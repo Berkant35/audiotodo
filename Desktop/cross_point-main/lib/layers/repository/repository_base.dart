@@ -2,9 +2,11 @@ import 'package:cross_point/layers/models/login_success.dart';
 import 'package:cross_point/utilities/navigation/navigation_constants.dart';
 import 'package:cross_point/utilities/navigation/navigation_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../local/local_base.dart';
 import '../local/local_manager.dart';
+import '../models/created_inventory.dart';
 import '../models/items.dart';
 import '../models/location_model.dart';
 import '../network/network_manager.dart';
@@ -91,6 +93,21 @@ class Repository extends LocaleBase {
     } catch (e) {
       debugPrint('Error: $e');
       return null;
+    }
+  }
+  Future<void> createdInventory(CreateInventory inventory,WidgetRef ref) async {
+    try {
+      return await getToken().then((value) async {
+        inventory.token = value;
+        return await networkManager!
+            .createInventory(value!, inventory,ref)
+            .then((value) {
+          return value;
+        });
+      });
+    } catch (e) {
+      (e.toString());
+      return;
     }
   }
 }

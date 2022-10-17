@@ -1,6 +1,7 @@
 import 'package:cross_point/layers/view_models/global_providers.dart';
 import 'package:cross_point/ui/base/base_widgets/per_item_of_menu.dart';
 import 'package:cross_point/utilities/constants/custom_colors.dart';
+import 'package:cross_point/utilities/constants/enums.dart';
 import 'package:cross_point/utilities/extensions/context_extension.dart';
 import 'package:cross_point/utilities/extensions/font_theme.dart';
 import 'package:cross_point/utilities/extensions/iconSizeExtension.dart';
@@ -36,7 +37,7 @@ class BasePage extends ConsumerWidget {
               ref.read(viewModelStateProvider.notifier).logout();
             },
             icon: const Icon(Icons.logout),
-            iconSize: IconSizeExtension.HIGH.sizeValue,
+            iconSize: IconSizeExtension.MEDIUMTOHIGH.sizeValue,
           )
         ],
       ),
@@ -74,23 +75,38 @@ class BasePage extends ConsumerWidget {
                     PerItemOfMenu(
                         imagePath: ImagePath.addNewInventorySvg,
                         title: 'New Inventory',
-                        onTap: () => NavigationService.instance.navigateToPage(
-                            path: NavigationConstants.locationSearchPage)),
+                        onTap: () {
+                          ref.read(operationStatusStateProvider.notifier).changeState(OperationStatus.INVENTORY);
+                          NavigationService.instance.navigateToPage(
+                              path: NavigationConstants.locationSearchPage);
+                        }),
                     PerItemOfMenu(
+                        imagePath: ImagePath.resultSvg,
+                        title: 'Inventories',
+                        onTap: () {
+                          ref.read(operationStatusStateProvider.notifier).changeState(OperationStatus.INVENTORYLIST);
+                          NavigationService.instance.navigateToPage(
+                              path: NavigationConstants.locationSearchPage);
+                        }),
+                    PerItemOfMenu(
+                        imagePath: ImagePath.addSvg,
+                        title: 'Add Item',
+                        onTap: () {
+                          ref.read(operationStatusStateProvider.notifier).changeState(OperationStatus.ADDITEM);
+
+                        }),
+                    PerItemOfMenu(
+                        imagePath: ImagePath.settingsSvg,
+                        title: 'Settings',
+                        onTap: () {
+                          ref.read(operationStatusStateProvider.notifier).changeState(OperationStatus.SETTINGS);
+
+                        }),
+                    /*PerItemOfMenu(
                         imagePath: ImagePath.addNewInventorySvg,
                         title: 'New Inventory',
                         onTap: () => NavigationService.instance.navigateToPage(
-                            path: NavigationConstants.locationSearchPage)),
-                    PerItemOfMenu(
-                        imagePath: ImagePath.addNewInventorySvg,
-                        title: 'New Inventory',
-                        onTap: () => NavigationService.instance.navigateToPage(
-                            path: NavigationConstants.locationSearchPage)),
-                    PerItemOfMenu(
-                        imagePath: ImagePath.addNewInventorySvg,
-                        title: 'New Inventory',
-                        onTap: () => NavigationService.instance.navigateToPage(
-                            path: NavigationConstants.locationSearchPage)),
+                            path: NavigationConstants.locationSearchPage)),*/
                   ],
                 ),
               ),
@@ -101,7 +117,7 @@ class BasePage extends ConsumerWidget {
               child: Padding(
                 padding: EdgeInsets.only(bottom: context.normalValue),
                 child: Text(
-                  'powered by uniqueid',
+                  'powered by Unique ID',
                   style: ThemeValueExtension.subtitle3.copyWith(
                       color: CustomColors.grimsi, fontWeight: FontWeight.w600),
                 ),

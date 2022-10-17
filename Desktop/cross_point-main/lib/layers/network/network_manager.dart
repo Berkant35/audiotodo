@@ -1,19 +1,24 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cross_point/layers/local/local_manager.dart';
+import 'package:cross_point/layers/view_models/global_providers.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../utilities/common_widgets/flutter_toast_dialog.dart';
 import '../../utilities/constants/url_constants.dart';
 import '../../utilities/navigation/navigation_constants.dart';
 import '../../utilities/navigation/navigation_service.dart';
+import '../models/created_inventory.dart';
 import '../models/items.dart';
 import '../models/location_model.dart';
 import '../models/login_success.dart';
 import '../repository/locator.dart';
+import '../view_models/login_state_manager.dart';
 
 part 'network_base.dart';
 
@@ -160,6 +165,53 @@ class NetworkManager extends NetworkManagerBase {
       debugPrint("Get locations error: $e");
       return null;
     }
+  }
+
+  @override
+  Future<void> createInventory(
+      String token, CreateInventory? inventory,WidgetRef ref) async {
+    try {
+
+
+      urlConstans.getUrl().then((value) async {
+        (_dio.httpClientAdapter as DefaultHttpClientAdapter)
+            .onHttpClientCreate = (HttpClient dioClient) {
+          dioClient.badCertificateCallback =
+          ((X509Certificate cert, String host, int port) => true);
+          return dioClient;
+        };
+
+        final response = await _dio.post(
+          '${value!}/inventories/create',
+          data: inventory?.toJson(),
+          options: Options(method: "POST", headers: {
+            "Authorization": "Bearer $token",
+            "Content-Type": "application/json"
+          }),
+        );
+        debugPrint("Response Creating Inventory: $response");
+        if (response.statusCode == 200 &&
+            response.data.toString().contains("200")) {
+          debugPrint("Response status code :200");
+          Dialogs.showSuccess("Successfully Saved!");
+           ref.read(inventoryTagsProvider.notifier).clearTagList(false);
+          ref
+              .read(loginButtonStateProvider.notifier)
+              .changeState(LoadingStates.loaded);
+          //final inventoryCreated = InventoryCreated.fromJson(response.data);
+          //debugPrint(inventoryCreated.data!.toJson().toString());
+          return null;
+        } else {
+          return null;
+        }
+      });
+    } catch (e) {
+      if (e is DioError) {
+        debugPrint("Hata: ${e.message}Ta");
+      }
+      return;
+    }
+    return;
   }
 
 }

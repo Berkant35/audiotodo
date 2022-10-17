@@ -54,7 +54,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               child: Padding(
                 padding: EdgeInsets.only(bottom: context.lowValue),
                 child: Text(
-                  'powered by uniqueid',
+                  'powered by Unique ID',
                   style: ThemeValueExtension.subtitle3.copyWith(
                       color: CustomColors.grimsi, fontWeight: FontWeight.w600),
                 ),

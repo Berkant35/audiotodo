@@ -5,6 +5,8 @@ class ImagePath {
   static const encodeSvg = 'assets/images/encode.svg';
   static const resultSvg = 'assets/images/result.svg';
   static const searchSvg = 'assets/images/search.svg';
+  static const addSvg = 'assets/images/add.svg';
+  static const settingsSvg = 'assets/images/settings.svg';
 
   static const logoPng = 'assets/images/logo.png';
   static const backPng = 'assets/images/back.png';

@@ -1,8 +1,10 @@
 import 'package:cross_point/layers/models/uhf_tag_info.dart';
+import 'package:cross_point/layers/view_models/operation_work_manager.dart';
 import 'package:cross_point/layers/view_models/rfid_state_manager.dart';
 import 'package:cross_point/layers/view_models/scan_stop_manager.dart';
 import 'package:cross_point/layers/view_models/tags_manager.dart';
 import 'package:cross_point/layers/view_models/view_model.dart';
+import 'package:cross_point/utilities/constants/enums.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/rfid_device.dart';
@@ -23,6 +25,10 @@ StateNotifierProvider<LoginButtonStateManager, LoadingStates>((ref) {
   return LoginButtonStateManager(LoadingStates.loaded);
 });
 
+final operationStatusStateProvider =
+StateNotifierProvider<OperationStatusStateManager, OperationStatus>((ref) {
+  return OperationStatusStateManager(OperationStatus.IDLE);
+});
 final scanStopStateProvider =
 StateNotifierProvider<ScanModeStateManager, ScanModes>((ref) {
   return ScanModeStateManager(ScanModes.idle);

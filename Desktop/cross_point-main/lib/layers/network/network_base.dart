@@ -33,4 +33,5 @@ abstract class NetworkManagerBase {
   Future<LoginSuccess?> login(String email,String password);
   Future<Locations?> getLocations(String token);
   Future<Items?> getItems(String token,String locationID);
+  Future<void> createInventory(String token, CreateInventory? inventory,WidgetRef ref);
 }

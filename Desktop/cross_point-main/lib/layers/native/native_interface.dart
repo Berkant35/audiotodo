@@ -3,7 +3,7 @@ part of 'native_manager.dart';
 enum ChannelKeys { mainChannel, eventChannel }
 
 ///Invoke methodların tiplerini topladığımız enum
-enum InvokeMethods { init, stopInventory, continueInventory, clearInventory }
+enum InvokeMethods { init, stopInventory, continueInventory, clearInventory,playSound }
 
 enum BroadCastStates { inventoryAndGetTag }
 
@@ -32,4 +32,6 @@ abstract class NativeInterface {
   Future<void> inventoryAndThenGetTags(WidgetRef ref);
 
   Future<void> clear();
+
+  Future<void> playSound();
 }

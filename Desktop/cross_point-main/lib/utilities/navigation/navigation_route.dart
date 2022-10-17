@@ -1,5 +1,6 @@
 import 'package:cross_point/main.dart';
 import 'package:cross_point/ui/auth/login_page.dart';
+import 'package:cross_point/ui/base/inventory_list_of_location_page.dart';
 import 'package:cross_point/ui/base/inventory_of_items.dart';
 import 'package:cross_point/ui/base/location_search.dart';
 import 'package:cross_point/ui/base/new_inventory.dart';
@@ -29,6 +30,14 @@ class NavigationRoute {
         return normalNavigate(const BasePage());
       case NavigationConstants.locationSearchPage:
         return normalNavigate(const LocationSearch());
+      case NavigationConstants.inventoryListOfLocationPage:
+        Map<String, String?> locationMap =
+        args.arguments as Map<String, String?>;
+
+        return normalNavigate(InventoryListOfLocationPage(
+            locationName: locationMap['locationName']!,
+            locationID: locationMap["locationID"]!));
+
       case NavigationConstants.inventoryOfItems:
         Map<String, String?> locationMap =
             args.arguments as Map<String, String?>;

@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:cross_point/layers/models/uhf_tag_info.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../native/native_manager.dart';
 
@@ -10,7 +12,11 @@ class InventoryTagsManager extends StateNotifier<Map<String, UHFTagInfo>> {
 
   final nativeManager = NativeManager();
   Set<String> expectedEpcList = {};
+  Map<String,String> readTime = {};
   Set<String> waitingEpcList = {};
+
+  bool isListening = false;
+
   changeState(Map<String, UHFTagInfo> value) {
     state = value;
   }
@@ -21,6 +27,9 @@ class InventoryTagsManager extends StateNotifier<Map<String, UHFTagInfo>> {
 
   addReadedTagForExpected(String epc){
     expectedEpcList.add(epc);
+    var addedTimeFormatUTC =
+    DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now().toUtc());
+    readTime.addAll({epc : addedTimeFormatUTC});
   }
 
   addTag(UHFTagInfo? tag) {
@@ -32,10 +41,20 @@ class InventoryTagsManager extends StateNotifier<Map<String, UHFTagInfo>> {
 
   }
 
-  startScan(WidgetRef ref) {
-    nativeManager.inventoryAndThenGetTags(ref).then((value) {
-      nativeManager.startScan();
+  listen(WidgetRef ref) {
+    debugPrint("Listening....");
+    nativeManager.inventoryAndThenGetTags(ref).then((value){
+      isListening = true;
     });
+  }
+
+  startScan(WidgetRef ref) {
+
+      nativeManager.inventoryAndThenGetTags(ref).then((value){
+        nativeManager.startScan();
+      });
+
+
   }
 
   stopScan() {
@@ -50,9 +69,13 @@ class InventoryTagsManager extends StateNotifier<Map<String, UHFTagInfo>> {
     state.remove(tag);
   }
 
-  clearTagList() {
+  clearTagList(bool deleteWaitingEpcList) {
     state.clear();
     nativeManager.clear();
+    if(deleteWaitingEpcList){
+      waitingEpcList.clear();
+    }
     expectedEpcList.clear();
+
   }
 }

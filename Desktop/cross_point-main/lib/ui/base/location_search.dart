@@ -1,6 +1,8 @@
+
 import 'package:cross_point/layers/view_models/global_providers.dart';
 import 'package:cross_point/layers/view_models/view_model.dart';
 import 'package:cross_point/ui/base/inventory_of_items.dart';
+import 'package:cross_point/utilities/constants/enums.dart';
 import 'package:cross_point/utilities/extensions/context_extension.dart';
 import 'package:cross_point/utilities/navigation/navigation_constants.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +59,7 @@ class _LocationSearchState extends ConsumerState<LocationSearch> {
                                 showSearch(
                                     context: context,
                                     delegate: CustomSearchDelegate(
-                                        locationList: locationList));
+                                        locationList: locationList,ref: ref));
                               },
                               icon: Icon(
                                 Icons.search,
@@ -84,7 +86,7 @@ class _LocationSearchState extends ConsumerState<LocationSearch> {
                             itemCount: locationList.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return perRowInfo(locationList, index, context);
+                              return perRowInfo(context, locationList[index]);
                             }),
                       )
                     : Center(
@@ -101,18 +103,20 @@ class _LocationSearchState extends ConsumerState<LocationSearch> {
     );
   }
 
-  GestureDetector perRowInfo(
-      List<Location> locationList, int index, BuildContext context) {
+  Future<void> buildNavigateToPage(Location location) {
+    String path = NavigationConstants.inventoryOfItems;
+    if(ref.read(operationStatusStateProvider) == OperationStatus.INVENTORYLIST){
+      path = NavigationConstants.inventoryListOfLocationPage;
+    }
+    return NavigationService.instance.navigateToPage(
+        path: path,
+        data: {"locationName": location.name, "locationID": location.id});
+  }
+
+  GestureDetector perRowInfo(BuildContext context, Location location) {
     return GestureDetector(
       onTap: () {
-
-        NavigationService.instance.navigateToPage(path: NavigationConstants.inventoryOfItems,data:
-        {
-          "locationName" : locationList[index].name,
-          "locationID" : locationList[index].id
-        });
-
-
+        buildNavigateToPage(location);
       },
       child: Container(
         color: Colors.transparent,
@@ -137,7 +141,7 @@ class _LocationSearchState extends ConsumerState<LocationSearch> {
                       SizedBox(
                         width: context.lowValue,
                       ),
-                      Text(locationList[index].name!,
+                      Text(location.name!,
                           style: ThemeValueExtension.subtitle2),
                       SizedBox(
                         width: context.lowValue,
@@ -155,7 +159,7 @@ class _LocationSearchState extends ConsumerState<LocationSearch> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Seç',
+                            'Choose',
                             style: ThemeValueExtension.subtitle3.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600),
@@ -187,8 +191,8 @@ class _LocationSearchState extends ConsumerState<LocationSearch> {
 
 class CustomSearchDelegate extends SearchDelegate {
   List<Location>? locationList;
-
-  CustomSearchDelegate({required this.locationList});
+  WidgetRef ref;
+  CustomSearchDelegate({required this.locationList,required this.ref});
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -231,13 +235,11 @@ class CustomSearchDelegate extends SearchDelegate {
       child: ListView.builder(
         itemCount: matchQuery.length,
         itemBuilder: (context, index) {
+          var location = locationList![index];
+
           return GestureDetector(
             onTap: () {
-              NavigationService.instance.navigateToPage(path: NavigationConstants.inventoryOfItems,data:
-              {
-                "locationName" : locationList![index].name,
-                "locationID" : locationList![index].id
-              });
+              buildNavigateToPage(location);
             },
             child: Container(
               color: Colors.transparent,
@@ -260,6 +262,16 @@ class CustomSearchDelegate extends SearchDelegate {
     );
   }
 
+  Future<void> buildNavigateToPage(Location location) {
+    String path = NavigationConstants.inventoryOfItems;
+    if(ref.read(operationStatusStateProvider) == OperationStatus.INVENTORYLIST){
+      path = NavigationConstants.inventoryListOfLocationPage;
+    }
+    return NavigationService.instance.navigateToPage(
+        path: path,
+        data: {"locationName": location.name, "locationID": location.id});
+  }
+
   @override
   Widget buildSuggestions(BuildContext context) {
     List<String> matchQuery = [];
@@ -274,14 +286,12 @@ class CustomSearchDelegate extends SearchDelegate {
     return ListView.builder(
       itemCount: matchQuery.length,
       itemBuilder: (context, index) {
+        var location = locationList![index];
+
         return ListTile(
           title: GestureDetector(
               onTap: () {
-                NavigationService.instance.navigateToPage(path: NavigationConstants.inventoryOfItems,data:
-                {
-                  "locationName" : locationList![index].name,
-                  "locationID" : locationList![index].id
-                });
+                buildNavigateToPage(location);
               },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

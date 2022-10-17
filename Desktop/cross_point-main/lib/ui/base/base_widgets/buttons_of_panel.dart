@@ -1,4 +1,5 @@
 import 'package:cross_point/utilities/extensions/context_extension.dart';
+import 'package:cross_point/utilities/extensions/iconSizeExtension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -27,10 +28,21 @@ class ButtonsOfPanel extends ConsumerWidget {
                       .changeState(ScanModes.stop);
                   ref.read(inventoryTagsProvider.notifier).stopScan();
                 },
-                inButtonWidget: Text(
-                  "Stop",
-                  style: ThemeValueExtension.subtitle,
+                inButtonWidget: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.cancel_outlined,
+                      size: IconSizeExtension.MEDIUMTOHIGH.sizeValue,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      "Stop",
+                      style: ThemeValueExtension.subtitle,
+                    ),
+                  ],
                 ),
+                height: buildHeight(context),
                 width: buttonWidth(context),
                 primaryColor: ref.watch(scanStopStateProvider) == ScanModes.stop
                     ? CustomColors.acikGri.withOpacity(0.25)
@@ -43,11 +55,24 @@ class ButtonsOfPanel extends ConsumerWidget {
                       .changeState(ScanModes.scan);
                   ref.read(inventoryTagsProvider.notifier).startScan(ref);
                 },
-                inButtonWidget: Text(
-                  "Scan",
-                  style: ThemeValueExtension.subtitle,
+                inButtonWidget: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.qr_code_scanner,
+                      size: IconSizeExtension.MEDIUMTOHIGH.sizeValue,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "Scan",
+                      style: ThemeValueExtension.subtitle,
+                    ),
+                  ],
                 ),
                 width: buttonWidth(context),
+                height: buildHeight(context),
                 primaryColor: ref.watch(scanStopStateProvider) == ScanModes.scan
                     ? CustomColors.acikGri.withOpacity(0.25)
                     : CustomColors.crossPointDark,
@@ -55,6 +80,8 @@ class ButtonsOfPanel extends ConsumerWidget {
       ],
     );
   }
+
+  double buildHeight(BuildContext context) => context.height * 0.045;
 
   double buttonWidth(BuildContext context) => context.width * 0.45;
 }

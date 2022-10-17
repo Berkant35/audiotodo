@@ -6,4 +6,5 @@ class NavigationConstants {
   static const basePage = '/BasePage';
   static const locationSearchPage = '/LocationSearch';
   static const inventoryOfItems = '/InventoryOfItems';
+  static const inventoryListOfLocationPage = '/InventoryListOfLocationPage';
 }

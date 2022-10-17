@@ -1,5 +1,7 @@
 import 'package:cross_point/layers/view_models/global_providers.dart';
+import 'package:cross_point/layers/view_models/login_state_manager.dart';
 import 'package:cross_point/utilities/constants/custom_colors.dart';
+import 'package:cross_point/utilities/extensions/EdgeExtension.dart';
 import 'package:cross_point/utilities/extensions/context_extension.dart';
 import 'package:cross_point/utilities/extensions/font_theme.dart';
 import 'package:cross_point/utilities/extensions/iconSizeExtension.dart';
@@ -24,6 +26,7 @@ class InventoryOfItems extends ConsumerStatefulWidget {
 
 class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
   Future<Items?>? _future;
+  Future<void>? _initializeStream;
 
   @override
   void initState() {
@@ -32,6 +35,7 @@ class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
     _future = ref
         .read(viewModelStateProvider.notifier)
         .getItems(widget.locationID, ref);
+    _initializeStream = ref.read(inventoryTagsProvider.notifier).listen(ref);
   }
 
   @override
@@ -45,8 +49,7 @@ class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
           ),
           onPressed: () {
             Navigator.of(context, rootNavigator: true).pop();
-
-            ref.read(inventoryTagsProvider.notifier).clearTagList();
+            ref.read(inventoryTagsProvider.notifier).clearTagList(true);
           },
         ),
         centerTitle: true,
@@ -58,32 +61,62 @@ class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
           style: ThemeValueExtension.subtitle,
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton:
-          ref.watch(inventoryTagsProvider.notifier).expectedEpcList.isNotEmpty
-              ? FloatingActionButton.extended(
-                  backgroundColor: CustomColors.crossPointDark,
-                  onPressed: () {},
-                  label: Text(
-                    "Save",
-                    style: ThemeValueExtension.subtitle,
-                  ))
-              : const SizedBox(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ref
+              .watch(inventoryTagsProvider.notifier)
+              .expectedEpcList
+              .isNotEmpty
+          ? Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: context.width,
+                height: context.height * 0.06,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(EdgeExtension.hugeEdge.edgeValue),
+                    )),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: context.lowValue / 2,
+                      horizontal: context.width * 0.28),
+                  child: ref.watch(loginButtonStateProvider) ==
+                          LoadingStates.loaded
+                      ? FloatingActionButton.extended(
+                          icon: Icon(
+                            Icons.cloud_upload_outlined,
+                            size: IconSizeExtension.MEDIUMTOHIGH.sizeValue,
+                          ),
+                          backgroundColor: CustomColors.crossPointDark,
+                          onPressed: () {
+                            ref
+                                .read(viewModelStateProvider.notifier)
+                                .createInventory(ref, widget.locationID);
+                          },
+                          label: Text(
+                            "Save",
+                            style: ThemeValueExtension.subtitle,
+                          ))
+                      : const Center(
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                ),
+              ),
+            )
+          : const SizedBox(),
       body: SizedBox(
         height: context.height,
         child: FutureBuilder<Items?>(
           future: _future,
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
             Items? items = snapshot.data;
-
             List<Item>? itemList = items?.data;
-
             return snapshot.connectionState == ConnectionState.done &&
                     items != null
                 ? Column(
                     children: [
                       Expanded(
-                        flex: 5,
+                        flex: 4,
                         child: Container(
                           decoration: const BoxDecoration(
                             border: Border(
@@ -93,19 +126,19 @@ class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
                             ),
                           ),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               buildTable(context, itemList!),
-                              const Padding(
-                                padding: EdgeInsets.only(bottom: 3),
-                                child: ButtonsOfPanel(),
+                              SizedBox(
+                                height: context.normalValue,
                               ),
+                              const ButtonsOfPanel(),
                             ],
                           ),
                         ),
                       ),
                       Expanded(
-                          flex: 16,
+                          flex: 17,
                           child: itemList.isNotEmpty
                               ? ListView.builder(
                                   itemCount: itemList.length,
@@ -138,28 +171,31 @@ class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
                                                         border: Border.all(
                                                             width: 4,
                                                             color: !ref
-                                                                .watch(
-                                                                inventoryTagsProvider)
-                                                                .containsKey(
-                                                                itemList[index]
-                                                                    .epc)
-                                                                ? CustomColors.crossPointDark
-                                                                : Colors.white)),
+                                                                    .watch(
+                                                                        inventoryTagsProvider)
+                                                                    .containsKey(
+                                                                        itemList[index]
+                                                                            .epc)
+                                                                ? CustomColors
+                                                                    .crossPointDark
+                                                                : Colors
+                                                                    .white)),
                                                     child: Center(
                                                       child: Text(
                                                         itemList[index].label!,
-                                                        style: ThemeValueExtension
-                                                            .subtitle
-                                                            .copyWith(
-                                                          color: !ref
-                                                              .watch(
-                                                              inventoryTagsProvider)
-                                                              .containsKey(
-                                                              itemList[index]
-                                                                  .epc)
-                                                              ? Colors.black
-                                                              : Colors.white
-                                                        ),
+                                                        style: ThemeValueExtension.subtitle.copyWith(
+                                                            color: !ref
+                                                                    .watch(
+                                                                        inventoryTagsProvider)
+                                                                    .containsKey(
+                                                                        itemList[index]
+                                                                            .epc)
+                                                                ? CustomColors
+                                                                    .crossPointDark
+                                                                : Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
                                                       ),
                                                     ),
                                                   ),
@@ -179,21 +215,20 @@ class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
                                                       children: [
                                                         Text(
                                                           itemList[index].ean!,
-                                                          style: ThemeValueExtension
-                                                              .subtitle
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
+                                                          style: ThemeValueExtension.subtitle.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
                                                               color: !ref
-                                                                  .watch(
-                                                                  inventoryTagsProvider)
-                                                                  .containsKey(
-                                                                  itemList[index]
-                                                                      .epc)
-                                                                  ? CustomColors.crossPointDark
-                                                                  : Colors.white
-                                                          ),
+                                                                      .watch(
+                                                                          inventoryTagsProvider)
+                                                                      .containsKey(
+                                                                          itemList[index]
+                                                                              .epc)
+                                                                  ? CustomColors
+                                                                      .crossPointDark
+                                                                  : Colors
+                                                                      .white),
                                                         ),
                                                         Row(
                                                           mainAxisAlignment:
@@ -202,37 +237,37 @@ class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
                                                           children: [
                                                             Row(
                                                               children: [
-                                                                 Icon(
+                                                                Icon(
                                                                   Icons
                                                                       .color_lens,
                                                                   color: !ref
-                                                                      .watch(
-                                                                      inventoryTagsProvider)
-                                                                      .containsKey(
-                                                                      itemList[index]
-                                                                          .epc)
-                                                                      ? CustomColors.crossPointDark
-                                                                      : Colors.white,
+                                                                          .watch(
+                                                                              inventoryTagsProvider)
+                                                                          .containsKey(itemList[index]
+                                                                              .epc)
+                                                                      ? CustomColors
+                                                                          .crossPointDark
+                                                                      : Colors
+                                                                          .white,
                                                                 ),
-                                                                SizedBox(width: context.lowValue,),
-
+                                                                SizedBox(
+                                                                  width: context
+                                                                      .lowValue,
+                                                                ),
                                                                 Text(
                                                                   itemList[
                                                                           index]
                                                                       .color!,
-                                                                  style: ThemeValueExtension
-                                                                      .subtitle
-                                                                      .copyWith(
-                                                                      color: !ref
-                                                                          .watch(
-                                                                          inventoryTagsProvider)
-                                                                          .containsKey(
-                                                                          itemList[index]
+                                                                  style: ThemeValueExtension.subtitle.copyWith(
+                                                                      color: !ref.watch(inventoryTagsProvider).containsKey(itemList[index]
                                                                               .epc)
-                                                                          ? CustomColors.crossPointDark
-                                                                          : Colors.white,
-                                                                          fontWeight:
-                                                                              FontWeight.w500),
+                                                                          ? CustomColors
+                                                                              .crossPointDark
+                                                                          : Colors
+                                                                              .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
                                                                 ),
                                                               ],
                                                             ),
@@ -243,34 +278,36 @@ class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
                                                             Row(
                                                               children: [
                                                                 Icon(
-                                                                  Icons.leaderboard,
+                                                                  Icons
+                                                                      .leaderboard,
                                                                   color: !ref
-                                                                      .watch(
-                                                                      inventoryTagsProvider)
-                                                                      .containsKey(
-                                                                      itemList[index]
-                                                                          .epc)
-                                                                      ? CustomColors.crossPointDark
-                                                                      : Colors.white,
+                                                                          .watch(
+                                                                              inventoryTagsProvider)
+                                                                          .containsKey(itemList[index]
+                                                                              .epc)
+                                                                      ? CustomColors
+                                                                          .crossPointDark
+                                                                      : Colors
+                                                                          .white,
                                                                 ),
-                                                                SizedBox(width: context.lowValue,),
+                                                                SizedBox(
+                                                                  width: context
+                                                                      .lowValue,
+                                                                ),
                                                                 Text(
                                                                   itemList[
                                                                           index]
                                                                       .sizes!,
-                                                                  style: ThemeValueExtension
-                                                                      .subtitle
-                                                                      .copyWith(
-                                                                          fontWeight:
-                                                                              FontWeight.w500,
-                                                                      color: !ref
-                                                                          .watch(
-                                                                          inventoryTagsProvider)
-                                                                          .containsKey(
-                                                                          itemList[index]
+                                                                  style: ThemeValueExtension.subtitle.copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                      color: !ref.watch(inventoryTagsProvider).containsKey(itemList[index]
                                                                               .epc)
-                                                                          ? CustomColors.crossPointDark
-                                                                          : Colors.white),
+                                                                          ? CustomColors
+                                                                              .crossPointDark
+                                                                          : Colors
+                                                                              .white),
                                                                 ),
                                                               ],
                                                             )
@@ -278,21 +315,20 @@ class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
                                                         ),
                                                         Text(
                                                           itemList[index].epc!,
-                                                          style: ThemeValueExtension
-                                                              .subtitle2
-                                                              .copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                            color: !ref
-                                                                .watch(
-                                                                inventoryTagsProvider)
-                                                                .containsKey(
-                                                                itemList[index]
-                                                                    .epc)
-                                                                ? CustomColors.crossPointDark
-                                                                : Colors.white
-                                                          ),
+                                                          style: ThemeValueExtension.subtitle2.copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: !ref
+                                                                      .watch(
+                                                                          inventoryTagsProvider)
+                                                                      .containsKey(
+                                                                          itemList[index]
+                                                                              .epc)
+                                                                  ? CustomColors
+                                                                      .crossPointDark
+                                                                  : Colors
+                                                                      .white),
                                                         ),
                                                       ],
                                                     ),
@@ -410,7 +446,7 @@ class _InventoryOfItemsState extends ConsumerState<InventoryOfItems> {
     );
   }
 
-  double buildHeight(BuildContext context) => context.height * 0.05;
+  double buildHeight(BuildContext context) => context.height * 0.04;
 
   Row perInfo(String header, String content) {
     return Row(

@@ -1,5 +1,6 @@
 import 'package:cross_point/layers/models/rfid_device.dart';
 import 'package:cross_point/layers/view_models/global_providers.dart';
+import 'package:cross_point/layers/view_models/scan_stop_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,16 +23,25 @@ class NativeManager extends NativeInterface {
 
   @override
   Future<void> inventoryAndThenGetTags(WidgetRef ref) async {
+
     _eventChannel
         .receiveBroadcastStream(BroadCastStates.inventoryAndGetTag.name)
         .listen((event) {
       //Clear Option
       if (event.toString() == '-1') {
-        ref.read(inventoryTagsProvider.notifier).clearTagList();
+        if(ref.read(scanStopStateProvider) == ScanModes.scan){
+          ref.read(scanStopStateProvider.notifier).changeState(ScanModes.stop);
+        }
         /*
         ref.read(inventoryTagsProvider.notifier).changeState({});
         */
       } else {
+        if(ref.read(scanStopStateProvider) == ScanModes.stop
+            || ref.read(scanStopStateProvider) == ScanModes.idle)
+        {
+          ref.read(scanStopStateProvider.notifier).changeState(ScanModes.scan);
+        }
+
         //UHFTagInfo perTag = UHFTagInfo.fromJson(jsonDecode(event));
         debugPrint('$event=Flutter');
         var uhfTagInfo = UHFTagInfo(epc: event, tid: event, userData: event);
@@ -40,8 +50,11 @@ class NativeManager extends NativeInterface {
         ref
             .read(inventoryTagsProvider.notifier)
             .addTag(uhfTagInfo);
-        if(ref.read(inventoryTagsProvider.notifier).waitingEpcList.contains(uhfTagInfo.epc)){
+        if(ref.read(inventoryTagsProvider.notifier).waitingEpcList.contains(uhfTagInfo.epc)
+        && !ref.read(inventoryTagsProvider.notifier).expectedEpcList.contains(uhfTagInfo.epc))
+        {
           ref.read(inventoryTagsProvider.notifier).addReadedTagForExpected(uhfTagInfo.epc!);
+          playSound();
         }
 
         /*
@@ -65,6 +78,11 @@ class NativeManager extends NativeInterface {
   @override
   Future<void> clear() async {
     await _methodChannel.invokeMethod(InvokeMethods.clearInventory.name);
+  }
+
+  @override
+  Future<void> playSound() async {
+    await _methodChannel.invokeMethod(InvokeMethods.playSound.name);
   }
 
 

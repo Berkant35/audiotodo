@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../utilities/navigation/navigation_constants.dart';
+import '../models/created_inventory.dart';
 import '../models/items.dart';
 import '../models/location_model.dart';
 
@@ -80,7 +81,7 @@ class ViewModel extends StateNotifier<void> {
         return null;
       } else {
         for (var item in result.data!) {
-          if(item.status == "1"){
+          if (item.status == "1") {
             ref.read(inventoryTagsProvider.notifier).addWaitingTag(item.epc!);
           }
         }
@@ -91,6 +92,31 @@ class ViewModel extends StateNotifier<void> {
       debugPrint("View Model Err: $e");
       //await repository.saveToken("");
       return null;
+    }
+  }
+
+  Future<void> createInventory(WidgetRef ref, String locationID) async {
+    try {
+      ref
+          .read(loginButtonStateProvider.notifier)
+          .changeState(LoadingStates.loading);
+      var tagList = <TagList>[];
+
+      ref.read(inventoryTagsProvider.notifier).expectedEpcList.forEach((epc) {
+        tagList.add(TagList(
+            epc: epc,
+            readDate: ref.read(inventoryTagsProvider.notifier).readTime[epc]));
+      });
+
+      var newInventory = CreateInventory(location: locationID, tagList: tagList);
+
+      return await repository.createdInventory(newInventory,ref);
+
+    } catch (e) {
+      debugPrint("$e ");
+      return;
+    } finally {
+
     }
   }
 
