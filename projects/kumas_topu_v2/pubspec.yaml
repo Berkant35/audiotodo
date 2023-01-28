@@ -1,0 +1,89 @@
+name: kumas_topu
+description: Kumas Topu RFID Project
+
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.6 <3.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  hive: ^2.2.3
+
+  dio: ^4.0.6
+
+  #time
+  ntp: ^2.0.0
+
+  #date format
+  intl: ^0.17.0
+
+  #device
+  device_info_plus: ^8.0.0
+
+
+  #path
+  path_provider: ^2.0.11
+  android_path_provider: ^0.3.0
+
+  #state managment
+  flutter_riverpod: ^2.1.1
+  state_notifier: ^0.7.2+1
+
+  #Model Works
+  json_annotation: ^4.7.0
+  json_serializable: ^6.5.4
+
+  #Toast Messages...
+  fluttertoast: ^8.1.1
+
+  #ui_helpers
+  responsive_sizer: ^3.1.1
+  cupertino_icons: ^1.0.2
+  flutter_svg: ^1.1.6
+  url_launcher: ^6.1.7
+  get_it: ^7.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+  flutter_lints: ^2.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+
+    - assets/images/
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Black.ttf
+        - asset: assets/fonts/Poppins-BlackItalic.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+        - asset: assets/fonts/Poppins-BoldItalic.ttf
+        - asset: assets/fonts/Poppins-ExtraBold.ttf
+        - asset: assets/fonts/Poppins-ExtraBoldItalic.ttf
+        - asset: assets/fonts/Poppins-ExtraLight.ttf
+        - asset: assets/fonts/Poppins-ExtraLightItalic.ttf
+        - asset: assets/fonts/Poppins-Italic.ttf
+        - asset: assets/fonts/Poppins-LightItalic.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins-MediumItalic.ttf
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+        - asset: assets/fonts/Poppins-SemiBoldItalic.ttf
+        - asset: assets/fonts/Poppins-Thin.ttf
+        - asset: assets/fonts/Poppins-ThinItalic.ttf
+
