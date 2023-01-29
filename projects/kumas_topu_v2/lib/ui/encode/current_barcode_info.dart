@@ -23,6 +23,7 @@ class CurrentBarcodeInfo extends ConsumerStatefulWidget {
 
 class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
   late TextEditingController barcodeEditingController;
+  final barcodeFormState = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -36,8 +37,8 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
     barcodeEditingController.text =
         ref.watch(currentBarcodeInfoProvider).barcodeInfo ?? "-";
 
-    return SizedBox(
-      width: 96.w,
+    return Form(
+      key: barcodeFormState,
       child: Padding(
         padding: seperatePadding(),
         child: Column(
@@ -67,9 +68,12 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
                             }
                           });
                         },
-                        icon: Icon(
-                          Icons.add_box,
-                          size: 4.h,
+                        icon: Padding(
+                          padding:  EdgeInsets.only(left: 6.w),
+                          child: Icon(
+                            Icons.add_box,
+                            size: 4.h,
+                          ),
                         ))
                     : const Center(
                         child: CircularProgressIndicator.adaptive(),
@@ -77,23 +81,31 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
               ],
             ),
             RowFormField(
-              padding: const EdgeInsets.all(0),
               headerName: "",
+              verticalContentPadding: 0.h,
               prefixIcon: Icons.qr_code_scanner_rounded,
-              hintText: "Barcode Number",
+              hintText: "Barcode Numarası",
               editingController: barcodeEditingController,
               custValidateFunction: (value) {
-                (value != "") ? "Boş Bırakılamaz" : null;
+                (ref.read(currentBarcodeInfoProvider).barcodeInfo != ""
+                    && ref.read(currentBarcodeInfoProvider).barcodeInfo != null
+                    && ref.read(currentBarcodeInfoProvider).barcodeInfo != "-")
+                    ? null : "Boş Bırakılamaz";
                 return null;
               },
               onChanged: (value) {
-                debugPrint("Triggered!");
+                debugPrint("Triggered!: $value");
                 var barcodeProvider = ref.read(currentBarcodeInfoProvider);
                 barcodeProvider.barcodeInfo = value;
                 ref
-                    .watch(currentBarcodeInfoProvider.notifier)
+                    .read(currentBarcodeInfoProvider.notifier)
                     .changeState(barcodeProvider);
-                return null;
+
+                if(value == ""){
+                  setState(() {});
+                }
+
+               return barcodeProvider.barcodeInfo;
               },
             ),
             const Divider(),
@@ -101,7 +113,9 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
               height: 4.h,
             ),
             buttons(),
-            SizedBox(height: 10.h,)
+            SizedBox(
+              height: 10.h,
+            )
           ],
         ),
       ),
@@ -130,26 +144,32 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
                 height: 4.h,
               ),
               (ref.watch(currentBarcodeInfoProvider).barcodeInfo != "-" &&
-                      ref.watch(currentBarcodeInfoProvider).barcodeInfo != null)
+                      ref.watch(currentBarcodeInfoProvider).barcodeInfo !=
+                          null &&
+                      ref.watch(currentBarcodeInfoProvider).barcodeInfo!.length>1)
                   ? Center(
                       child: CustomElevatedButton(
                         onPressed: ref.watch(currentTriggerModeProvider) ==
                                 TriggerModeStatus.BARCODE
                             ? () {
-                                ref
-                                    .read(viewModelStateProvider.notifier)
-                                    .createEPCForMatch(ref)
-                                    .then((value) {
-                                  if (ref
-                                              .read(currentBarcodeInfoProvider)
-                                              .epc !=
-                                          null &&
-                                      value != null) {
-                                    NavigationService.instance.navigateToPage(
-                                        path: NavigationConstants
-                                            .matchWithRFIDPage);
-                                  }
-                                });
+                                barcodeFormState.currentState!.save();
+                                if (barcodeFormState.currentState!.validate()) {
+                                  ref
+                                      .read(viewModelStateProvider.notifier)
+                                      .createEPCForMatch(ref)
+                                      .then((value) {
+                                    if (ref
+                                                .read(
+                                                    currentBarcodeInfoProvider)
+                                                .epc !=
+                                            null &&
+                                        value != null) {
+                                      NavigationService.instance.navigateToPage(
+                                          path: NavigationConstants
+                                              .matchWithRFIDPage);
+                                    }
+                                  });
+                                }
                               }
                             : null,
                         inButtonText: "RFID Eşleştirme",

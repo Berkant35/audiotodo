@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/models/create_result_epc.dart';
 import 'package:kumas_topu/models/encode_standarts.dart';
+import 'package:kumas_topu/models/inventory_list.dart';
+import 'package:kumas_topu/models/read_epc.dart';
 import 'package:kumas_topu/models/serial_number.dart';
 
 import '../../utilities/constants/app/enums.dart';
@@ -75,13 +77,12 @@ class ViewModel extends StateNotifier<void> {
             .navigateToPageClear(path: NavigationConstants.loginPage);
         return null;
       } else {
-        if(result.data!.length == 1){
+        if (result.data!.length == 1) {
           var perStandart = PerStandart();
           perStandart.id = result.data!.first.id;
           perStandart.encodeName = result.data!.first.encodeName;
           ref
-              .read(currentBarcodeStandartProvider
-              .notifier)
+              .read(currentBarcodeStandartProvider.notifier)
               .changeState(perStandart);
         }
         return result;
@@ -120,6 +121,51 @@ class ViewModel extends StateNotifier<void> {
       ref
           .read(loginButtonStateProvider.notifier)
           .changeState(LoadingStates.loaded);
+    }
+  }
+
+  Future<bool> addInventory(WidgetRef ref, String title) async {
+    try {
+      ref
+          .read(loginButtonStateProvider.notifier)
+          .changeState(LoadingStates.loading);
+      var result = await repository.addInventory(title);
+      return result;
+    } catch (e) {
+      return false;
+    } finally {
+      ref
+          .read(loginButtonStateProvider.notifier)
+          .changeState(LoadingStates.loaded);
+    }
+  }
+
+  Future<InventoryList?> getInventoryList() async {
+    try {
+      return await repository.getInventoryList();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> sendTags(WidgetRef ref, bool saveAndClose) async {
+    try {
+      List<dynamic> tagList = [];
+
+      var readList =
+          ref.watch(currentInventoryProvider)!.readEpcList!;
+
+      for (var readEpc in readList) {
+        tagList.add(readEpc
+            .toJson());
+      }
+
+      return await repository.sendTags(
+          ref.read(currentInventoryProvider)!.inventory!,
+          tagList,
+          saveAndClose);
+    } catch (e) {
+      return;
     }
   }
 

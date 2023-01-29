@@ -86,9 +86,7 @@ class MainPage extends ConsumerWidget {
                           scaleHigh: 8.h,
                           title: 'SAYIM',
                           onTap: () {
-                            ref
-                                .read(inventoryTagsProvider.notifier)
-                                .listen(ref);
+
                             NavigationService.instance.navigateToPage(
                                 path: NavigationConstants.inventoryMainPage);
                           }),

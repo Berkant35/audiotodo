@@ -44,7 +44,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             borderRadius: BorderRadius.all(
                 Radius.circular(EdgeExtension.lowEdge.edgeValue)),
             child: Container(
-              height: 70.h,
+              height: 75.h,
               width: 80.w,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(

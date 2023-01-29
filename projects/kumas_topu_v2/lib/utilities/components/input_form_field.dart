@@ -14,6 +14,7 @@ class CustomFormField extends StatefulWidget {
   bool? canEdit;
   final int? maxLines;
   final int? maxLength;
+  final double? verticialContentPadding;
   final TextInputType? inputType;
   String? Function(String? value) validateFunction;
   String? Function(String? value)? onChanged;
@@ -27,6 +28,7 @@ class CustomFormField extends StatefulWidget {
       this.suffixData,
       this.maxLength,
       this.textAlign,
+      this.verticialContentPadding,
       this.canEdit,
       this.hintStyle,
       this.inputType,
@@ -102,16 +104,20 @@ class _CustomFormFieldState extends State<CustomFormField> {
                           widget.visibleStatus = !widget.visibleStatus!;
                           setState(() {});
                         },
-                        icon: Icon(widget.visibleStatus!
-                            ? Icons.visibility
-                            : Icons.visibility_off,color: CustomColors.primaryColor,),
+                        icon: Icon(
+                          widget.visibleStatus!
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: CustomColors.primaryColor,
+                        ),
                       )
                     : null,
-            hintStyle: widget.hintStyle ?? ThemeValueExtension.subtitle.copyWith(
-              color: CustomColors.customGreyColor
-            ),
+            hintStyle: widget.hintStyle ??
+                ThemeValueExtension.subtitle
+                    .copyWith(color: CustomColors.customGreyColor),
             contentPadding: EdgeInsets.symmetric(
-                vertical: context.normalValue, horizontal: context.lowValue)),
+                vertical: widget.verticialContentPadding ?? context.normalValue,
+                horizontal: context.lowValue)),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kumas_topu/ui/auth/login_page.dart';
 import 'package:kumas_topu/ui/encode/match_with_rfid.dart';
+import 'package:kumas_topu/ui/inventory/do_inventory.dart';
 import 'package:kumas_topu/ui/main_page.dart';
 import 'package:kumas_topu/ui/encode/encode_main.dart';
 import 'package:kumas_topu/ui/settings/settings_page.dart';
@@ -29,6 +30,8 @@ class NavigationRoute {
         return normalNavigate(const MatchWithRFID());
       case NavigationConstants.inventoryMainPage:
         return normalNavigate(const InventoryMain());
+      case NavigationConstants.doInventoryPage:
+        return normalNavigate(const DoInventory());
 
       default:
         return MaterialPageRoute(

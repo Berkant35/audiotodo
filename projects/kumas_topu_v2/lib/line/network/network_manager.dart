@@ -6,9 +6,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:kumas_topu/models/create_success.dart';
 
 import '../../models/create_result_epc.dart';
 import '../../models/encode_status.dart';
+import '../../models/inventory_list.dart';
 import '../../models/login_success.dart';
 
 import '../../models/encode_standarts.dart';
@@ -132,13 +134,12 @@ class NetworkManager extends NetworkManagerBase {
         DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
 
-
         final response = await _dio.post('$value/encode/encode_epc', data: {
           "access_token": accessToken,
           "barcode_identifier": barcode,
           "encode_standards_id": standart?.id,
-          "device_id":androidInfo.id,
-          "device_name":androidInfo.device
+          "device_id": androidInfo.id,
+          "device_name": androidInfo.device
         });
 
 
@@ -176,7 +177,7 @@ class NetworkManager extends NetworkManagerBase {
 
   @override
   Future<EncodeStatus?> encodeStatusOK(
-      String? epc, String? encodeStatus, String accessToken) async {
+      String? epc, String? encodeStatus, String accessToken,String? tid) async {
     try {
       return await urlConstans.getUrl().then((value) async {
         (_dio.httpClientAdapter as DefaultHttpClientAdapter)
@@ -191,6 +192,7 @@ class NetworkManager extends NetworkManagerBase {
         final response = await _dio.post('$value/encode/encode_status', data: {
           "access_token": accessToken,
           "epc": epc,
+          "tid":tid,
           "encode_status": encodeStatus
         });
 
@@ -210,8 +212,7 @@ class NetworkManager extends NetworkManagerBase {
             return encodeStatus;
           }
         } else {
-          if (response.data.toString().contains("TOKEN WRONG"))
-          {
+          if (response.data.toString().contains("TOKEN WRONG")) {
             _tokenExpiredLogout();
             return null;
           }
@@ -230,7 +231,7 @@ class NetworkManager extends NetworkManagerBase {
         (_dio.httpClientAdapter as DefaultHttpClientAdapter)
             .onHttpClientCreate = (HttpClient dioClient) {
           dioClient.badCertificateCallback =
-          ((X509Certificate cert, String host, int port) => true);
+              ((X509Certificate cert, String host, int port) => true);
           return dioClient;
         };
 
@@ -247,15 +248,13 @@ class NetworkManager extends NetworkManagerBase {
           final serialNumber = SerialNumber.fromJson(response.data);
 
           if (serialNumber.code == 200) {
-
             return serialNumber;
           } else {
             Dialogs.showFailed(serialNumber.err!.message!);
             return serialNumber;
           }
         } else {
-          if (response.data.toString().contains("TOKEN WRONG"))
-          {
+          if (response.data.toString().contains("TOKEN WRONG")) {
             _tokenExpiredLogout();
             return null;
           }
@@ -264,6 +263,166 @@ class NetworkManager extends NetworkManagerBase {
     } catch (e) {
       debugPrint("Get locations error: $e");
       return null;
+    }
+  }
+
+  //You can create web server snippet for http request with dio
+  @override
+  Future<CreateSuccess?> addInventory(String title, String accessToken) async {
+    try {
+      return await urlConstans.getUrl().then((value) async {
+        (_dio.httpClientAdapter as DefaultHttpClientAdapter)
+            .onHttpClientCreate = (HttpClient dioClient) {
+          dioClient.badCertificateCallback =
+              ((X509Certificate cert, String host, int port) => true);
+          return dioClient;
+        };
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        final response = await _dio.post('$value/inventories/create', data: {
+          "access_token": accessToken,
+          "inventory_name": title,
+          "device_id": androidInfo.id,
+          "device_name": androidInfo.device
+        });
+
+        debugPrint("Response: ${response.toString()}");
+
+        debugPrint("Res:${response.statusCode}");
+
+        if (response.statusCode == 200 &&
+            !response.data.toString().contains("TOKEN WRONG")) {
+          final createResult = CreateSuccess.fromJson(response.data);
+
+          if (createResult.code == 200) {
+            if (createResult.data!) {
+              Dialogs.showSuccess("Başarılı bir şekilde oluşturuldu");
+            } else {
+              Dialogs.showFailed("Bir şeyler ters gitti!");
+            }
+
+            return createResult;
+          } else {
+            Dialogs.showFailed(createResult.err!.message!);
+            return createResult;
+          }
+        } else {
+          if (response.data.toString().contains("TOKEN WRONG")) {
+            _tokenExpiredLogout();
+            return null;
+          }
+        }
+      });
+    } catch (e) {
+      debugPrint("addInventory error: $e");
+      return null;
+    }
+  }
+
+  @override
+  Future<InventoryList?> getInventories(String accessToken) async {
+    try {
+      return await urlConstans.getUrl().then((value) async {
+        (_dio.httpClientAdapter as DefaultHttpClientAdapter)
+            .onHttpClientCreate = (HttpClient dioClient) {
+          dioClient.badCertificateCallback =
+              ((X509Certificate cert, String host, int port) => true);
+          return dioClient;
+        };
+
+        final response = await _dio.post('$value/inventories/list', data: {
+          "access_token": accessToken,
+        });
+
+        debugPrint("Response Data: ${response.data.toString()}");
+
+        debugPrint("Res:${response.statusCode}");
+
+        if (response.statusCode == 200 &&
+            !response.data.toString().contains("TOKEN WRONG")) {
+          final inventoryListResult = InventoryList.fromJson(response.data);
+
+          if (inventoryListResult.code == 200) {
+            return inventoryListResult;
+          } else {
+            Dialogs.showFailed(inventoryListResult.err!.message!);
+            return inventoryListResult;
+          }
+        } else {
+          if (response.data.toString().contains("TOKEN WRONG")) {
+            _tokenExpiredLogout();
+            return null;
+          }
+        }
+      });
+    } catch (e) {
+      debugPrint("addInventory error: $e");
+      return null;
+    }
+  }
+
+/*{
+    "access_token"  : "{{access_token}}",
+    "inventories_id"      : "8",
+    "device_id":"1111",
+    "device_name":"test_zebra",
+    "inventories_close":"0",
+    "tag_list" : [
+        {
+            "epc" : "9080000000072FEB42C98E220001E240",
+            "read_date": "2022-12-04 21:32:43"
+        },
+        {
+            "epc" : "9080000000072FEB42C98E230001E240",
+            "read_date": "2022-12-04 21:32:43"
+        },
+         {
+            "epc" : "9080000000072FEB42C98E240001E240",
+            "read_date": "2022-12-04 21:32:43"
+        }
+    ]
+}*/
+  @override
+  Future<void> sendTags(String accessToken, Inventory inventory,List<dynamic> readEpcList,bool saveAndClose) async {
+    try {
+      return await urlConstans.getUrl().then((value) async {
+        (_dio.httpClientAdapter as DefaultHttpClientAdapter)
+            .onHttpClientCreate = (HttpClient dioClient) {
+          dioClient.badCertificateCallback =
+              ((X509Certificate cert, String host, int port) => true);
+          return dioClient;
+        };
+        AndroidDeviceInfo androidInfo = await _deviceInfo.androidInfo;
+        Map<String,dynamic> data = {
+        "access_token": accessToken,
+        "inventories_id": inventory.iD,
+        "device_id":androidInfo.id,
+        "device_name":androidInfo.device,
+        "inventories_close": saveAndClose ? "1" : "0",
+        "tag_list" : readEpcList
+        };
+        debugPrint(data.toString());
+        final response = await _dio.post('$value/inventories/record', data: data);
+
+        debugPrint("Response: ${response.toString()}");
+
+        debugPrint("Res:${response.statusCode}");
+
+        if (response.statusCode == 200 &&
+            !response.data.toString().contains("TOKEN WRONG")) {
+
+
+
+        } else {
+          if (response.data.toString().contains("TOKEN WRONG")) {
+            _tokenExpiredLogout();
+
+          }
+        }
+      });
+    } catch (e) {
+      debugPrint("addInventory error: $e");
+
     }
   }
 }

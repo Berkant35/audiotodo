@@ -4,11 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.uniqueid.kumas_topu_v2.enums.RFIDModes;
 import com.uniqueid.kumas_topu_v2.enums.ReaderModes;
 import com.uniqueid.kumas_topu_v2.enums.TriggerModes;
 import com.uniqueid.kumas_topu_v2.enums.WriteErrors;
@@ -33,13 +37,18 @@ import com.zebra.rfid.api3.STOP_TRIGGER_TYPE;
 import com.zebra.rfid.api3.TagData;
 import com.zebra.rfid.api3.TriggerInfo;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.EventListener;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel;
 
 public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
+
 
     private static final String TAG = "ZebraReaderSDK";
 
@@ -269,6 +278,9 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
     }
 
 
+
+
+
     public static class EventHandler implements RfidEventsListener {
 
 
@@ -277,22 +289,43 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
             // Recommended to use new method getReadTagsEx for better performance in case of large tag population
 
 
-            myTags = reader.Actions.getReadTags(100);
+            myTags = reader.Actions.getReadTags(500);
 
             if (myTags != null) {
                 for (TagData tag : myTags) {
                     Log.d("ZEBRA_MAIN", "Tag ID " + tag.getTagID());
                     for (TagData myTag : myTags) {
 
+
                         String perTag = myTag.getTagID();
 
+
                         if (!tempTags.contains(perTag)) {
+
+
                             tempTags.add(perTag);
                             if (context.allAttributeMode.currentReadMode == ReaderModes.INVENTORY_MODE
                                     &&
                                     context.currentInventoryEventSink != null
                             ) {
-                                context.currentInventoryEventSink.success(perTag);
+
+                                Log.i(TAG, "eventReadNotify: Sending to flutter...");
+                                try {
+                                    context.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            context.currentInventoryEventSink.success(perTag);
+                                        }
+                                    });
+                                } catch (Exception ee) {
+                                    Log.e(TAG, "eventReadNotifyErr: " + ee);
+                                }
+                            } else {
+                                if (context.currentInventoryEventSink == null) {
+                                    Log.e(TAG, "eventReadNotify: currentInventoryEventSink null");
+                                } else {
+                                    Log.e(TAG, "eventReadNotify: Not Inventory Mode!");
+                                }
                             }
                         }
                     }
@@ -328,20 +361,21 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
     // sadece ortak kaynakları manipüle edebilecek işlemleri içermelidir."
 
 
-    synchronized public void initializeInventory(EventChannel.EventSink eventSink)
-    {
+    synchronized public void initializeInventory(EventChannel.EventSink eventSink) {
         Antennas.AntennaRfConfig antennaRfConfig = null;
         try {
             antennaRfConfig = reader.Config.Antennas.getAntennaRfConfig(1);
         } catch (InvalidUsageException | OperationFailureException e) {
             e.printStackTrace();
         }
-        assert antennaRfConfig != null;
-        antennaRfConfig.setrfModeTableIndex(0);
-        antennaRfConfig.setTari(0);
-        antennaRfConfig.setTransmitPowerIndex(300);
-        mainEventChannelSink = eventSink;
-        tempTags.clear();
+        if(antennaRfConfig != null){
+            antennaRfConfig.setrfModeTableIndex(0);
+            antennaRfConfig.setTari(0);
+            antennaRfConfig.setTransmitPowerIndex(300);
+            mainEventChannelSink = eventSink;
+            tempTags.clear();
+        }
+
     }
 
 
@@ -351,10 +385,38 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
             return;
         Log.i("READER_CONNECT_CHECK", "connected!");
         try {
-            reader.Actions.Inventory.perform();
+            if (context.allAttributeMode.rfidModes != RFIDModes.INVENTORY) {
+                reader.Actions.Inventory.perform();
+            }
         } catch (InvalidUsageException | OperationFailureException e) {
             e.printStackTrace();
         }
+    }
+
+
+    synchronized public void clearTempTags(){
+        if(tempTags != null){
+            tempTags.clear();
+        }
+    }
+
+    private TagData readBank(String tagID, MEMORY_BANK memory_bank) throws InvalidUsageException, OperationFailureException {
+
+        TagAccess tagAccess = new TagAccess();
+        TagAccess.ReadAccessParams readAccessParams =
+                tagAccess.new ReadAccessParams();
+        readAccessParams.setMemoryBank(memory_bank);
+        TagData tagData = null;
+        try {
+            tagData  =  reader.Actions.TagAccess.readWait(tagID,readAccessParams,null);
+
+        }catch (OperationFailureException e){
+            Log.e(TAG, "readBankError(getVendorMessage):"+e.getVendorMessage());
+            Log.e(TAG, "readBankError:"+e.getMessage());
+            Log.e(TAG, "readBankError(getResults):"+e.getResults().toString());
+        }
+
+        return  tagData;
     }
 
     synchronized public void writeData(String epc) {
@@ -371,11 +433,11 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
             // set the configuration
 
 
+            reader.Config.Antennas.setAntennaRfConfig(1, antennaRfConfig);
 
-            reader.Config.Antennas.setAntennaRfConfig(1,antennaRfConfig);
-
-            Log.i(TAG, "writeData PRE INVENTORY:"+reader.Config.Antennas.getAntennaConfig(1)
-                    .getTransmitPowerIndex());;
+            Log.i(TAG, "writeData PRE INVENTORY:" + reader.Config.Antennas.getAntennaConfig(1)
+                    .getTransmitPowerIndex());
+            ;
 
 
             reader.Actions.Inventory.perform();
@@ -388,11 +450,12 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
             antennaRfConfig.setTari(0);
             antennaRfConfig.setTransmitPowerIndex(300);
 
-            reader.Config.Antennas.setAntennaRfConfig(1,antennaRfConfig);
+            reader.Config.Antennas.setAntennaRfConfig(1, antennaRfConfig);
 
-            Log.i(TAG, "writeData AFTER INVENTORY:"+reader.Config.Antennas
+            Log.i(TAG, "writeData AFTER INVENTORY:" + reader.Config.Antennas
                     .getAntennaConfig(1)
-                    .getTransmitPowerIndex());;
+                    .getTransmitPowerIndex());
+            ;
 
 
             if (tempTags.size() == 1) {
@@ -402,92 +465,172 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
                 writeAccessParams.setAccessPassword(0);
                 writeAccessParams.setMemoryBank(MEMORY_BANK.MEMORY_BANK_EPC);
 
-                writeAccessParams.setOffset(2);
+                writeAccessParams.setOffset(1);
 
 
                 if (epc != null) {
-                    writeAccessParams.setWriteDataLength(Integer.parseInt(String.valueOf(epc.length() / 4)));
-                    Log.i(TAG, "setWriteDataLength: " + (epc.length() / 4));
-                    writeAccessParams.setWriteData(epc);
-                    Log.i(TAG, "epc: " + epc);
+                    writeAccessParams.setWriteDataLength(9);
+                    String prefixString = "4000";
+                    String prefixWithEpc = prefixString + epc;
+                    Log.i(TAG, "setWriteDataLength: " + (prefixWithEpc.length() / 4));
+                    writeAccessParams.setWriteData(prefixWithEpc);
+                    Log.i(TAG, "epc: " + prefixWithEpc);
                     writeAccessParams.setWriteRetries(3);
+
                     Log.i(TAG, "Last seen epc:" + tempTags.get(0));
+
+
 
                     reader.Actions.TagAccess.writeWait(tempTags.get(0), writeAccessParams, null, null);
 
-                    MediaPlayer.create(context, R.raw.barcodebeep).start();
+                    tempTags.clear();
+                    reader.Actions.Inventory.perform();
 
-                    if (mainMethodChannelResult != null) {
-                        mainMethodChannelResult.success(Constants.methodChannelResultOk);
-                        mainMethodChannelResult = null;
-                    } else if (context.currentEventSink != null) {
-                        context.currentEventSink.success(Constants.methodChannelResultOk);
+                    Thread.sleep(1000);
+
+                    reader.Actions.Inventory.stop();
+
+                    if (tempTags.contains(epc)) {
+
+                        String tid = null;
+
+                        TagData tagDataForTID = readBank(epc,MEMORY_BANK.MEMORY_BANK_TID);
+
+                        tid = tagDataForTID.getMemoryBankData();
+
+
+                        HashMap<String, Object> resultOKObject = new HashMap<String, Object>();
+
+                        resultOKObject.put("tid",tid);
+                        resultOKObject.put("status",Constants.methodChannelResultOk);
+                        Gson gson = new GsonBuilder().create();
+                        String jsonString = gson.toJson(resultOKObject);
+
+                        MediaPlayer.create(context, R.raw.barcodebeep).start();
+
+                        if (mainMethodChannelResult != null) {
+                            mainMethodChannelResult.success(jsonString);
+                            mainMethodChannelResult = null;
+                        } else if (context.currentEventSink != null) {
+                            context.currentEventSink.success(jsonString);
+                        } else {
+                            if (context.currentResult != null) {
+                                context.currentResult.success(jsonString);
+                                context.currentResult = null;
+                            }
+                        }
                     } else {
-                        if (context.currentResult != null) {
-                            context.currentResult.success(Constants.methodChannelResultOk);
-                            context.currentResult = null;
+                        HashMap<String, Object> resultFailedObject = new HashMap<String, Object>();
+
+                        resultFailedObject.put("tid","");
+                        resultFailedObject.put("status",Constants.methodChannelResultFailed);
+                        Gson gson = new GsonBuilder().create();
+                        String jsonString = gson.toJson(resultFailedObject);
+
+                        MediaPlayer.create(context, R.raw.serror).start();
+
+                        if (mainMethodChannelResult != null) {
+                            mainMethodChannelResult.success(jsonString);
+                            mainMethodChannelResult = null;
+                        } else if (context.currentEventSink != null) {
+                            context.currentEventSink.success(jsonString);
+                        } else {
+                            if (context.currentResult != null) {
+                                context.currentResult.success(jsonString);
+                                context.currentResult = null;
+                            }
                         }
                     }
 
+
                 } else {
+
+                    HashMap<String, Object> resultSomethingWentWrongObject = new HashMap<String, Object>();
+
+                    resultSomethingWentWrongObject.put("tid","");
+                    resultSomethingWentWrongObject.put("status",WriteErrors.SOMETHING_WENT_WRONG.name());
+
+                    Gson gson = new GsonBuilder().create();
+                    String jsonString = gson.toJson(resultSomethingWentWrongObject);
                     if (mainMethodChannelResult != null) {
-                        mainMethodChannelResult.success(WriteErrors.SOMETHING_WENT_WRONG.name());
+                        mainMethodChannelResult.success(jsonString);
                         mainMethodChannelResult = null;
                     } else if (context.currentEventSink != null) {
-                        context.currentEventSink.success(WriteErrors.SOMETHING_WENT_WRONG.name());
+                        context.currentEventSink.success(jsonString);
                     } else {
                         if (context.currentResult != null) {
-                            context.currentResult.success(WriteErrors.SOMETHING_WENT_WRONG.name());
+                            context.currentResult.success(jsonString);
                             context.currentResult = null;
                         }
                     }
                 }
-
 
 
                 ///???????
 
 
             } else if (tempTags.size() == 0) {
+                HashMap<String, Object> resultNotFoundTagObject = new HashMap<String, Object>();
+
+                resultNotFoundTagObject.put("tid","");
+                resultNotFoundTagObject.put("status",WriteErrors.NOT_FOUND_TAG.name());
+
+
+                Gson gson = new GsonBuilder().create();
+                String jsonString = gson.toJson(resultNotFoundTagObject);
                 MediaPlayer.create(context, R.raw.serror).start();
                 if (mainMethodChannelResult != null) {
-                    mainMethodChannelResult.success(WriteErrors.NOT_FOUND_TAG.name());
+                    mainMethodChannelResult.success(jsonString);
                     mainMethodChannelResult = null;
                 } else if (context.currentEventSink != null) {
-                    context.currentEventSink.success(WriteErrors.NOT_FOUND_TAG.name());
+                    context.currentEventSink.success(jsonString);
                 } else {
                     if (context.currentResult != null) {
-                        context.currentResult.success(WriteErrors.NOT_FOUND_TAG.name());
+                        context.currentResult.success(jsonString);
                         context.currentResult = null;
                     }
                 }
             } else {
+                HashMap<String, Object> resultTooManyTagObject = new HashMap<String, Object>();
+
+                resultTooManyTagObject.put("tid","");
+                resultTooManyTagObject.put("status",WriteErrors.TOO_MANY_TAG.name());
                 //Error Code 1: 1'den fazla etiket
+                Gson gson = new GsonBuilder().create();
+                String jsonString = gson.toJson(resultTooManyTagObject);
                 MediaPlayer.create(context, R.raw.serror).start();
 
                 if (mainMethodChannelResult != null) {
-                    mainMethodChannelResult.success(WriteErrors.TOO_MANY_TAG.name());
+                    mainMethodChannelResult.success(jsonString);
                     mainMethodChannelResult = null;
                 } else if (context.currentEventSink != null) {
-                    context.currentEventSink.success(WriteErrors.TOO_MANY_TAG.name());
+                    context.currentEventSink.success(jsonString);
                 } else {
                     if (context.currentResult != null) {
-                        context.currentResult.success(WriteErrors.TOO_MANY_TAG.name());
+                        context.currentResult.success(jsonString);
                         context.currentResult = null;
                     }
                 }
             }
         } catch (OperationFailureException | InvalidUsageException | InterruptedException e) {
             e.printStackTrace();
+            HashMap<String, Object> resultSomethingWentWrongObject = new HashMap<String, Object>();
+
+            resultSomethingWentWrongObject.put("tid","");
+            resultSomethingWentWrongObject.put("status",WriteErrors.SOMETHING_WENT_WRONG.name());
+
+            Gson gson = new GsonBuilder().create();
+            String jsonString = gson.toJson(resultSomethingWentWrongObject);
+
             MediaPlayer.create(context, R.raw.serror).start();
             if (mainMethodChannelResult != null) {
-                mainMethodChannelResult.success(WriteErrors.SOMETHING_WENT_WRONG.name());
+                mainMethodChannelResult.success(jsonString);
                 mainMethodChannelResult = null;
             } else if (context.currentEventSink != null) {
-                context.currentEventSink.success(WriteErrors.SOMETHING_WENT_WRONG.name());
+                context.currentEventSink.success(jsonString);
             } else {
                 if (context.currentResult != null) {
-                    context.currentResult.success(WriteErrors.SOMETHING_WENT_WRONG.name());
+                    context.currentResult.success(jsonString);
                     context.currentResult = null;
                 }
             }
@@ -526,11 +669,12 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
     synchronized public void stopInventory() {
         // check reader connection
         if (!isReaderConnected())
-
             return;
         try {
-            reader.Actions.Inventory.stop();
-            tempTags.clear();
+            if (context.allAttributeMode.rfidModes != RFIDModes.STOPPED_INVENTORY) {
+                reader.Actions.Inventory.stop();
+                tempTags.clear();
+            }
         } catch (InvalidUsageException e) {
             e.printStackTrace();
         } catch (OperationFailureException e) {

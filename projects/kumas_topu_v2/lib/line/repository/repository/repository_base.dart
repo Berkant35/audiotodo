@@ -6,6 +6,7 @@ import 'package:kumas_topu/models/create_result_epc.dart';
 import 'package:kumas_topu/models/serial_number.dart';
 
 import '../../../models/encode_standarts.dart';
+import '../../../models/inventory_list.dart';
 import '../../../models/login_success.dart';
 import '../../../utilities/init/navigation/navigation_constants.dart';
 import '../../../utilities/init/navigation/navigation_service.dart';
@@ -100,6 +101,56 @@ class Repository extends LocaleBase {
       return localService.getToken().then((token) async {
         if (token != null) {
           return await networkManager!.getSerialFromDatabase(token);
+        }
+      });
+    } catch (e) {
+      debugPrint('Error: $e');
+      return null;
+    }
+  }
+
+  Future<bool> addInventory(String title) async {
+    try {
+      return localService.getToken().then((token) async {
+        if (token != null) {
+          return await networkManager!.addInventory(title, token).then((value) {
+            return value!.data!;
+          });
+        } else {
+          return false;
+        }
+      });
+    } catch (e) {
+      debugPrint('Error: $e');
+      return false;
+    }
+  }
+
+  Future<void> sendTags(
+      Inventory inventory, List<dynamic> readEpcList, bool saveAndClose) async {
+    try {
+      return localService.getToken().then((token) async {
+        if (token != null) {
+          return await networkManager!
+              .sendTags(token, inventory, readEpcList, saveAndClose)
+              .then((value) {});
+        }
+      });
+    } catch (e) {
+      debugPrint('Error: $e');
+      return null;
+    }
+  }
+
+  Future<InventoryList?> getInventoryList() async {
+    try {
+      return localService.getToken().then((token) async {
+        if (token != null) {
+          return await networkManager!.getInventories(token).then((value) {
+            return value!;
+          });
+        } else {
+          return null;
         }
       });
     } catch (e) {

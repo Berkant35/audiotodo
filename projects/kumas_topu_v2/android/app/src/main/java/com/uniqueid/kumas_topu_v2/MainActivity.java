@@ -1,6 +1,9 @@
 package com.uniqueid.kumas_topu_v2;
 
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -29,10 +32,10 @@ public class MainActivity extends FlutterActivity {
     CustomBarcodeManager customBarcodeManager = null;
     MethodChannel.Result currentResult;
 
-    MethodCall currentCall;
-    MethodCall listenCurrentCall;
-    EventChannel.EventSink currentEventSink;
-    EventChannel.EventSink currentInventoryEventSink;
+    public static MethodCall currentCall;
+    public static MethodCall listenCurrentCall;
+    public static EventChannel.EventSink currentEventSink;
+    public  EventChannel.EventSink currentInventoryEventSink;
     AllAttributeMode allAttributeMode = new AllAttributeMode();
 
     //Reader Fonksiyonları
@@ -43,6 +46,12 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        Log.i(TAG, "onCreate(IP):"+ip);
+
         customBarcodeManager = new CustomBarcodeManager();
         customBarcodeManager.onCreateBarcodeManager(this);
 
@@ -104,10 +113,26 @@ public class MainActivity extends FlutterActivity {
                                     zebraReaderSDK.initializeInventory(currentInventoryEventSink);
                                     break;
                                 case Constants.startInventory:
+                                    Log.i(TAG, "configureFlutterEngine: Start Inventory...");
                                     zebraReaderSDK.performInventory();
+                                    allAttributeMode.rfidModes = RFIDModes.INVENTORY;
+
+                                    if(currentInventoryEventSink != null){
+                                        currentInventoryEventSink.success("1");
+                                    }
+                                    break;
+                                case Constants.clearInventory:
+                                    Log.i(TAG, "configureFlutterEngine: Start Inventory...");
+                                    zebraReaderSDK.clearTempTags();
+
                                     break;
                                 case Constants.stopInventory:
+                                    Log.i(TAG, "configureFlutterEngine: Stop Inventory...");
                                     zebraReaderSDK.stopInventory();
+                                    allAttributeMode.rfidModes = RFIDModes.STOPPED_INVENTORY;
+                                    if(currentInventoryEventSink != null){
+                                        currentInventoryEventSink.success("-1");
+                                    }
                                     break;
                             }
                         }
@@ -157,7 +182,6 @@ public class MainActivity extends FlutterActivity {
                     public void onListen(Object listening, EventChannel.EventSink eventSink) {
                         currentEventSink = eventSink;
                         allAttributeMode.currentReadMode = ReaderModes.WRITE_MODE;
-
                         Log.i(TAG, "onListen: TRIGGERED!");
                     }
 
@@ -173,13 +197,15 @@ public class MainActivity extends FlutterActivity {
                     @Override
                     public void onListen(Object listening, EventChannel.EventSink eventSink) {
                         Log.i(TAG, "onListen: Listening...xxx");
-                        allAttributeMode.currentReadMode = ReaderModes.INVENTORY_MODE;
                         currentInventoryEventSink = eventSink;
+                        allAttributeMode.currentReadMode = ReaderModes.INVENTORY_MODE;
                         zebraReaderSDK.initializeInventory(currentInventoryEventSink);
+
                     }
 
                     @Override
                     public void onCancel(Object listening) {
+                        Log.i(TAG, "onCancel: Cancel listen!");
                     }
 
                 }
@@ -187,6 +213,13 @@ public class MainActivity extends FlutterActivity {
 
 
     }
+
+
+
+    public EventChannel.EventSink getCurrentInventoryEventSink(){
+        return currentInventoryEventSink;
+    }
+
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -212,22 +245,37 @@ public class MainActivity extends FlutterActivity {
                 Log.i(TAG, "onKeyUp(WRITE_DATA_GENERATED_EPC):"+generatedEpc);
                 zebraReaderSDK.writeData(generatedEpc);
             }
-        }else if(allAttributeMode.currentReadMode == ReaderModes.INVENTORY_MODE
-                && keyCode == 102 && allAttributeMode.currentTriggerMode != TriggerModes.PRESSING){
+        }
 
+            else if(allAttributeMode.currentReadMode == ReaderModes.INVENTORY_MODE
+                && keyCode == 102 && allAttributeMode.currentTriggerMode != TriggerModes.PRESSING)
+        {
 
             allAttributeMode.currentTriggerMode = TriggerModes.PRESSING;
-            if(allAttributeMode.rfidModes == RFIDModes.INVENTORY){
+
+            Log.i(TAG, "onKeyUpRFIDMODES: "+allAttributeMode.rfidModes.name());
+
+            if(allAttributeMode.rfidModes == RFIDModes.INVENTORY)
+            {
+                Log.i(TAG, "onKeyUp: INVENTORY MODE!");
+
                 currentInventoryEventSink.success("-1");
+
                 zebraReaderSDK.stopInventory();
-            }else{
+                allAttributeMode.rfidModes = RFIDModes.STOPPED_INVENTORY;
+
+            }else
+            {
+                Log.i(TAG, "onKeyUp: NOT INVENTORY MODE!");
                 currentInventoryEventSink.success("1");
                 zebraReaderSDK.performInventory();
+                allAttributeMode.rfidModes = RFIDModes.INVENTORY;
             }
         }
         Log.i(TAG, "onKeyUp: TRIGGERED!!!!!"+allAttributeMode.currentReadMode.name());
         Log.i(TAG, "onKeyUp: TRIGGERED!!!!!"+allAttributeMode.currentTriggerMode.name());
         Log.i(TAG, "onKeyUp: TRIGGERED!!!!!"+keyCode);
+
 
 
         return super.onKeyUp(keyCode, event);

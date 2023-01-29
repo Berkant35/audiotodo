@@ -127,37 +127,37 @@ extension ThemeValueExtension on BuildContext {
       fontFamily: ApplicationConstants.customFontFamily);
 
   static TextStyle get headline6 => TextStyle(
-      fontSize:  18.sp ,
+      fontSize:  22.sp ,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.15.sp,
       fontFamily: ApplicationConstants.customFontFamily);
 
   static TextStyle get subtitle => TextStyle(
-      fontSize:  16.sp ,
+      fontSize:  20.sp ,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.15.sp,
       fontFamily: ApplicationConstants.customFontFamily);
 
   static TextStyle get subtitle2 => TextStyle(
-      fontSize:  14.sp ,
+      fontSize:  18.sp ,
       fontWeight: FontWeight.w700,
       letterSpacing: 0.1.sp,
       fontFamily: ApplicationConstants.customFontFamily);
 
   static TextStyle get subtitle3 => TextStyle(
-      fontSize:  14.sp ,
+      fontSize:  16.sp ,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.5.sp,
       fontFamily: ApplicationConstants.customFontFamily);
 
   static TextStyle get subtitle4 => TextStyle(
-      fontSize:  12.sp ,
+      fontSize:  14.sp ,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.25.sp,
       fontFamily: ApplicationConstants.customFontFamily);
 
   static TextStyle get subtitle5 => TextStyle(
-      fontSize:  13.sp ,
+      fontSize:  12.sp ,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.1.sp,
       fontFamily: ApplicationConstants.customFontFamily);
@@ -169,7 +169,7 @@ extension ThemeValueExtension on BuildContext {
       fontFamily: ApplicationConstants.customFontFamily);
 
   static TextStyle get body2 => TextStyle(
-      fontSize:  13.sp ,
+      fontSize:  10.sp ,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.25.sp,
       fontFamily: ApplicationConstants.customFontFamily);

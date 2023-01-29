@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/ui/encode/select_standart.dart';
 import 'package:kumas_topu/utilities/components/custom_svg.dart';
-import 'package:kumas_topu/utilities/components/title_app_bar.dart';
+import 'package:kumas_topu/utilities/components/appbars/title_app_bar.dart';
 import 'package:kumas_topu/utilities/constants/app/enums.dart';
 import 'package:kumas_topu/utilities/init/navigation/navigation_constants.dart';
 import 'package:kumas_topu/utilities/init/navigation/navigation_service.dart';
@@ -37,6 +37,12 @@ class _EncodeMainState extends ConsumerState<EncodeMain> {
         leadingWidget: IconButton(
           icon: Icon(Icons.arrow_back, size: 4.h),
           onPressed: () {
+            var standart = ref.read(currentBarcodeStandartProvider);
+            standart = null;
+            ref
+                .read(currentBarcodeStandartProvider.notifier)
+                .changeState(standart);
+
             NavigationService.instance
                 .navigateToPageClear(path: NavigationConstants.mainPage);
           },
@@ -47,13 +53,13 @@ class _EncodeMainState extends ConsumerState<EncodeMain> {
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CustomSvg(
+                  children: const [
+                    /*CustomSvg(
                       imagepath: ImagePath.scanSvg,
                       width: 30.w,
-                    ),
-                    const SelectStandart(),
-                    const CurrentBarcodeInfo()
+                    ),*/
+                    SelectStandart(),
+                    CurrentBarcodeInfo()
                   ],
                 ),
               ),

@@ -2,6 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/line/viewmodel/current_barcode_info_manager.dart';
 import 'package:kumas_topu/line/viewmodel/current_barcode_standart.dart';
+import 'package:kumas_topu/line/viewmodel/current_inventory_manager.dart';
 import 'package:kumas_topu/line/viewmodel/login_state_manager.dart';
 import 'package:kumas_topu/line/viewmodel/operation_work_manager.dart';
 import 'package:kumas_topu/line/viewmodel/rfid_state_manager.dart';
@@ -12,6 +13,7 @@ import 'package:kumas_topu/line/viewmodel/tags_manager.dart';
 import 'package:kumas_topu/line/viewmodel/trigger_mode.dart';
 import 'package:kumas_topu/line/viewmodel/view_model.dart';
 import 'package:kumas_topu/line/viewmodel/write_mode_manager.dart';
+import 'package:kumas_topu/models/current_inventory.dart';
 import 'package:kumas_topu/models/encode_standarts.dart';
 
 import '../models/barcode_info.dart';
@@ -74,3 +76,7 @@ StateNotifierProvider<TriggerModeManager, TriggerModeStatus>((ref) {
   return TriggerModeManager(TriggerModeStatus.IDLE);
 });
 
+final currentInventoryProvider=
+StateNotifierProvider<CurrentInventoryState, CurrentInventory?>((ref) {
+  return CurrentInventoryState(null);
+});

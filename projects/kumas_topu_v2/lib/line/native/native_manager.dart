@@ -75,25 +75,39 @@ class NativeManager extends NativeInterface {
 
   @override
   Future<void> inventoryAndThenGetTags(WidgetRef ref) async {
-    _inventoryEventChannel
-        .receiveBroadcastStream(BroadCastStates.inventoryAndGetTag.name)
-        .listen((event) {
-      //Clear Option
-      if (event.toString() == '-1') {
-        if (ref.read(scanStopStateProvider) == ScanModes.scan) {
-          ref.read(scanStopStateProvider.notifier).changeState(ScanModes.stop);
+    try {
+      _inventoryEventChannel.receiveBroadcastStream().listen((event) {
+        debugPrint("Flutter Event Check!!!!: ${event.toString()}");
+        //Clear Option
+        if (event.toString() == '-1') {
+          if (ref.read(scanStopStateProvider) == ScanModes.scan) {
+            ref
+                .read(scanStopStateProvider.notifier)
+                .changeState(ScanModes.stop);
+          }
+        } else if (event.toString() == "1") {
+          if (ref.read(scanStopStateProvider) == ScanModes.stop ||
+              ref.read(scanStopStateProvider) == ScanModes.idle) {
+            ref
+                .read(scanStopStateProvider.notifier)
+                .changeState(ScanModes.scan);
+          }
+        } else {
+          if (ref
+              .read(currentInventoryProvider)!
+              .inventory!
+              .prefix!
+              .split(",")
+              .contains(event.toString().substring(0, 4))) {
+            ref
+                .read(currentInventoryProvider.notifier)
+                .addTag(event, DateTime.now().toUtc().toString());
+          }
         }
-      } else if(event.toString() == "1"){
-        if (ref.read(scanStopStateProvider) == ScanModes.stop ||
-            ref.read(scanStopStateProvider) == ScanModes.idle) {
-          ref.read(scanStopStateProvider.notifier).changeState(ScanModes.scan);
-        }
-
-        //UHFTagInfo perTag = UHFTagInfo.fromJson(jsonDecode(event));
-
-        debugPrint("Flutter: $event");
-      }
-    });
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   @override
@@ -103,7 +117,7 @@ class NativeManager extends NativeInterface {
 
   @override
   Future<void> startScan() async {
-    await _methodChannel.invokeMethod(InvokeMethods.continueInventory.name);
+    await _methodChannel.invokeMethod(InvokeMethods.startInventory.name);
   }
 
   @override
@@ -135,7 +149,7 @@ class NativeManager extends NativeInterface {
   }
 
   @override
-  Future<void> scanBarcode(WidgetRef ref,bool isGoToFirstPage) async {
+  Future<void> scanBarcode(WidgetRef ref, bool isGoToFirstPage) async {
     var result =
         await _methodChannel.invokeMethod(InvokeMethods.scanBarcode.name);
 
@@ -146,7 +160,7 @@ class NativeManager extends NativeInterface {
 
     ref.read(currentBarcodeInfoProvider.notifier).changeState(barcodeInfo);
 
-    scanBarcode(ref,false);
+    scanBarcode(ref, false);
   }
 
   Future<void> scanBarcodeButton(WidgetRef ref) async {
@@ -157,7 +171,7 @@ class NativeManager extends NativeInterface {
     //var barcodeJson = json.decode(result.toString());
     var barcodeInfo = BarcodeInfo(barcodeInfo: result);
     ref.read(currentBarcodeInfoProvider.notifier).changeState(barcodeInfo);
-    scanBarcode(ref,false);
+    scanBarcode(ref, false);
   }
 
   @override
@@ -165,15 +179,13 @@ class NativeManager extends NativeInterface {
     await _methodChannel.invokeMethod(InvokeMethods.singleInventory.name);
   }
 
-
-
   @override
   Future<bool> barcodeModeOn(WidgetRef ref) async {
     var result =
         await _methodChannel.invokeMethod(InvokeMethods.barcodeModeOn.name);
     if (result == "CONNECTED") {
       Dialogs.showSuccess("Barkod Aktif!");
-      scanBarcode(ref,false);
+      scanBarcode(ref, false);
       return true;
     } else {
       Dialogs.showFailed("Barkoda Bağlanılamadı!");
@@ -188,7 +200,7 @@ class NativeManager extends NativeInterface {
     _eventChannel
         .receiveBroadcastStream(BroadCastStates.listenTriggerForWrite.name)
         .listen((event) {
-          debugPrint(event.toString()+'<---event');
+      debugPrint('$event<---event');
       if (event == TriggerPressStatus.PRESSING.name) {
         ref
             .read(loginButtonStateProvider.notifier)
@@ -202,7 +214,11 @@ class NativeManager extends NativeInterface {
             .read(loginButtonStateProvider.notifier)
             .changeState(LoadingStates.loaded);
       } else {
-        var getResult = showDialogFromSuccessOrWrite(event);
+        Map<String, dynamic> valueMap = json.decode(event.toString());
+
+        var getResult = showDialogFromSuccessOrWrite(valueMap["status"]);
+
+        debugPrint("Flutter TID:" + valueMap['tid']);
 
         if (getResult) {
           ref
@@ -216,7 +232,7 @@ class NativeManager extends NativeInterface {
                   .read(viewModelStateProvider.notifier)
                   .repository
                   .networkManager!
-                  .encodeStatusOK(epc, "1", token)
+                  .encodeStatusOK(epc, "1", token, valueMap['tid'])
                   .then((value) {
                 goFirstPage(value, ref);
               });
@@ -229,12 +245,9 @@ class NativeManager extends NativeInterface {
 
   Future<void> goFirstPage(EncodeStatus? value, WidgetRef ref) async {
     if (value != null && value.code == 200) {
-      NavigationService.instance.navigateToPageClear(
-          path: NavigationConstants.encodeMainPage
-      );
-      scanBarcode(
-          ref,true);
-
+      NavigationService.instance
+          .navigateToPageClear(path: NavigationConstants.encodeMainPage);
+      scanBarcode(ref, true);
     }
   }
 
@@ -247,7 +260,11 @@ class NativeManager extends NativeInterface {
       var result = await _methodSupportChannel
           .invokeMethod(InvokeMethods.writeEpc.name, {"epc": epc});
 
-      var getResult = showDialogFromSuccessOrWrite(result);
+      Map<String, dynamic> valueMap = json.decode(result.toString());
+
+      var getResult = showDialogFromSuccessOrWrite(valueMap["status"]);
+
+      debugPrint("Flutter TID:" + valueMap['tid']);
 
       if (getResult) {
         ref
@@ -257,13 +274,11 @@ class NativeManager extends NativeInterface {
             .getToken()
             .then((token) {
           if (token != null) {
-            debugPrint("ISOK--EPC:$epc}");
-
             ref
                 .read(viewModelStateProvider.notifier)
                 .repository
                 .networkManager!
-                .encodeStatusOK(epc, "1", token)
+                .encodeStatusOK(epc, "1", token, valueMap['tid'])
                 .then((value) {
               goFirstPage(value, ref);
             });

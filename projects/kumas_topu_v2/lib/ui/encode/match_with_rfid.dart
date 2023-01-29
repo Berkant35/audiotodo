@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/utilities/components/custom_elevated_button.dart';
 import 'package:kumas_topu/utilities/components/seperate_padding.dart';
-import 'package:kumas_topu/utilities/components/title_app_bar.dart';
+import 'package:kumas_topu/utilities/components/appbars/title_app_bar.dart';
 import 'package:kumas_topu/utilities/constants/app/enums.dart';
 import 'package:kumas_topu/utilities/init/theme/custom_colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

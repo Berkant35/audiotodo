@@ -7,6 +7,7 @@ class BarcodeInfo {
   String? timeout;
   PerStandart? perStandart;
   String? epc;
+  String? tid;
   String? userData;
   String? password;
 
@@ -16,6 +17,7 @@ class BarcodeInfo {
       this.barcodeErrorCode,
       this.timeout,
       this.perStandart,
+      this.tid,
       this.userData,
       this.password,
       this.epc});
@@ -27,6 +29,7 @@ class BarcodeInfo {
     timeout = json['timeout'];
     perStandart = json['perStandart'];
     userData = json['userData'];
+    tid = json['tid'];
     password = json['password'];
     epc = json['epc'];
   }
@@ -39,6 +42,7 @@ class BarcodeInfo {
     data['timeout'] = timeout;
     data['perStandart'] = perStandart;
     data['userData'] = userData;
+    data['tid'] = tid;
     data['password'] = password;
     data['epc'] = epc;
     return data;

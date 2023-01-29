@@ -7,4 +7,5 @@ class NavigationConstants{
   static const encodeMainPage = '/EncodeMain';
   static const matchWithRFIDPage = '/MatchWithRFID';
   static const inventoryMainPage = '/InventoryMain';
+  static const doInventoryPage = '/DoInventory';
 }

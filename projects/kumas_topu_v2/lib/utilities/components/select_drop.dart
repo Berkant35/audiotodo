@@ -7,7 +7,6 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../constants/extension/context_extensions.dart';
 import '../init/theme/custom_colors.dart';
 
-
 class SelectDrop extends ConsumerStatefulWidget {
   final Function(String value) onSaved;
   final List<String> getList;
@@ -17,19 +16,18 @@ class SelectDrop extends ConsumerStatefulWidget {
 
   const SelectDrop(
       {Key? key,
-        required this.onSaved,
-        required this.getList,
-        required this.title,
-        required this.dropTitle,
-        this.defaultValue})
+      required this.onSaved,
+      required this.getList,
+      required this.title,
+      required this.dropTitle,
+      this.defaultValue})
       : super(key: key);
+
   @override
   ConsumerState createState() => _SelectDropState();
 }
 
 class _SelectDropState extends ConsumerState<SelectDrop> {
-
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -46,36 +44,31 @@ class _SelectDropState extends ConsumerState<SelectDrop> {
             ),
             widget.getList.isNotEmpty
                 ? widget.getList.length > 1
-                ? GetExpansionStaticChooseList(
-              onSaved: widget.onSaved,
-              getList: widget.getList,
-              defaultValue: widget.defaultValue,
-              title: widget.dropTitle,
-            )
+                    ? GetExpansionStaticChooseList(
+                        onSaved: widget.onSaved,
+                        getList: widget.getList,
+                        defaultValue: widget.defaultValue,
+                        title: widget.dropTitle,
+                      )
+                    : Padding(
+                        padding: seperatePadding(),
+                        child: Text(widget.getList.first,
+                            style: ThemeValueExtension.subtitle.copyWith(
+                              color: CustomColors.primaryColor,
+                            )),
+                      )
                 : Padding(
-              padding: seperatePadding(),
-              child: Text(widget.getList.first,
-                  style: ThemeValueExtension.subtitle.copyWith(
-                    color: CustomColors.primaryColor,
-
-                  )),
-            )
-                : Padding(
-              padding: seperatePadding(),
-              child: Text("Seçilecek bir standart bulunamadı",
-                  style: ThemeValueExtension.subtitle.copyWith(
-                      color: CustomColors.errorColor
-                  )
-              ),
-            ),
+                    padding: seperatePadding(),
+                    child: Text("Seçilecek bir standart bulunamadı",
+                        style: ThemeValueExtension.subtitle
+                            .copyWith(color: CustomColors.errorColor)),
+                  ),
           ],
         ),
       ),
     );
   }
 }
-
-
 
 class GetExpansionStaticChooseList extends StatefulWidget {
   final Function(String value) onSaved;
@@ -121,9 +114,12 @@ class _GetExpansionStaticChooseListState
             textColor: CustomColors.midPurpleColor,
             iconColor: CustomColors.midPurpleColor,
             key: UniqueKey(),
-            title: Text(chooseValue ?? widget.title,
-                style: ThemeValueExtension.subtitle
-                    .copyWith(fontWeight: FontWeight.w600)),
+            title: SizedBox(
+              child: Text(chooseValue ?? widget.title,
+                  style: ThemeValueExtension.subtitle.copyWith(
+                      fontWeight: FontWeight.w600,
+                      overflow: TextOverflow.ellipsis)),
+            ),
             children: [builder(widget.getList)],
           ),
         ),
@@ -142,25 +138,29 @@ class _GetExpansionStaticChooseListState
 
   ListTile listTile(List<dynamic> list, int index) {
     return ListTile(
-      title: GestureDetector(
+      title: InkWell(
         onTap: () {
           chooseValue = list[index];
           widget.onSaved(chooseValue!);
           setState(() {});
         },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              list[index],
-              style: ThemeValueExtension.subtitle2
-                  .copyWith(fontWeight: FontWeight.w500),
-            ),
-            const Icon(
-              Icons.add_box_outlined,
-              color: CustomColors.secondaryColor,
-            )
-          ],
+        child: SizedBox(
+          width: double.infinity,
+          height: 8.h,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: 80.w,
+                child: Text(
+                  list[index],
+                  style: ThemeValueExtension.subtitle.copyWith(
+                      fontWeight: FontWeight.w500,
+                      overflow: TextOverflow.ellipsis),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

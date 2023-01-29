@@ -5,11 +5,16 @@ abstract class NetworkManagerBase {
 
   Dio get manager => _dio;
 
+  late DeviceInfoPlugin _deviceInfo;
+
+  DeviceInfoPlugin get deviceInfoPlugin => _deviceInfo;
+
+
   NetworkManagerBase();
 
-  void init(String baseUrl, Map<String, dynamic>? headers) {
+  init(String baseUrl, Map<String, dynamic>? headers)  {
     final localBase = LocaleService();
-
+    _deviceInfo = DeviceInfoPlugin();
     _dio = Dio(BaseOptions(baseUrl: baseUrl, headers: headers));
 
     (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
@@ -41,8 +46,20 @@ abstract class NetworkManagerBase {
   Future<EncodeStatus?> encodeStatusOK(
       String? epc,
       String? encodeStatus,
-      String accessToken);
+      String accessToken,
+      String? tid,
+
+      );
 
   Future<SerialNumber?> getSerialFromDatabase(String accessToken);
 
+  Future<CreateSuccess?> addInventory(String title,String accessToken);
+
+
+  Future<InventoryList?> getInventories(String accessToken);
+
+  Future<void> sendTags(
+      String accessToken,
+      Inventory inventory,
+      List<dynamic> readEpcList,bool saveAndClose);
 }

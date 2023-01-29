@@ -13,6 +13,7 @@ class RowFormField extends StatefulWidget {
   final bool? canEdit;
   final IconData? prefixIcon;
   final TextInputType? inputType;
+  final double? verticalContentPadding;
   final int? maxLines;
   final int? maxLength;
   final EdgeInsetsGeometry? padding;
@@ -33,6 +34,7 @@ class RowFormField extends StatefulWidget {
       this.inputType,
       this.textAlign,
       this.hintText,
+      this.verticalContentPadding,
       this.maxLines,
       this.maxLength})
       : super(key: key);
@@ -46,14 +48,15 @@ class _RowFormFieldState extends State<RowFormField> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Padding(
+        (widget.headerName != "") ? Padding(
           padding: widget.padding == null ? seperatePadding() : widget.padding!,
           child: Text(
             widget.headerName,
             style: ThemeValueExtension.subtitle,
           ),
-        ),
+        ) : const SizedBox(),
         CustomFormField(
           authEditingFormController: widget.editingController,
           validateFunction: widget.custValidateFunction,
@@ -63,7 +66,9 @@ class _RowFormFieldState extends State<RowFormField> {
           maxLines: widget.maxLines,
           textAlign: widget.textAlign,
           maxLength: widget.maxLength,
+
           hintText: widget.hintText,
+          verticialContentPadding: widget.verticalContentPadding,
           iconData: Icon(
             widget.prefixIcon,
             color: CustomColors.primaryColor,

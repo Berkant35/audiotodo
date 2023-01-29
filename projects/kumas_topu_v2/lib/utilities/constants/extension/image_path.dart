@@ -17,4 +17,8 @@ class ImagePath {
 
   static const backPng = 'assets/images/back.png';
   static const appBarBack = 'assets/images/appBarBack.png';
+
+  static const scanLottieAnimation = 'assets/lottie/scanner.json';
+
+
 }
