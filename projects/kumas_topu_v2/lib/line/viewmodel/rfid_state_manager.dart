@@ -35,17 +35,12 @@ class RFIDDeviceStateManager extends StateNotifier<RFIDDevice?> {
   Future<void> initReader(WidgetRef ref) async {
     var readerDevice = await nativeManager.connectRFIDDevice();
     if (readerDevice != null) {
-      debugPrint("Successfully initialized!");
       state = readerDevice;
       Dialogs.showSuccess("RFID Aktif");
       /*NavigationService.instance
           .navigateToPage(path: NavigationConstants.newInventoryPage);*/
       //ref.read(contentStateProvider.notifier).changeState(ContentStates.READY);
       //nativeManager.listenButtonForKill(ref);
-    } else {
-      //ref.read(switchControllerProvider.notifier).changeState(false, ref);
-
-      Dialogs.showFailed("RFID Bağlanılamadı!");
     }
   }
 

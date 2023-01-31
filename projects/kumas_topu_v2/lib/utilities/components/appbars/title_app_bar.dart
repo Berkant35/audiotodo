@@ -5,11 +5,12 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 class TitleAppBar extends AppBar {
   final String label;
   final Widget? leadingWidget;
-
-
-  TitleAppBar({super.key, required this.label,this.leadingWidget})
+  final Function? onTap;
+  TitleAppBar({super.key, required this.label, this.leadingWidget,required this.onTap})
       : super(
-          title: Text(label, style: ThemeValueExtension.headline6),
+          title: InkWell(
+              onTap: onTap as void Function()?,
+              child: Text(label, style: ThemeValueExtension.headline6)),
           leadingWidth: 8.w,
           leading: leadingWidget,
         );

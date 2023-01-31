@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:kumas_topu/models/encode_status.dart';
 import 'package:kumas_topu/utilities/components/dialogs.dart';
 import 'package:kumas_topu/utilities/init/navigation/navigation_constants.dart';
@@ -99,9 +100,13 @@ class NativeManager extends NativeInterface {
               .prefix!
               .split(",")
               .contains(event.toString().substring(0, 4))) {
+
+            var addedTimeFormatUTC =
+            DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now().toUtc());
+
             ref
                 .read(currentInventoryProvider.notifier)
-                .addTag(event, DateTime.now().toUtc().toString());
+                .addTag(event, addedTimeFormatUTC);
           }
         }
       });

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kumas_topu/utilities/components/seperate_padding.dart';
-import 'package:kumas_topu/utilities/constants/extension/image_path.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../utilities/components/custom_svg.dart';
 import '../../utilities/components/login_form.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -17,20 +13,23 @@ class LoginPage extends ConsumerStatefulWidget {
   ConsumerState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage>
+{
   late TextEditingController controller1;
   late TextEditingController controller2;
 
+  //x6h35fc4py
 
   @override
   void initState() {
     super.initState();
-    controller1 = TextEditingController(text: "murat@ilgazi.com");
-    controller2 = TextEditingController(text: "jum2ktdbsd");
+    controller1 = TextEditingController();
+    controller2 = TextEditingController();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,
@@ -40,10 +39,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       ),
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          LoginForm(controller1, controller2),
-        ],
+      body: Center(
+          child: LoginForm(
+              controller1,
+              controller2)
       ),
     );
   }

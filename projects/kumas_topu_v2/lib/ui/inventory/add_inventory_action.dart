@@ -12,8 +12,11 @@ import '../../utilities/constants/extension/context_extensions.dart';
 import '../../utilities/init/theme/custom_colors.dart';
 
 class AddInventoryAction extends ConsumerStatefulWidget {
+  final bool isShipment;
+
   const AddInventoryAction({
     Key? key,
+    required this.isShipment
   }) : super(key: key);
 
   @override
@@ -52,7 +55,7 @@ class _AddInventoryActionState extends ConsumerState<AddInventoryAction> {
             children: [
               RowFormField(
                   headerName: "Sayım Başlık",
-                  hintText: "Depo-Sevk-1",
+                  hintText: "Sayım-1",
                   maxLength: 100,
                   prefixIcon: Icons.drive_file_rename_outline,
                   editingController: titleController,
@@ -66,11 +69,12 @@ class _AddInventoryActionState extends ConsumerState<AddInventoryAction> {
               ref.watch(loginButtonStateProvider) != LoadingStates.loading
                   ? CustomElevatedButton(
                       onPressed: () {
+
                         titleKey.currentState!.save();
                         if (titleKey.currentState!.validate()) {
                           ref
                               .read(viewModelStateProvider.notifier)
-                              .addInventory(ref, titleController.text)
+                              .addInventory(ref, titleController.text,ref.read(currentIsShipmentProvider))
                               .then((value) {
                                 if(value){
                                   NavigationService.instance.navigatePopUp();

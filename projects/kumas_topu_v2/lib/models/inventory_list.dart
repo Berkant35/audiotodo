@@ -8,24 +8,24 @@ class InventoryList {
 
   InventoryList({this.status, this.code, this.data, this.err});
 
-  InventoryList.fromJson(Map<String, dynamic> json) {
+  InventoryList.fromJson(Map<String, dynamic> json,bool isShipment) {
     status = json['status'];
     code = json['code'];
     if (json['data'] != null) {
       data = <Inventory>[];
       json['data'].forEach((v) {
-        data!.add(Inventory.fromJson(v));
+        data!.add(Inventory.fromJson(v,isShipment));
       });
     }
     err = json['err'] != null ? Err.fromJson(json['err']) : null;
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(bool isShipment) {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['code'] = code;
     if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
+      data['data'] = this.data!.map((v) => v.toJson(isShipment)).toList();
     }
     data['err'] = err;
     return data;
@@ -40,18 +40,18 @@ class Inventory {
 
   Inventory({this.iD, this.inventoryName, this.inventoryUniqueName});
 
-  Inventory.fromJson(Map<String, dynamic> json) {
+  Inventory.fromJson(Map<String, dynamic> json,bool isShipment) {
     iD = json['ID'];
-    inventoryName = json['inventory_name'];
-    inventoryUniqueName = json['inventory_unique_name'];
+    inventoryName = json[isShipment ? "shipment_name" : 'inventory_name'];
+    inventoryUniqueName = json[isShipment ? "shipment_unique_name" : 'inventory_unique_name'];
     prefix = json['prefix'];
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(bool isShipment) {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['ID'] = iD;
-    data['inventory_name'] = inventoryName;
-    data['inventory_unique_name'] = inventoryUniqueName;
+    data[isShipment ? "shipment_name" : 'inventory_name'] = inventoryName;
+    data[isShipment ? "shipment_unique_name" : 'inventory_unique_name'] = inventoryUniqueName;
     data['prefix'] = prefix;
     return data;
   }

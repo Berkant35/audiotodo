@@ -33,6 +33,16 @@ class _EncodeMainState extends ConsumerState<EncodeMain> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TitleAppBar(
+        onTap: () {
+          var standart = ref.read(currentBarcodeStandartProvider);
+          standart = null;
+          ref
+              .read(currentBarcodeStandartProvider.notifier)
+              .changeState(standart);
+
+          NavigationService.instance
+              .navigateToPageClear(path: NavigationConstants.mainPage);
+        },
         label: "Kodlama",
         leadingWidget: IconButton(
           icon: Icon(Icons.arrow_back, size: 4.h),

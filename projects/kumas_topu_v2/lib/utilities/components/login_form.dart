@@ -36,22 +36,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     return Center(
       child: Padding(
         padding: seperatePadding(),
-        child: Material(
-          borderRadius: BorderRadius.all(
-              Radius.circular(EdgeExtension.lowEdge.edgeValue)),
-          elevation: 2,
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(
-                Radius.circular(EdgeExtension.lowEdge.edgeValue)),
-            child: Container(
-              height: 75.h,
-              width: 80.w,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(EdgeExtension.lowEdge.edgeValue))),
-              child: buildForm(context),
-            ),
-          ),
+        child: Container(
+          height: 90.h,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(
+                  Radius.circular(EdgeExtension.lowEdge.edgeValue))),
+          child: Center(child: buildForm(context)),
         ),
       ),
     );
@@ -60,83 +50,79 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   Form buildForm(BuildContext context) {
     return Form(
         key: validateForm,
-        child: SizedBox(
-          height: 50.h,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 5.h,
-                ),
-                Align(
-                    alignment: Alignment.topCenter,
-                    child: SizedBox(
-                      height: 12.h,
-                      width: 60.w,
-                      child: Image.asset(
-                        ImagePath.logoPng,
-                        fit: BoxFit.cover,
-                      ),
-                    )),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  child: RowFormField(
-                      headerName: "Email",
-                      prefixIcon: Icons.perm_identity_sharp,
-                      hintText: "E-mail",
-                      editingController: widget.controller1,
-                      custValidateFunction: (value) {
-                        (value != "") ? "Boş Bırakılamaz" : null;
-                      }),
-                ),
-                SizedBox(height: MediaQueryExtension(context).lowValue),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  child: RowFormField(
-                      headerName: "Şifre",
-                      prefixIcon: Icons.key,
-                      editingController: widget.controller2,
-                      visibleStatus: true,
-                      hintText: "Şifre",
-                      custValidateFunction: (value) {
-                        (value != "") ? "Boş Bırakılamaz" : null;
-                      }),
-                ),
-                SizedBox(
-                  height: 5.h,
-                ),
-                Center(
-                  child: ref.watch(loginButtonStateProvider) !=
-                          LoadingStates.loading
-                      ? CustomElevatedButton(
-                          width: 50.w,
-                          onPressed: () {
-                            validateForm.currentState!.save();
-                            if(validateForm.currentState!.validate()){
-                              ref.read(viewModelStateProvider.notifier).login(
-                                  widget.controller1.text,
-                                  widget.controller2.text,
-                                  ref);
-                            }
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: 5.h,
+              ),
+              Align(
+                  alignment: Alignment.topCenter,
+                  child: SizedBox(
+                    height: 12.h,
+                    width: 60.w,
+                    child: Image.asset(
+                      ImagePath.logoPng,
+                      fit: BoxFit.cover,
+                    ),
+                  )),
+              SizedBox(
+                height: 5.h,
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                child: RowFormField(
+                    headerName: "Email",
+                    prefixIcon: Icons.perm_identity_sharp,
+                    hintText: "E-mail",
+                    editingController: widget.controller1,
+                    custValidateFunction: (value) {
+                      (value != "") ? "Boş Bırakılamaz" : null;
+                    }),
+              ),
+              SizedBox(height: MediaQueryExtension(context).lowValue),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                child: RowFormField(
+                    headerName: "Şifre",
+                    prefixIcon: Icons.key,
+                    editingController: widget.controller2,
+                    visibleStatus: true,
+                    hintText: "Şifre",
+                    custValidateFunction: (value) {
+                      (value != "") ? "Boş Bırakılamaz" : null;
+                    }),
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Center(
+                child: ref.watch(loginButtonStateProvider) !=
+                        LoadingStates.loading
+                    ? CustomElevatedButton(
+                        width: 50.w,
+                        onPressed: () {
+                          validateForm.currentState!.save();
+                          if(validateForm.currentState!.validate())
+                          {
+                            ref.read(viewModelStateProvider.notifier).login(
+                                widget.controller1.text,
+                                widget.controller2.text,
+                                ref);
+                          }
 
-                          },
-                          inButtonText: 'Giriş Yap',
-                          primaryColor: CustomColors.primaryColorM,
-                        )
-                      : const Center(
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                ),
-                SizedBox(
-                  height: 10.h,
-                ),
-              ],
-            ),
+                        },
+                        inButtonText: 'Giriş Yap',
+                        primaryColor: CustomColors.primaryColorM,
+                      )
+                    : const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+              ),
+
+            ],
           ),
         ));
   }

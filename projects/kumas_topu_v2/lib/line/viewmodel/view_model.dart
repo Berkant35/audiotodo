@@ -124,12 +124,12 @@ class ViewModel extends StateNotifier<void> {
     }
   }
 
-  Future<bool> addInventory(WidgetRef ref, String title) async {
+  Future<bool> addInventory(WidgetRef ref, String title,bool isShipment) async {
     try {
       ref
           .read(loginButtonStateProvider.notifier)
           .changeState(LoadingStates.loading);
-      var result = await repository.addInventory(title);
+      var result = await repository.addInventory(title,isShipment);
       return result;
     } catch (e) {
       return false;
@@ -140,15 +140,15 @@ class ViewModel extends StateNotifier<void> {
     }
   }
 
-  Future<InventoryList?> getInventoryList() async {
+  Future<InventoryList?> getInventoryList(bool isShipment) async {
     try {
-      return await repository.getInventoryList();
+      return await repository.getInventoryList(isShipment);
     } catch (e) {
       return null;
     }
   }
 
-  Future<void> sendTags(WidgetRef ref, bool saveAndClose) async {
+  Future<void> sendTags(WidgetRef ref, bool saveAndClose,bool isShipment) async {
     try {
       List<dynamic> tagList = [];
 
@@ -163,7 +163,7 @@ class ViewModel extends StateNotifier<void> {
       return await repository.sendTags(
           ref.read(currentInventoryProvider)!.inventory!,
           tagList,
-          saveAndClose);
+          saveAndClose,isShipment);
     } catch (e) {
       return;
     }

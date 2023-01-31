@@ -53,13 +53,13 @@ abstract class NetworkManagerBase {
 
   Future<SerialNumber?> getSerialFromDatabase(String accessToken);
 
-  Future<CreateSuccess?> addInventory(String title,String accessToken);
+  Future<CreateSuccess?> addInventory(String title,String accessToken,bool isShipment);
 
 
-  Future<InventoryList?> getInventories(String accessToken);
+  Future<InventoryList?> getInventories(String accessToken,bool isShipment);
 
   Future<void> sendTags(
       String accessToken,
       Inventory inventory,
-      List<dynamic> readEpcList,bool saveAndClose);
+      List<dynamic> readEpcList,bool saveAndClose,bool isShipment);
 }

@@ -28,14 +28,62 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          ref.watch(currentInventoryProvider)!.inventory?.inventoryName ?? "-",
-          style: ThemeValueExtension.headline6
-              .copyWith(overflow: TextOverflow.ellipsis),
+        title: InkWell(
+          onTap: (){
+            ref.read(currentInventoryProvider.notifier).clearInventory();
+            NavigationService.instance.navigatePopUp().then((value) {
+              if (ref.watch(scanStopStateProvider) != ScanModes.scan) {
+                ref
+                    .read(currentTriggerModeProvider.notifier)
+                    .nativeManager
+                    .stopScan()
+                    .then((value) {
+                  ref
+                      .read(currentTriggerModeProvider.notifier)
+                      .nativeManager
+                      .clear()
+                      .then((value) {
+                    ref
+                        .read(scanStopStateProvider.notifier)
+                        .changeState(ScanModes.idle);
+                  });
+                });
+              }
+            });
+          },
+          child: InkWell(
+            onTap: (){
+              ref.read(currentInventoryProvider.notifier).clearInventory();
+              NavigationService.instance.navigatePopUp().then((value) {
+                if (ref.watch(scanStopStateProvider) != ScanModes.scan) {
+                  ref
+                      .read(currentTriggerModeProvider.notifier)
+                      .nativeManager
+                      .stopScan()
+                      .then((value) {
+                    ref
+                        .read(currentTriggerModeProvider.notifier)
+                        .nativeManager
+                        .clear()
+                        .then((value) {
+                      ref
+                          .read(scanStopStateProvider.notifier)
+                          .changeState(ScanModes.idle);
+                    });
+                  });
+                }
+              });
+            },
+            child: Text(
+              ref.watch(currentInventoryProvider)!.inventory?.inventoryName ?? "-",
+              style: ThemeValueExtension.headline6
+                  .copyWith(overflow: TextOverflow.ellipsis),
+            ),
+          ),
         ),
         leadingWidth: 8.w,
         leading: IconButton(
-          onPressed: () {
+          onPressed:   () {
             ref.read(currentInventoryProvider.notifier).clearInventory();
             NavigationService.instance.navigatePopUp().then((value) {
               if (ref.watch(scanStopStateProvider) != ScanModes.scan) {
@@ -64,13 +112,14 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
         ),
         actions: [
           IconButton(
-              onPressed: () => showDialog(
+              onPressed: ref.watch(currentInventoryProvider)!.readEpcList!.isNotEmpty
+                  ? () => showDialog(
                       context: context,
                       builder: (BuildContext dialogContext) {
-                        return const InventorySaveAlertDialog();
+                        return  InventorySaveAlertDialog(isShipment: ref.read(currentIsShipmentProvider));
                       }).then((value) {
                     setState(() {});
-                  }),
+                  }) : null,
               icon: Icon(
                 Icons.save,
                 size: 4.h,
@@ -101,7 +150,7 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
                                   style: ThemeValueExtension.subtitle2,
                                 ),
                                 subtitle: Text(
-                                  hashMap.readDate!.toString().substring(0, 22),
+                                  hashMap.readDate!.toString(),
                                   style: ThemeValueExtension.subtitle2,
                                 ),
                               ),

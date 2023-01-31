@@ -7,6 +7,7 @@ import 'package:kumas_topu/ui/encode/encode_main.dart';
 import 'package:kumas_topu/ui/settings/settings_page.dart';
 
 import '../../../ui/inventory/inventory_main.dart';
+import '../../../ui/shipment/shipment_main.dart';
 import 'navigation_constants.dart';
 
 class NavigationRoute {
@@ -27,12 +28,15 @@ class NavigationRoute {
       case NavigationConstants.encodeMainPage:
         return normalNavigate(const EncodeMain());
       case NavigationConstants.matchWithRFIDPage:
-        return normalNavigate(const MatchWithRFID());
+        Map<String,dynamic> map = args.arguments as Map<String,dynamic>;
+
+        return normalNavigate( MatchWithRFID(controller: map['controller'],));
       case NavigationConstants.inventoryMainPage:
         return normalNavigate(const InventoryMain());
       case NavigationConstants.doInventoryPage:
         return normalNavigate(const DoInventory());
-
+      case NavigationConstants.shipmentMainPage:
+        return normalNavigate(const ShipmentMain());
       default:
         return MaterialPageRoute(
           builder: (context) => const MainPage(),

@@ -7,10 +7,12 @@ class AddInventoryAppBar extends AppBar {
   final String label;
   final Widget? leadingWidget;
   final Function? addAction;
-
-  AddInventoryAppBar({super.key, required this.label, this.leadingWidget,required this.addAction})
+  final Function? onTapTitle;
+  AddInventoryAppBar({super.key, required this.label, this.leadingWidget,required this.addAction,required this.onTapTitle})
       : super(
-            title: Text(label, style: ThemeValueExtension.headline6),
+            title: InkWell(
+                onTap: onTapTitle as void Function()?,
+                child: Text(label, style: ThemeValueExtension.headline6)),
             leadingWidth: 8.w,
             leading: leadingWidget,
             actions: [

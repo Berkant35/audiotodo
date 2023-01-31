@@ -6,6 +6,7 @@ import 'package:kumas_topu/models/inventory_list.dart';
 import 'package:kumas_topu/ui/inventory/per_row_inventory_info.dart';
 import 'package:kumas_topu/utilities/components/appbars/add_inventory_app_bar.dart';
 import 'package:kumas_topu/utilities/constants/extension/context_extensions.dart';
+import 'package:kumas_topu/utilities/init/navigation/navigation_service.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../utilities/constants/extension/edge_extension.dart';
@@ -26,17 +27,18 @@ class _InventoryMainState extends ConsumerState<InventoryMain> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AddInventoryAppBar(
-        label: 'Sayım',
+        onTapTitle: ()=>NavigationService.instance.navigatePopUp(),
+        label: ref.read(currentIsShipmentProvider) ? 'Sevk' : 'Sayım',
         addAction: () => showDialog(
             context: context,
             builder: (BuildContext dialogContext) {
-              return const AddInventoryAction();
+              return const AddInventoryAction(isShipment: false,);
             }).then((value) {
           setState(() {});
         }),
       ),
       body: FutureBuilder<InventoryList?>(
-        future: ref.read(viewModelStateProvider.notifier).getInventoryList(),
+        future: ref.read(viewModelStateProvider.notifier).getInventoryList(ref.read(currentIsShipmentProvider)),
         builder: (context, snapshot) {
           var inventoryList = snapshot.data;
           return snapshot.connectionState == ConnectionState.done

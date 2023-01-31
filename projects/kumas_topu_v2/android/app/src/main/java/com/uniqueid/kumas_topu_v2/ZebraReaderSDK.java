@@ -1,14 +1,10 @@
 package com.uniqueid.kumas_topu_v2;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
 import android.media.MediaPlayer;
-import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,12 +33,8 @@ import com.zebra.rfid.api3.STOP_TRIGGER_TYPE;
 import com.zebra.rfid.api3.TagData;
 import com.zebra.rfid.api3.TriggerInfo;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel;
@@ -77,6 +69,9 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
 
 
     private static ArrayList<ReaderDevice> availableRFIDReaderList;
+
+
+
 
 
     public void onCreate(MainActivity activity) {
@@ -182,7 +177,8 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
                             // search reader specified by name
                             for (ReaderDevice device : availableRFIDReaderList) {
 
-                                if (device.getName().equals(Build.MODEL) || device.getName().equals(Build.BRAND)) {
+                                if (device.getName().equals(Build.MODEL) ||
+                                        device.getName().equals(Build.BRAND)) {
                                     readerDevice = device;
                                     reader = readerDevice.getRFIDReader();
 
@@ -280,6 +276,24 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
 
 
 
+    synchronized public void setPower(int value) throws OperationFailureException, InvalidUsageException {
+        Antennas.AntennaRfConfig antennaRfConfig = null;
+
+        antennaRfConfig = reader.Config.Antennas.getAntennaRfConfig(1);
+
+        antennaRfConfig.setrfModeTableIndex(0);
+        antennaRfConfig.setTari(0);
+        antennaRfConfig.setTransmitPowerIndex(value);
+        // set the configuration
+        reader.Config.Antennas.setAntennaRfConfig(1, antennaRfConfig);
+    }
+
+    synchronized public  int getPower() throws OperationFailureException, InvalidUsageException {
+        Antennas.AntennaRfConfig antennaRfConfig = null;
+        antennaRfConfig = reader.Config.Antennas.getAntennaRfConfig(1);
+
+        return   antennaRfConfig.getTransmitPowerIndex();
+    }
 
     public static class EventHandler implements RfidEventsListener {
 
@@ -362,19 +376,8 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
 
 
     synchronized public void initializeInventory(EventChannel.EventSink eventSink) {
-        Antennas.AntennaRfConfig antennaRfConfig = null;
-        try {
-            antennaRfConfig = reader.Config.Antennas.getAntennaRfConfig(1);
-        } catch (InvalidUsageException | OperationFailureException e) {
-            e.printStackTrace();
-        }
-        if(antennaRfConfig != null){
-            antennaRfConfig.setrfModeTableIndex(0);
-            antennaRfConfig.setTari(0);
-            antennaRfConfig.setTransmitPowerIndex(300);
-            mainEventChannelSink = eventSink;
-            tempTags.clear();
-        }
+        mainEventChannelSink = eventSink;
+        tempTags.clear();
 
     }
 

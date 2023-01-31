@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/line/global_providers.dart';
 import 'package:kumas_topu/utilities/components/custom_elevated_button.dart';
@@ -34,7 +35,40 @@ class MainPage extends ConsumerWidget {
         actions: [
           IconButton(
               onPressed: () {
-                ref.read(viewModelStateProvider.notifier).logout();
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text(
+                          "Çıkış Yapmaktan Emin Misiniz?",
+                          style: ThemeValueExtension.subtitle,
+                          textAlign: TextAlign.center,
+                        ),
+                        content: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            CustomElevatedButton(
+                              onPressed: () => ref
+                                  .read(viewModelStateProvider.notifier)
+                                  .logout(),
+                              inButtonText: "Evet",
+                              primaryColor: CustomColors.primaryColorM,
+                              width: 25.w,
+                            ),
+                            SizedBox(
+                              width: 2.w,
+                            ),
+                            CustomElevatedButton(
+                              onPressed: () =>
+                                  NavigationService.instance.navigatePopUp(),
+                              inButtonText: "Hayır",
+                              primaryColor: CustomColors.darkPurpleColorM,
+                              width: 25.w,
+                            )
+                          ],
+                        ),
+                      );
+                    });
               },
               icon: const Icon(Icons.exit_to_app))
         ],
@@ -70,7 +104,11 @@ class MainPage extends ConsumerWidget {
                           imagePath: ImagePath.barcodeSvg,
                           scaleHigh: 8.h,
                           title: 'KODLAMA',
-                          onTap: () {
+                          onTap: () async {
+                            await SystemChannels.platform.invokeMethod<void>(
+                              'SystemSound.play',
+                              SystemSoundType.click.toString(),
+                            );
                             ref
                                 .read(currentTriggerModeProvider.notifier)
                                 .changeState(TriggerModeStatus.BARCODE, ref);
@@ -80,13 +118,29 @@ class MainPage extends ConsumerWidget {
                       PerItemOfMenu(
                           imagePath: ImagePath.wifiTruckSvg,
                           title: 'SEVK',
-                          onTap: () {}),
+                          onTap: () async {
+                            ref
+                                .read(currentIsShipmentProvider.notifier)
+                                .changeState(true);
+                            await SystemChannels.platform.invokeMethod<void>(
+                              'SystemSound.play',
+                              SystemSoundType.click.toString(),
+                            );
+                            NavigationService.instance.navigateToPage(
+                                path: NavigationConstants.inventoryMainPage);
+                          }),
                       PerItemOfMenu(
                           imagePath: ImagePath.addSvg,
                           scaleHigh: 8.h,
                           title: 'SAYIM',
-                          onTap: () {
-
+                          onTap: () async {
+                            ref
+                                .read(currentIsShipmentProvider.notifier)
+                                .changeState(false);
+                            await SystemChannels.platform.invokeMethod<void>(
+                              'SystemSound.play',
+                              SystemSoundType.click.toString(),
+                            );
                             NavigationService.instance.navigateToPage(
                                 path: NavigationConstants.inventoryMainPage);
                           }),
@@ -94,7 +148,11 @@ class MainPage extends ConsumerWidget {
                           imagePath: ImagePath.settingsSvg,
                           scaleHigh: 9.h,
                           title: 'AYARLAR',
-                          onTap: () {
+                          onTap: () async {
+                            await SystemChannels.platform.invokeMethod<void>(
+                              'SystemSound.play',
+                              SystemSoundType.click.toString(),
+                            );
                             NavigationService.instance.navigateToPage(
                                 path: NavigationConstants.settingsPage);
                           }),

@@ -4,8 +4,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:kumas_topu/models/create_success.dart';
 
 import '../../models/create_result_epc.dart';
@@ -142,8 +141,6 @@ class NetworkManager extends NetworkManagerBase {
           "device_name": androidInfo.device
         });
 
-
-
         if (response.statusCode == 200 &&
             !response.data.toString().contains("TOKEN WRONG")) {
           final resultOfEpc = CreateResultEPC.fromJson(response.data);
@@ -176,8 +173,8 @@ class NetworkManager extends NetworkManagerBase {
   }
 
   @override
-  Future<EncodeStatus?> encodeStatusOK(
-      String? epc, String? encodeStatus, String accessToken,String? tid) async {
+  Future<EncodeStatus?> encodeStatusOK(String? epc, String? encodeStatus,
+      String accessToken, String? tid) async {
     try {
       return await urlConstans.getUrl().then((value) async {
         (_dio.httpClientAdapter as DefaultHttpClientAdapter)
@@ -192,7 +189,7 @@ class NetworkManager extends NetworkManagerBase {
         final response = await _dio.post('$value/encode/encode_status', data: {
           "access_token": accessToken,
           "epc": epc,
-          "tid":tid,
+          "tid": tid,
           "encode_status": encodeStatus
         });
 
@@ -268,8 +265,12 @@ class NetworkManager extends NetworkManagerBase {
 
   //You can create web server snippet for http request with dio
   @override
-  Future<CreateSuccess?> addInventory(String title, String accessToken) async {
+  Future<CreateSuccess?> addInventory(
+      String title, String accessToken, bool isShipment) async {
     try {
+
+      debugPrint("Shipment State $isShipment");
+
       return await urlConstans.getUrl().then((value) async {
         (_dio.httpClientAdapter as DefaultHttpClientAdapter)
             .onHttpClientCreate = (HttpClient dioClient) {
@@ -279,9 +280,9 @@ class NetworkManager extends NetworkManagerBase {
         };
         DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        final response = await _dio.post('$value/inventories/create', data: {
+        final response = await _dio.post('$value/${isShipment ? "shipment": "inventories"}/create', data: {
           "access_token": accessToken,
-          "inventory_name": title,
+          isShipment ? "shipment_name" :"inventory_name": title,
           "device_id": androidInfo.id,
           "device_name": androidInfo.device
         });
@@ -320,8 +321,14 @@ class NetworkManager extends NetworkManagerBase {
   }
 
   @override
-  Future<InventoryList?> getInventories(String accessToken) async {
+  Future<InventoryList?> getInventories(
+      String accessToken, bool isShipment) async {
     try {
+
+
+      debugPrint("Shıpment: $isShipment}");
+
+
       return await urlConstans.getUrl().then((value) async {
         (_dio.httpClientAdapter as DefaultHttpClientAdapter)
             .onHttpClientCreate = (HttpClient dioClient) {
@@ -330,7 +337,7 @@ class NetworkManager extends NetworkManagerBase {
           return dioClient;
         };
 
-        final response = await _dio.post('$value/inventories/list', data: {
+        final response = await _dio.post('$value/${isShipment ? "shipment": "inventories"}/list', data: {
           "access_token": accessToken,
         });
 
@@ -340,7 +347,7 @@ class NetworkManager extends NetworkManagerBase {
 
         if (response.statusCode == 200 &&
             !response.data.toString().contains("TOKEN WRONG")) {
-          final inventoryListResult = InventoryList.fromJson(response.data);
+          final inventoryListResult = InventoryList.fromJson(response.data,isShipment);
 
           if (inventoryListResult.code == 200) {
             return inventoryListResult;
@@ -383,8 +390,10 @@ class NetworkManager extends NetworkManagerBase {
     ]
 }*/
   @override
-  Future<void> sendTags(String accessToken, Inventory inventory,List<dynamic> readEpcList,bool saveAndClose) async {
+  Future<void> sendTags(String accessToken, Inventory inventory,
+      List<dynamic> readEpcList, bool saveAndClose, bool isShipment) async {
     try {
+      debugPrint("isShipment $isShipment");
       return await urlConstans.getUrl().then((value) async {
         (_dio.httpClientAdapter as DefaultHttpClientAdapter)
             .onHttpClientCreate = (HttpClient dioClient) {
@@ -393,16 +402,17 @@ class NetworkManager extends NetworkManagerBase {
           return dioClient;
         };
         AndroidDeviceInfo androidInfo = await _deviceInfo.androidInfo;
-        Map<String,dynamic> data = {
-        "access_token": accessToken,
-        "inventories_id": inventory.iD,
-        "device_id":androidInfo.id,
-        "device_name":androidInfo.device,
-        "inventories_close": saveAndClose ? "1" : "0",
-        "tag_list" : readEpcList
+        Map<String, dynamic> data = {
+          "access_token": accessToken,
+           isShipment ? "shipment_id" : "inventories_id": inventory.iD,
+          "device_id": androidInfo.id,
+          "device_name": androidInfo.device,
+          isShipment ? "shipment_close" : "inventories_close": saveAndClose ? "1" : "0",
+          "tag_list": readEpcList
         };
         debugPrint(data.toString());
-        final response = await _dio.post('$value/inventories/record', data: data);
+        final response =
+            await _dio.post('$value/${isShipment ? "shipment": "inventories"}/record', data: data);
 
         debugPrint("Response: ${response.toString()}");
 
@@ -410,19 +420,15 @@ class NetworkManager extends NetworkManagerBase {
 
         if (response.statusCode == 200 &&
             !response.data.toString().contains("TOKEN WRONG")) {
-
-
-
+          Dialogs.showSuccess("Başarılı bir şekilde kaydedildi!");
         } else {
           if (response.data.toString().contains("TOKEN WRONG")) {
             _tokenExpiredLogout();
-
           }
         }
       });
     } catch (e) {
       debugPrint("addInventory error: $e");
-
     }
   }
 }

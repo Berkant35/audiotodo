@@ -1,6 +1,5 @@
 import 'err.dart';
 
-
 class LoginSuccess {
   bool? status;
   int? code;
@@ -15,16 +14,16 @@ class LoginSuccess {
     code = json['code'];
     accessToken = json['access_token'];
     data = json['data'];
-    err = json['err'];
+    err = json['err'] != null ? Err.fromJson(json['err']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['code'] = this.code;
-    data['access_token'] = this.accessToken;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['code'] = code;
+    data['access_token'] = accessToken;
     data['data'] = this.data;
-    data['err'] = this.err;
+    data['err'] = err;
     return data;
   }
 }

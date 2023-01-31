@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/line/global_providers.dart';
 import 'package:kumas_topu/utilities/components/custom_elevated_button.dart';
+import 'package:kumas_topu/utilities/components/dialogs.dart';
 import 'package:kumas_topu/utilities/components/seperate_padding.dart';
 import 'package:kumas_topu/utilities/constants/extension/context_extensions.dart';
 import 'package:kumas_topu/utilities/init/navigation/navigation_constants.dart';
@@ -69,7 +70,7 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
                           });
                         },
                         icon: Padding(
-                          padding:  EdgeInsets.only(left: 6.w),
+                          padding: EdgeInsets.only(left: 6.w),
                           child: Icon(
                             Icons.add_box,
                             size: 4.h,
@@ -87,10 +88,12 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
               hintText: "Barcode Numarası",
               editingController: barcodeEditingController,
               custValidateFunction: (value) {
-                (ref.read(currentBarcodeInfoProvider).barcodeInfo != ""
-                    && ref.read(currentBarcodeInfoProvider).barcodeInfo != null
-                    && ref.read(currentBarcodeInfoProvider).barcodeInfo != "-")
-                    ? null : "Boş Bırakılamaz";
+                (ref.read(currentBarcodeInfoProvider).barcodeInfo != "" &&
+                        ref.read(currentBarcodeInfoProvider).barcodeInfo !=
+                            null &&
+                        ref.read(currentBarcodeInfoProvider).barcodeInfo != "-")
+                    ? null
+                    : "Boş Bırakılamaz";
                 return null;
               },
               onChanged: (value) {
@@ -101,11 +104,11 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
                     .read(currentBarcodeInfoProvider.notifier)
                     .changeState(barcodeProvider);
 
-                if(value == ""){
+                if (value == "") {
                   setState(() {});
                 }
 
-               return barcodeProvider.barcodeInfo;
+                return barcodeProvider.barcodeInfo;
               },
             ),
             const Divider(),
@@ -146,7 +149,11 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
               (ref.watch(currentBarcodeInfoProvider).barcodeInfo != "-" &&
                       ref.watch(currentBarcodeInfoProvider).barcodeInfo !=
                           null &&
-                      ref.watch(currentBarcodeInfoProvider).barcodeInfo!.length>1)
+                      ref
+                              .watch(currentBarcodeInfoProvider)
+                              .barcodeInfo!
+                              .length >
+                          1)
                   ? Center(
                       child: CustomElevatedButton(
                         onPressed: ref.watch(currentTriggerModeProvider) ==
@@ -164,11 +171,26 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
                                                 .epc !=
                                             null &&
                                         value != null) {
+                                      var barcodeInfo =
+                                          ref.read(currentBarcodeInfoProvider);
+                                      barcodeInfo.barcodeInfo = "";
+                                      ref
+                                          .read(currentBarcodeInfoProvider
+                                              .notifier)
+                                          .changeState(barcodeInfo);
+
                                       NavigationService.instance.navigateToPage(
                                           path: NavigationConstants
-                                              .matchWithRFIDPage);
+                                              .matchWithRFIDPage,
+                                          data: {
+                                            "controller":
+                                                barcodeEditingController
+                                          });
                                     }
                                   });
+                                } else {
+                                  Dialogs.showFailed(
+                                      "Lütfen standart seçimini gerçekleştirin");
                                 }
                               }
                             : null,

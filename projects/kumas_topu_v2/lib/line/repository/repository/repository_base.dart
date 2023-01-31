@@ -109,11 +109,11 @@ class Repository extends LocaleBase {
     }
   }
 
-  Future<bool> addInventory(String title) async {
+  Future<bool> addInventory(String title,bool isShipment ) async {
     try {
       return localService.getToken().then((token) async {
         if (token != null) {
-          return await networkManager!.addInventory(title, token).then((value) {
+          return await networkManager!.addInventory(title, token,isShipment).then((value) {
             return value!.data!;
           });
         } else {
@@ -127,12 +127,13 @@ class Repository extends LocaleBase {
   }
 
   Future<void> sendTags(
-      Inventory inventory, List<dynamic> readEpcList, bool saveAndClose) async {
+      Inventory inventory, List<dynamic> readEpcList, bool saveAndClose
+      ,bool isShipment ) async {
     try {
       return localService.getToken().then((token) async {
         if (token != null) {
           return await networkManager!
-              .sendTags(token, inventory, readEpcList, saveAndClose)
+              .sendTags(token, inventory, readEpcList, saveAndClose,isShipment)
               .then((value) {});
         }
       });
@@ -142,11 +143,11 @@ class Repository extends LocaleBase {
     }
   }
 
-  Future<InventoryList?> getInventoryList() async {
+  Future<InventoryList?> getInventoryList(bool isShipment ) async {
     try {
       return localService.getToken().then((token) async {
         if (token != null) {
-          return await networkManager!.getInventories(token).then((value) {
+          return await networkManager!.getInventories(token,isShipment).then((value) {
             return value!;
           });
         } else {

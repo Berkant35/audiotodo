@@ -6,7 +6,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <queries>
-        <package android:name="com.symbol.emdk.emdkservice" />
+        <package android:name="com.symbol.emdk.emdkservice"
+            android:required="false"
+            />
     </queries>
 
    <application
@@ -14,7 +16,8 @@
         tools:replace="android:label"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-       <uses-library android:name="com.symbol.emdk"/>
+       <uses-library android:name="com.symbol.emdk"
+           android:required="false"/>
 
        <activity
             android:name=".MainActivity"
