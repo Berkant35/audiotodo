@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "678938752463",
+    "project_id": "osgb-b8e4e",
+    "storage_bucket": "osgb-b8e4e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:678938752463:android:428ca61b0ece9546040eba",
+        "android_client_info": {
+          "package_name": "com.osgb.osgb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "678938752463-hgnphf8on870tsb1gc2htqngjmtpfcgs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_DbnvtYC4gmbWtWCMnyHS72fRw9dgvN8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "678938752463-hgnphf8on870tsb1gc2htqngjmtpfcgs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
