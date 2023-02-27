@@ -61,10 +61,11 @@ flutter {
 
 dependencies {
     implementation files('libs/xUtils-2.5.5.jar')
+    implementation fileTree(dir: 'libs', include: ['*.*'])
     compileOnly 'com.symbol:emdk:+'
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation project(':RFIDAPI3Library')
-    implementation fileTree(dir: 'libs', include: ['*.*'])
+
 
     implementation project(':RFIDAPI3Library')
 }

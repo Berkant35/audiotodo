@@ -9,7 +9,7 @@ import 'package:state_notifier/state_notifier.dart';
 class TriggerModeManager extends StateNotifier<TriggerModeStatus>{
   TriggerModeManager(TriggerModeStatus state) : super(TriggerModeStatus.IDLE);
 
-  NativeManager nativeManager = NativeManager();
+  final nativeManager = NativeManager.instance;
 
   changeState(TriggerModeStatus value,WidgetRef ref){
     switch(value){
@@ -28,7 +28,7 @@ class TriggerModeManager extends StateNotifier<TriggerModeStatus>{
   }
 
   Future<void> _changeToBarcodeStateOn(WidgetRef ref) async {
-    var result =  await nativeManager.barcodeModeOn(ref);
+    var result =  await nativeManager!.barcodeModeOn(ref);
     if(result){
       state = TriggerModeStatus.BARCODE;
     }

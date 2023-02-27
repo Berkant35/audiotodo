@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dotenv/dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,10 +35,12 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp]);
 
+
   runApp(const ProviderScope(child: KumasTopu()));
 }
 
 class KumasTopu extends StatelessWidget {
+
   const KumasTopu({super.key});
 
   @override

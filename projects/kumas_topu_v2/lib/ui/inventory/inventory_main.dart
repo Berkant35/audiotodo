@@ -59,6 +59,7 @@ class _InventoryMainState extends ConsumerState<InventoryMain> {
                       child: Text(
                         "Henüz oluşturulmuş bir sayım yok.",
                         style: ThemeValueExtension.subtitle,
+                        textAlign: TextAlign.center,
                       ),
                     )
               : const Center(

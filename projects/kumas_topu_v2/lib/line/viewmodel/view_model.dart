@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/models/create_result_epc.dart';
 import 'package:kumas_topu/models/encode_standarts.dart';
 import 'package:kumas_topu/models/inventory_list.dart';
-import 'package:kumas_topu/models/read_epc.dart';
 import 'package:kumas_topu/models/serial_number.dart';
 
 import '../../utilities/constants/app/enums.dart';
@@ -14,14 +13,14 @@ import '../repository/repository/repository_base.dart';
 
 class ViewModel extends StateNotifier<void> {
   ViewModel() : super({});
-  final repository = Repository();
+  final repository = Repository.instance;
 
   Future<void> login(String email, String password, WidgetRef ref) async {
     try {
       ref
           .read(loginButtonStateProvider.notifier)
           .changeState(LoadingStates.loading);
-      var result = await repository.login(email, password);
+      var result = await repository!.login(email, password);
 
       if (result != null) {
         NavigationService.instance
@@ -40,7 +39,7 @@ class ViewModel extends StateNotifier<void> {
 
   Future<bool> checkToken() async {
     try {
-      var result = await repository.getToken();
+      var result = await repository!.getToken();
 
       if (result != null && result != "") {
         return true;
@@ -56,7 +55,7 @@ class ViewModel extends StateNotifier<void> {
 
   Future<void> logout() async {
     try {
-      var result = await repository.saveToken("");
+      var result = await repository!.saveToken("");
 
       if (result) {
         NavigationService.instance
@@ -71,7 +70,7 @@ class ViewModel extends StateNotifier<void> {
 
   Future<EncodeStandarts?> getEncodeStandarts(WidgetRef ref) async {
     try {
-      var result = await repository.getEncodeStandarts();
+      var result = await repository!.getEncodeStandarts();
       if (result == null) {
         NavigationService.instance
             .navigateToPageClear(path: NavigationConstants.loginPage);
@@ -97,7 +96,7 @@ class ViewModel extends StateNotifier<void> {
       ref
           .read(loginButtonStateProvider.notifier)
           .changeState(LoadingStates.loading);
-      var result = await repository.createEPCForMatch(ref);
+      var result = await repository!.createEPCForMatch(ref);
       return result;
     } catch (e) {
       return null;
@@ -113,7 +112,7 @@ class ViewModel extends StateNotifier<void> {
       ref
           .read(loginButtonStateProvider.notifier)
           .changeState(LoadingStates.loading);
-      var result = await repository.getSerialNumber(ref);
+      var result = await repository!.getSerialNumber(ref);
       return result;
     } catch (e) {
       return null;
@@ -129,7 +128,7 @@ class ViewModel extends StateNotifier<void> {
       ref
           .read(loginButtonStateProvider.notifier)
           .changeState(LoadingStates.loading);
-      var result = await repository.addInventory(title,isShipment);
+      var result = await repository!.addInventory(title,isShipment);
       return result;
     } catch (e) {
       return false;
@@ -142,7 +141,7 @@ class ViewModel extends StateNotifier<void> {
 
   Future<InventoryList?> getInventoryList(bool isShipment) async {
     try {
-      return await repository.getInventoryList(isShipment);
+      return await repository!.getInventoryList(isShipment);
     } catch (e) {
       return null;
     }
@@ -160,7 +159,7 @@ class ViewModel extends StateNotifier<void> {
             .toJson());
       }
 
-      return await repository.sendTags(
+      return await repository!.sendTags(
           ref.read(currentInventoryProvider)!.inventory!,
           tagList,
           saveAndClose,isShipment);

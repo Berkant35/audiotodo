@@ -153,6 +153,7 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
     public void initializeChannelsMethodForFlutter(MethodChannel.Result methodChannelResult) {
 
         mainMethodChannelResult = methodChannelResult;
+
     }
 
     public void initializeChannelsSinkForFlutter(EventChannel.EventSink eventChannelSink) {
@@ -318,12 +319,14 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
 
 
                             tempTags.add(perTag);
-                            if (context.allAttributeMode.currentReadMode == ReaderModes.INVENTORY_MODE
+                            if (context.allAttributeMode.currentReadMode ==
+                                    ReaderModes.INVENTORY_MODE
                                     &&
                                     context.currentInventoryEventSink != null
                             ) {
 
                                 Log.i(TAG, "eventReadNotify: Sending to flutter...");
+
                                 try {
                                     context.runOnUiThread(new Runnable() {
                                         @Override
@@ -336,9 +339,13 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
                                 }
                             } else {
                                 if (context.currentInventoryEventSink == null) {
-                                    Log.e(TAG, "eventReadNotify: currentInventoryEventSink null");
+                                    Log.e(
+                                            TAG,
+                                            "eventReadNotify: currentInventoryEventSink null");
                                 } else {
-                                    Log.e(TAG, "eventReadNotify: Not Inventory Mode!");
+                                    Log.e(
+                                            TAG,
+                                            "eventReadNotify: Not Inventory Mode!");
                                 }
                             }
                         }
@@ -350,7 +357,8 @@ public class ZebraReaderSDK implements Readers.RFIDReaderEventHandler {
                             Log.d("ZEBRA_MAIN", " Mem Bank Data " + tag.getMemoryBankData());
                         }
                     }
-                    if (tag.isContainsLocationInfo()) {
+                    if (tag.isContainsLocationInfo())
+                    {
                         short dist = tag.LocationInfo.getRelativeDistance();
                         Log.d("ZEBRA_MAIN", "Tag relative distance " + dist);
                     }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:kumas_topu/utilities/constants/extension/context_extensions.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class TitleAppBar extends AppBar {
+class TitleAppBar extends AppBar
+{
   final String label;
   final Widget? leadingWidget;
   final Function? onTap;

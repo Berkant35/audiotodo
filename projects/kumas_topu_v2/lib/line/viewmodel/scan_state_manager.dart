@@ -12,7 +12,7 @@ import '../native/native_manager.dart';
 
 class ScanToMatchStateManager extends StateNotifier<ScanToMatchStatus>{
   ScanToMatchStateManager(ScanToMatchStatus state) : super(ScanToMatchStatus.IDLE);
-  final nativeManager = NativeManager();
+  final nativeManager = NativeManager.instance;
 
   changeState(ScanToMatchStatus value){
     state = value;
@@ -20,11 +20,11 @@ class ScanToMatchStateManager extends StateNotifier<ScanToMatchStatus>{
   }
 
   Future<void> listen(WidgetRef ref)async{
-    nativeManager.listenAndSetScanToMatchStatus(ref);
+    nativeManager!.listenAndSetScanToMatchStatus(ref);
   }
 
   Future<void> setMode(ScanToMatchStatus scanToMatchStatus) async {
-    nativeManager.setStatusOfScanToMatchStatus(scanToMatchStatus);
+    nativeManager!.setStatusOfScanToMatchStatus(scanToMatchStatus);
   }
 
 }

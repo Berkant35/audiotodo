@@ -19,7 +19,7 @@ class RFIDDeviceStateManager extends StateNotifier<RFIDDevice?> {
   double? currentPowerValue;
 
 
-  NativeManager nativeManager = NativeManager();
+  final nativeManager = NativeManager.instance;
 
   changeState(RFIDDevice value) {
     state = value;
@@ -27,13 +27,13 @@ class RFIDDeviceStateManager extends StateNotifier<RFIDDevice?> {
   }
 
   Future<void> scanBarcode(WidgetRef ref) async {
-     await nativeManager.scanBarcode(ref,false);
+     await nativeManager!.scanBarcode(ref,false);
   }
 
 
   ///Cihaza bağlanma fonksiyon
   Future<void> initReader(WidgetRef ref) async {
-    var readerDevice = await nativeManager.connectRFIDDevice();
+    var readerDevice = await nativeManager!.connectRFIDDevice();
     if (readerDevice != null) {
       state = readerDevice;
       Dialogs.showSuccess("RFID Aktif");
@@ -45,14 +45,14 @@ class RFIDDeviceStateManager extends StateNotifier<RFIDDevice?> {
   }
 
   Future<double?> getPower() async {
-    var result = await nativeManager.getPower();
+    var result = await nativeManager!.getPower();
     currentPowerValue = result.toDouble();
     return currentPowerValue ?? 5.0;
   }
 
   Future<void> setPower(String setPowerValue) async {
     currentPowerValue  = double.tryParse(setPowerValue)!.toInt().toDouble();
-     await nativeManager.setPower(setPowerValue).then((value){
+     await nativeManager!.setPower(setPowerValue).then((value){
        currentPowerValue  = double.tryParse(setPowerValue);
      });
   }

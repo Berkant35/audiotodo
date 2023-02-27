@@ -32,7 +32,7 @@ class _MatchWithRFIDState extends ConsumerState<MatchWithRFID> {
     ref
         .read(
         currentTriggerModeProvider.notifier)
-        .nativeManager
+        .nativeManager!
         .listenTriggerForWriteMode(
         ref,
         ref
@@ -75,7 +75,7 @@ class _MatchWithRFIDState extends ConsumerState<MatchWithRFID> {
                 ? () {
                     ref
                         .read(currentTriggerModeProvider.notifier)
-                        .nativeManager
+                        .nativeManager!
                         .writeData(
                             ref, ref.read(currentBarcodeInfoProvider).epc!);
                   }

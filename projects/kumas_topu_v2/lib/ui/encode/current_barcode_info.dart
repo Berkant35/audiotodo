@@ -69,12 +69,9 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
                             }
                           });
                         },
-                        icon: Padding(
-                          padding: EdgeInsets.only(left: 6.w),
-                          child: Icon(
-                            Icons.add_box,
-                            size: 4.h,
-                          ),
+                        icon: Icon(
+                          Icons.add_box,
+                          size: 5.h,
                         ))
                     : const Center(
                         child: CircularProgressIndicator.adaptive(),
@@ -136,7 +133,7 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
                       ? () {
                           ref
                               .read(currentTriggerModeProvider.notifier)
-                              .nativeManager
+                              .nativeManager!
                               .scanBarcodeButton(ref);
                         }
                       : null,
@@ -160,7 +157,8 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
                                 TriggerModeStatus.BARCODE
                             ? () {
                                 barcodeFormState.currentState!.save();
-                                if (barcodeFormState.currentState!.validate()) {
+                                if (barcodeFormState.currentState!.validate())
+                                {
                                   ref
                                       .read(viewModelStateProvider.notifier)
                                       .createEPCForMatch(ref)
@@ -173,7 +171,7 @@ class _CurrentBarcodeInfoState extends ConsumerState<CurrentBarcodeInfo> {
                                         value != null) {
                                       var barcodeInfo =
                                           ref.read(currentBarcodeInfoProvider);
-                                      barcodeInfo.barcodeInfo = "";
+
                                       ref
                                           .read(currentBarcodeInfoProvider
                                               .notifier)

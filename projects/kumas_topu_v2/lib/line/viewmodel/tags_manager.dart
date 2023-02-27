@@ -10,7 +10,7 @@ import '../native/native_manager.dart';
 class InventoryTagsManager extends StateNotifier<Map<String, UHFTagInfo>> {
   InventoryTagsManager(Map<String, UHFTagInfo> state) : super({});
 
-  final nativeManager = NativeManager();
+  final nativeManager = NativeManager.instance;
   Set<String> expectedEpcList = {};
   Map<String,String> readTime = {};
   Set<String> waitingEpcList = {};
@@ -43,22 +43,24 @@ class InventoryTagsManager extends StateNotifier<Map<String, UHFTagInfo>> {
 
   listen(WidgetRef ref) {
     debugPrint("Listening....");
-    nativeManager.inventoryAndThenGetTags(ref).then((value){
+    nativeManager!.inventoryAndThenGetTags(ref).then((value){
       isListening = true;
     });
   }
 
+
+
   startScan(WidgetRef ref) {
 
-      nativeManager.inventoryAndThenGetTags(ref).then((value){
-        nativeManager.startScan();
+      nativeManager!.inventoryAndThenGetTags(ref).then((value){
+        nativeManager!.startScan();
       });
 
 
   }
 
   stopScan() {
-    nativeManager.stopScan();
+    nativeManager!.stopScan();
   }
 
   updateTag(UHFTagInfo tag) {
@@ -71,7 +73,7 @@ class InventoryTagsManager extends StateNotifier<Map<String, UHFTagInfo>> {
 
   clearTagList(bool deleteWaitingEpcList) {
     state.clear();
-    nativeManager.clear();
+    nativeManager!.clear();
     if(deleteWaitingEpcList){
       waitingEpcList.clear();
     }
@@ -80,6 +82,6 @@ class InventoryTagsManager extends StateNotifier<Map<String, UHFTagInfo>> {
   }
 
   initInventory(){
-    nativeManager.initInventory();
+    nativeManager!.initInventory();
   }
 }

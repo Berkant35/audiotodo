@@ -1,10 +1,11 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/line/global_providers.dart';
+import 'package:kumas_topu/line/native/native_manager.dart';
 import 'package:kumas_topu/utilities/components/custom_elevated_button.dart';
 import 'package:kumas_topu/utilities/components/per_item_of_menu.dart';
-import 'package:kumas_topu/utilities/components/seperate_padding.dart';
 import 'package:kumas_topu/utilities/constants/app/application_constants.dart';
 import 'package:kumas_topu/utilities/constants/app/enums.dart';
 import 'package:kumas_topu/utilities/constants/extension/context_extensions.dart';
@@ -149,12 +150,39 @@ class MainPage extends ConsumerWidget {
                           scaleHigh: 9.h,
                           title: 'AYARLAR',
                           onTap: () async {
+                            DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+                            AndroidDeviceInfo androidInfo =
+                                await deviceInfo.androidInfo;
+                            double maxPower = 0.0;
+                            if (androidInfo.brand.toUpperCase() == "ZEBRA") {
+                              maxPower = 300.0;
+                            } else {
+                              maxPower = 30.0;
+                            }
+
                             await SystemChannels.platform.invokeMethod<void>(
                               'SystemSound.play',
                               SystemSoundType.click.toString(),
                             );
                             NavigationService.instance.navigateToPage(
-                                path: NavigationConstants.settingsPage);
+                                path: NavigationConstants.settingsPage,
+                                data: {"maxValue": maxPower});
+                          }),
+                      PerItemOfMenu(
+                          imagePath: ImagePath.searchSvg,
+                          scaleHigh: 9.h,
+                          title: 'İNCELE',
+                          onTap: () async {
+                            await SystemChannels.platform.invokeMethod<void>(
+                              'SystemSound.play',
+                              SystemSoundType.click.toString(),
+                            );
+
+                            NativeManager.instance!.listenAndSingleInventory(ref);
+
+
+                            NavigationService.instance.navigateToPage(
+                                path: NavigationConstants.detailOfProductPage);
                           }),
                     ],
                   ),

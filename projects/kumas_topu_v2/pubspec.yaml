@@ -28,7 +28,6 @@ dependencies:
   #device
   device_info_plus: ^8.0.0
 
-
   #path
   path_provider: ^2.0.11
   android_path_provider: ^0.3.0
@@ -40,6 +39,9 @@ dependencies:
   #Model Works
   json_annotation: ^4.7.0
   json_serializable: ^6.5.4
+
+  #dotenv:
+  dotenv: ^4.1.0
 
   #Toast Messages...
   fluttertoast: ^8.1.1
@@ -67,6 +69,7 @@ flutter:
 
     - assets/images/
     - assets/lottie/
+
 
   fonts:
     - family: Poppins

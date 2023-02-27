@@ -1,6 +1,12 @@
 part of 'native_manager.dart';
 
-enum ChannelKeys { mainChannel, mainSupportChannel, eventChannel, scanToMatchEventChannel,inventoryEventChannel }
+enum ChannelKeys {
+  mainChannel,
+  mainSupportChannel,
+  eventChannel,
+  scanToMatchEventChannel,
+  inventoryEventChannel,
+  singleInventoryEventChannel}
 
 ///Invoke methodların tiplerini topladığımız enum
 enum InvokeMethods {
@@ -26,6 +32,10 @@ enum BroadCastStates { inventoryAndGetTag,scanToMatchAndGetTagWithBarcodeNumber,
 enum RFIDStatus { connected, disconnected }
 
 abstract class NativeInterface {
+
+
+
+
   ///Flutter --> JAVA
 
   ///method channel sadece gidip bir tane veri getirdiğimiz method.
@@ -44,6 +54,8 @@ abstract class NativeInterface {
   final EventChannel _inventoryEventChannel =
   EventChannel(ChannelKeys.inventoryEventChannel.name);
 
+  final EventChannel _singleInventoryEventChannel =
+  EventChannel(ChannelKeys.singleInventoryEventChannel.name);
   ///Barcode okuması ve rfid etiketi okuma caselerini buradan haberleşerek yapıcaz
   final EventChannel _scanToMatchEventChannel =
   EventChannel(ChannelKeys.scanToMatchEventChannel.name);
@@ -77,9 +89,11 @@ abstract class NativeInterface {
 
   ///Read single with tag and update barcode info
 
-  Future<void> singleInventory();
+  Future<void> singleInventory(WidgetRef ref);
 
   Future<void> listenAndSetScanToMatchStatus(WidgetRef ref);
+
+  Future<void> listenAndSingleInventory(WidgetRef ref);
 
   Future<void> scanBarcode(WidgetRef ref,bool isGoToFirstPage);
 

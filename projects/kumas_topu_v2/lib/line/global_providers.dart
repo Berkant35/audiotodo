@@ -2,8 +2,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/line/viewmodel/current_barcode_info_manager.dart';
 import 'package:kumas_topu/line/viewmodel/current_barcode_standart.dart';
+import 'package:kumas_topu/line/viewmodel/current_epc_detail.dart';
 import 'package:kumas_topu/line/viewmodel/current_inventory_manager.dart';
 import 'package:kumas_topu/line/viewmodel/current_is_shapment_manager.dart';
+import 'package:kumas_topu/line/viewmodel/current_power_value_manager.dart';
 import 'package:kumas_topu/line/viewmodel/login_state_manager.dart';
 import 'package:kumas_topu/line/viewmodel/operation_work_manager.dart';
 import 'package:kumas_topu/line/viewmodel/rfid_state_manager.dart';
@@ -14,8 +16,10 @@ import 'package:kumas_topu/line/viewmodel/tags_manager.dart';
 import 'package:kumas_topu/line/viewmodel/trigger_mode.dart';
 import 'package:kumas_topu/line/viewmodel/view_model.dart';
 import 'package:kumas_topu/line/viewmodel/write_mode_manager.dart';
+import 'package:kumas_topu/models/current_epc_detail.dart';
 import 'package:kumas_topu/models/current_inventory.dart';
 import 'package:kumas_topu/models/encode_standarts.dart';
+import 'package:kumas_topu/models/epc_detail.dart';
 
 import '../models/barcode_info.dart';
 import '../models/rfid_device.dart';
@@ -72,6 +76,12 @@ StateNotifierProvider<CurrentBarcodeInfoManager, BarcodeInfo>((ref) {
   return CurrentBarcodeInfoManager(BarcodeInfo());
 });
 
+
+final currentEpcDetailInfoProvider =
+StateNotifierProvider<CurrentEpcDetailManager, CurrentEpcDetail?>((ref) {
+  return CurrentEpcDetailManager(CurrentEpcDetail(currentEpc: "",epcDetail: null));
+});
+
 final currentTriggerModeProvider=
 StateNotifierProvider<TriggerModeManager, TriggerModeStatus>((ref) {
   return TriggerModeManager(TriggerModeStatus.IDLE);
@@ -85,4 +95,9 @@ StateNotifierProvider<CurrentInventoryState, CurrentInventory?>((ref) {
 final currentIsShipmentProvider=
 StateNotifierProvider<CurrentIsShipmentManager, bool>((ref) {
   return CurrentIsShipmentManager(false);
+});
+
+final currentPowerValueProvider=
+StateNotifierProvider<CurrentPowerValueManager, int>((ref) {
+  return CurrentPowerValueManager(15);
 });

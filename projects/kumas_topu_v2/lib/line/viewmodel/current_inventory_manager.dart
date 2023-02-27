@@ -9,7 +9,7 @@ class CurrentInventoryState extends StateNotifier<CurrentInventory?> {
   CurrentInventoryState(CurrentInventory? currentInventory) : super(null);
   int count = 0;
 
-  final nativeManager = NativeManager();
+  final nativeManager = NativeManager.instance;
 
   changeState(CurrentInventory value) {
     state = value;
@@ -17,18 +17,22 @@ class CurrentInventoryState extends StateNotifier<CurrentInventory?> {
 
   addTag(String epc, String dateTime) {
     count++;
-    debugPrint("Count:$count");
+    debugPrint("Count: $count");
 
     if (state?.readEpcList != null &&
         !state!.readEpcList!.toString().contains(epc))
     {
 
-      state?.readEpcList!.add(ReadEpc(epc: epc, readDate: dateTime));
+      state?.readEpcList!.add(
+          ReadEpc(
+              epc: epc,
+              readDate: dateTime)
+      );
 
       state?.readEpcList!.sort((a, b) =>
           DateTime.parse(b.readDate!).compareTo(DateTime.parse(a.readDate!)));
 
-      nativeManager.playSound();
+      nativeManager!.playSound();
 
     }
 

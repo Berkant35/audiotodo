@@ -4,6 +4,7 @@ public enum ReaderModes {
     IDLE,
     BARCODE_MODE,
     WRITE_MODE,
+    SINGLE_MODE,
     INVENTORY_MODE;
 
     private ReaderModes() {

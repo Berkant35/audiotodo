@@ -44,8 +44,8 @@ public class MainActivity extends FlutterActivity {
     //Chainway
     ChainwayReaderSDK chainwayReaderSDK = null;
 
-
-    MethodChannel.Result currentResult;
+    //CurrentResult
+    public MethodChannel.Result currentResult;
 
 
     //Flutter
@@ -53,19 +53,25 @@ public class MainActivity extends FlutterActivity {
     public static MethodCall listenCurrentCall;
     public static EventChannel.EventSink currentEventSink;
     public EventChannel.EventSink currentInventoryEventSink;
+    public EventChannel.EventSink currentSingleInventoryEventSink;
 
-
-    AllAttributeMode allAttributeMode = new AllAttributeMode();
+    //All attribute
+    public AllAttributeMode allAttributeMode = new AllAttributeMode();
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        initializeDynamicReader();
+    }
 
-        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
-        Log.i(TAG, "onCreate(IP):" + ip);
+
+    /**
+     * Uygulama başladığı zaman zebraysa zebra initiliaze chanway ise cahinway
+     * initialize edildiği bölümdür.
+     */
+    private void initializeDynamicReader() {
 
         if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
             customBarcodeManager = new CustomBarcodeManager();
@@ -75,183 +81,27 @@ public class MainActivity extends FlutterActivity {
             zebraReaderSDK.onCreate(this);
         } else if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "CHAINWAY")) {
             chainwayReaderSDK = new ChainwayReaderSDK();
+            chainwayReaderSDK.onCreate(this);
 
         }
 
-
-        Log.i(TAG, "onCreate: ONCREATE!!!!");
+        Log.i(TAG, "initializeDynamicReader: initializing...");
     }
+
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), Constants.mainChannel)
                 .setMethodCallHandler(
-                        (call, result) -> {
-                            currentResult = result;
-
-                            switch (call.method) {
-
-                                case Constants.init:
-
-                                    allAttributeMode.barcodeModes = BarcodeModes.IDLE;
-
-                                    if (Objects.equals(Build.BRAND, "ZEBRA"))
-                                    {
-                                        if (zebraReaderSDK.isReaderConnected())
-                                        {
-                                            currentResult.success(
-                                                    Constants.methodChannelResultConnected);
-                                        }
-                                         else
-                                        {
-                                            currentResult.success(
-                                                    Constants.methodChannelResultFailed);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        chainwayReaderSDK.initUHF(currentResult);
-                                        currentResult = null;
-                                    }
-
-                                    break;
-
-                                case Constants.barcodeModeOn:
-                                    allAttributeMode.currentReadMode = ReaderModes.BARCODE_MODE;
-                                    if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA"))
-                                    {
-                                        if (customBarcodeManager.getScannerReady())
-                                        {
-
-                                            Log.i(TAG, "configureFlutterEngine: READY!");
-
-                                            currentResult.success(
-                                                    Constants.methodChannelResultConnected);
-                                        } else {
-
-                                            Log.e(TAG, "configureFlutterEngine: FAILED");
-
-                                            currentResult.success(
-                                                    Constants.methodChannelResultFailed);
-                                        }
-                                        currentResult = null;
-                                    } else {
-                                        if (chainwayReaderSDK.scannerIsReady) {
-                                            currentResult.success(
-                                                    Constants.methodChannelResultConnected);
-                                        } else {
-                                            currentResult.success(
-                                                    Constants.methodChannelResultFailed);
-                                        }
-                                    }
-
-                                    break;
-                                case Constants.scanBarcode:
-                                    allAttributeMode.currentReadMode = ReaderModes.BARCODE_MODE;
-                                    Log.i(TAG, "configureFlutterEngine: waiting... barcode!!");
-                                    break;
-                                case Constants.writeEpc:
-                                    allAttributeMode.currentReadMode = ReaderModes.WRITE_MODE;
-                                    listenCurrentCall = call;
-                                    currentResult.success(
-                                            Constants.methodChannelResultOk);
-                                    currentResult = null;
-                                    break;
-                                case Constants.initializeInventory:
-                                    if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
-                                        zebraReaderSDK.initializeInventory(currentInventoryEventSink);
-                                    } else {
-                                        chainwayReaderSDK.initializeInventory(currentInventoryEventSink);
-                                    }
-                                    break;
-                                case Constants.startInventory:
-                                    Log.i(TAG, "configureFlutterEngine: Start Inventory...");
-                                    if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
-                                        zebraReaderSDK.performInventory();
-                                    } else {
-                                        chainwayReaderSDK.startInventory();
-                                    }
-                                    allAttributeMode.rfidModes = RFIDModes.INVENTORY;
-
-                                    if (currentInventoryEventSink != null) {
-                                        currentInventoryEventSink.success("1");
-                                    }
-
-
-                                    break;
-                                case Constants.clearInventory:
-                                    Log.i(TAG, "configureFlutterEngine: Start Inventory...");
-                                    zebraReaderSDK.clearTempTags();
-
-                                    break;
-                                case Constants.stopInventory:
-                                    Log.i(TAG, "configureFlutterEngine: Stop Inventory...");
-                                    zebraReaderSDK.stopInventory();
-                                    allAttributeMode.rfidModes = RFIDModes.STOPPED_INVENTORY;
-                                    if (currentInventoryEventSink != null) {
-                                        currentInventoryEventSink.success("-1");
-                                    }
-                                    break;
-                                case Constants.playSound:
-                                    successSoundPlay();
-                                    break;
-                                case Constants.getPower:
-                                    try {
-                                        int power = zebraReaderSDK.getPower();
-                                        result.success(String.valueOf(power));
-                                    } catch (OperationFailureException | InvalidUsageException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    break;
-                                case Constants.setPower:
-                                    String value = call.argument("powerValue");
-                                    assert value != null;
-                                    int powerValue = Integer.parseInt(value);
-                                    try {
-                                        zebraReaderSDK.setPower(powerValue);
-                                    } catch (OperationFailureException | InvalidUsageException e) {
-                                        e.printStackTrace();
-                                    }
-                                    result.success(Constants.methodChannelResultOk);
-                                    break;
-
-                            }
-                        }
+                        this::FlutterActions
                 );
 
 
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(),
                 Constants.mainSupportChannel)
                 .setMethodCallHandler(
-                        (call, result) -> {
-
-                            zebraReaderSDK.initializeChannelsMethodForFlutter(result);
-                            currentCall = call;
-                            Log.i(TAG, "configureFlutterEngine: mainSupportChannel");
-                            switch (call.method) {
-                                case Constants.scanBarcodeButton:
-                                    try {
-
-                                        customBarcodeManager.scanBarcode(result);
-                                    } catch (ScannerException e) {
-                                        e.printStackTrace();
-                                    }
-                                    break;
-                                case Constants.writeEpc:
-                                    allAttributeMode.currentReadMode = ReaderModes.WRITE_MODE;
-
-                                    String generatedEpc = call.argument("epc");
-                                    Log.i(TAG, "OLUŞTURULACAK OLAN EPC!:" + generatedEpc);
-                                    zebraReaderSDK.writeData(generatedEpc);
-                                    break;
-                                case Constants.barcodeModeOn:
-                                    allAttributeMode.currentReadMode = ReaderModes.BARCODE_MODE;
-                                    break;
-
-                            }
-                        }
+                        this::supportFlutterActions
                 );
 
 
@@ -272,6 +122,26 @@ public class MainActivity extends FlutterActivity {
 
                 }
         );
+
+
+        new EventChannel(flutterEngine.getDartExecutor(), Constants.singleInventoryEventChannel).setStreamHandler(
+                new EventChannel.StreamHandler() {
+
+                    @Override
+                    public void onListen(Object listening, EventChannel.EventSink eventSink)
+                    {
+                        currentSingleInventoryEventSink = eventSink;
+                        allAttributeMode.currentReadMode = ReaderModes.SINGLE_MODE;
+
+                    }
+
+                    @Override
+                    public void onCancel(Object listening) {}
+
+                }
+        );
+
+
         new EventChannel(flutterEngine.getDartExecutor(), Constants.inventoryEventChannel).setStreamHandler(
                 new EventChannel.StreamHandler() {
 
@@ -280,7 +150,11 @@ public class MainActivity extends FlutterActivity {
                         Log.i(TAG, "onListen: Listening...xxx");
                         currentInventoryEventSink = eventSink;
                         allAttributeMode.currentReadMode = ReaderModes.INVENTORY_MODE;
-                        zebraReaderSDK.initializeInventory(currentInventoryEventSink);
+                        if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
+                            zebraReaderSDK.initializeInventory(currentInventoryEventSink);
+                        } else {
+                            chainwayReaderSDK.initializeInventory(currentInventoryEventSink);
+                        }
 
                     }
 
@@ -295,6 +169,202 @@ public class MainActivity extends FlutterActivity {
 
     }
 
+    /**
+     *
+     */
+
+    private void supportFlutterActions(MethodCall call, MethodChannel.Result result) {
+        if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
+            zebraReaderSDK.initializeChannelsMethodForFlutter(result);
+        } else {
+            chainwayReaderSDK.initializeChannelsMethodForFlutter(result);
+        }
+        currentCall = call;
+        switch (call.method) {
+            case Constants.scanBarcodeButton:
+                try {
+                    if (Objects.equals(Build.BRAND, "ZEBRA")) {
+                        customBarcodeManager.scanBarcode(result);
+                    } else {
+                        if (chainwayReaderSDK.barcodeDecoder != null &&
+                                chainwayReaderSDK.getCurrentBarcodeMode() != BarcodeModes.SCANNING)
+                        {
+                            chainwayReaderSDK.scanBarcode(currentResult);
+                        }
+                    }
+                } catch (ScannerException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case Constants.writeEpc:
+                allAttributeMode.currentReadMode = ReaderModes.WRITE_MODE;
+                String generatedEpc = call.argument("epc");
+                Log.i(TAG, "OLUŞTURULACAK OLAN EPC!:" + generatedEpc);
+
+
+                if (Objects.equals(Build.BRAND, "ZEBRA")) {
+                    zebraReaderSDK.writeData(generatedEpc);
+                } else {
+                    chainwayReaderSDK.writeData(generatedEpc);
+                }
+
+
+                break;
+            case Constants.barcodeModeOn:
+                allAttributeMode.currentReadMode = ReaderModes.BARCODE_MODE;
+                break;
+
+        }
+    }
+
+    private void FlutterActions(MethodCall call, MethodChannel.Result result) {
+        currentResult = result;
+
+        switch (call.method) {
+
+            case Constants.init:
+                allAttributeMode.barcodeModes = BarcodeModes.IDLE;
+                if (Objects.equals(Build.BRAND, "ZEBRA")) {
+                    if (zebraReaderSDK.isReaderConnected()) {
+                        currentResult.success(
+                                Constants.methodChannelResultConnected);
+                    } else {
+                        currentResult.success(
+                                Constants.methodChannelResultFailed);
+                    }
+                } else {
+                    chainwayReaderSDK.initUHF(currentResult);
+
+                }
+                break;
+            case Constants.barcodeModeOn:
+                allAttributeMode.currentReadMode = ReaderModes.BARCODE_MODE;
+                if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
+                    if (customBarcodeManager.getScannerReady()) {
+                        Log.i(TAG, "configureFlutterEngine: READY!");
+                        currentResult.success(
+                                Constants.methodChannelResultConnected);
+                    } else {
+                        Log.e(TAG, "configureFlutterEngine: FAILED");
+                        currentResult.success(
+                                Constants.methodChannelResultFailed);
+                    }
+                    currentResult = null;
+                } else {
+
+
+                    if (chainwayReaderSDK.scannerIsReady) {
+                        currentResult.success(
+                                Constants.methodChannelResultConnected);
+                    } else {
+                        currentResult.success(
+                                Constants.methodChannelResultFailed);
+                    }
+                }
+                break;
+            case Constants.scanBarcode:
+                allAttributeMode.currentReadMode = ReaderModes.BARCODE_MODE;
+                Log.i(TAG, "configureFlutterEngine: waiting... barcode!!");
+                break;
+            case Constants.writeEpc:
+                allAttributeMode.currentReadMode = ReaderModes.WRITE_MODE;
+                listenCurrentCall = call;
+                currentResult.success(
+                        Constants.methodChannelResultOk);
+                currentResult = null;
+                break;
+            case Constants.initializeInventory:
+                if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
+                    zebraReaderSDK.initializeInventory(currentInventoryEventSink);
+                } else {
+                    chainwayReaderSDK.initializeInventory(currentInventoryEventSink);
+                }
+                break;
+            case Constants.startInventory:
+                Log.i(TAG, "configureFlutterEngine: Start Inventory...");
+                allAttributeMode.rfidModes = RFIDModes.INVENTORY;
+                if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
+                    zebraReaderSDK.performInventory();
+                } else {
+                    chainwayReaderSDK.startInventory();
+                }
+                if (currentInventoryEventSink != null) {
+                    currentInventoryEventSink.success("1");
+                }
+                break;
+            case Constants.clearInventory:
+                Log.i(TAG, "configureFlutterEngine: Start Inventory...");
+                if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
+                    zebraReaderSDK.clearTempTags();
+                } else {
+                    chainwayReaderSDK.clearTempTags();
+                }
+
+                break;
+            case Constants.stopInventory:
+                Log.i(TAG, "configureFlutterEngine: Stop Inventory...");
+                if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
+                    zebraReaderSDK.stopInventory();
+                } else {
+                    chainwayReaderSDK.startInventory();
+                }
+
+                allAttributeMode.rfidModes = RFIDModes.STOPPED_INVENTORY;
+                if (currentInventoryEventSink != null) {
+                    currentInventoryEventSink.success("-1");
+                }
+                break;
+            case Constants.singleInventory:
+
+
+                if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
+                    //zebraReaderSDK.singleInventory();
+                } else {
+                    chainwayReaderSDK.singleInventory();
+                }
+
+
+
+                break;
+            case Constants.playSound:
+                successSoundPlay();
+                break;
+            case Constants.getPower:
+                try {
+                    int power = 0;
+                    if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
+                        power = zebraReaderSDK.getPower();
+                    } else {
+                        power = chainwayReaderSDK.getPower();
+                    }
+
+
+                    result.success(String.valueOf(power));
+                } catch (OperationFailureException | InvalidUsageException e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            case Constants.setPower:
+                String value = call.argument("powerValue");
+                assert value != null;
+                int powerValue = Integer.parseInt(value);
+                try {
+                    if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
+                        zebraReaderSDK.setPower(powerValue);
+                    } else {
+                        chainwayReaderSDK.setPower(powerValue);
+                    }
+
+                } catch (OperationFailureException | InvalidUsageException e) {
+                    e.printStackTrace();
+                }
+                result.success(Constants.methodChannelResultOk);
+                break;
+
+        }
+    }
+
 
     public EventChannel.EventSink getCurrentInventoryEventSink() {
         return currentInventoryEventSink;
@@ -305,12 +375,22 @@ public class MainActivity extends FlutterActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (
                 allAttributeMode.currentReadMode == ReaderModes.BARCODE_MODE
-                        && keyCode == 102 && allAttributeMode.currentTriggerMode != TriggerModes.PRESSING) {
+                        && (keyCode == 102 || (keyCode > 290 && keyCode < 300)) &&
+                        allAttributeMode.currentTriggerMode != TriggerModes.PRESSING) {
+
             allAttributeMode.currentTriggerMode = TriggerModes.PRESSING;
 
+            if (!Build.BRAND.toUpperCase(Locale.ROOT).equals("ZEBRA")) {
+
+                if (chainwayReaderSDK.barcodeDecoder != null && chainwayReaderSDK.getCurrentBarcodeMode() != BarcodeModes.SCANNING) {
+                    chainwayReaderSDK.scanBarcode(currentResult);
+                } else {
+                    Log.e(TAG, "onKeyUp: NULL");
+                }
+            }
 
         } else if (allAttributeMode.currentReadMode == ReaderModes.WRITE_MODE
-                && keyCode == 102 && allAttributeMode.currentTriggerMode != TriggerModes.PRESSING) {
+                && (keyCode == 102 || (keyCode > 290 && keyCode < 300)) && allAttributeMode.currentTriggerMode != TriggerModes.PRESSING) {
             allAttributeMode.currentTriggerMode = TriggerModes.PRESSING;
             if (currentEventSink != null) {
                 currentEventSink.success(TriggerModes.PRESSING.name());
@@ -320,10 +400,29 @@ public class MainActivity extends FlutterActivity {
             if (listenCurrentCall != null) {
                 String generatedEpc = listenCurrentCall.argument("epc");
                 Log.i(TAG, "onKeyUp(WRITE_DATA_GENERATED_EPC):" + generatedEpc);
-                zebraReaderSDK.writeData(generatedEpc);
+                if(Build.BRAND.toUpperCase(Locale.ROOT).equals("ZEBRA")){
+                    zebraReaderSDK.writeData(generatedEpc);
+                }else {
+                    chainwayReaderSDK.writeData(generatedEpc);
+                }
             }
-        } else if (allAttributeMode.currentReadMode == ReaderModes.INVENTORY_MODE
-                && keyCode == 102 && allAttributeMode.currentTriggerMode != TriggerModes.PRESSING) {
+        }else if(allAttributeMode.currentReadMode == ReaderModes.SINGLE_MODE
+                && (keyCode == 102 || (keyCode > 290 && keyCode < 300)) &&
+                allAttributeMode.currentTriggerMode != TriggerModes.PRESSING){
+
+            allAttributeMode.currentTriggerMode = TriggerModes.PRESSING;
+            if (Build.BRAND.toUpperCase(Locale.ROOT).equals("ZEBRA"))
+            {
+                //zebraReaderSDK.stopInventory();
+            } else {
+                chainwayReaderSDK.singleInventory();
+            }
+        }
+
+
+        else if (allAttributeMode.currentReadMode == ReaderModes.INVENTORY_MODE
+                && (keyCode == 102 || (keyCode > 290 && keyCode < 300)) &&
+                allAttributeMode.currentTriggerMode != TriggerModes.PRESSING) {
 
             allAttributeMode.currentTriggerMode = TriggerModes.PRESSING;
 
@@ -334,19 +433,31 @@ public class MainActivity extends FlutterActivity {
 
                 currentInventoryEventSink.success("-1");
 
-                zebraReaderSDK.stopInventory();
+                if (Build.BRAND.toUpperCase(Locale.ROOT).equals("ZEBRA")) {
+                    zebraReaderSDK.stopInventory();
+                } else {
+                    chainwayReaderSDK.stopInventory();
+                }
+
                 allAttributeMode.rfidModes = RFIDModes.STOPPED_INVENTORY;
 
-            } else {
+            }
+            else {
                 Log.i(TAG, "onKeyUp: NOT INVENTORY MODE!");
                 currentInventoryEventSink.success("1");
-                zebraReaderSDK.performInventory();
+                if (Build.BRAND.toUpperCase(Locale.ROOT).equals("ZEBRA")) {
+                    zebraReaderSDK.performInventory();
+                } else {
+                    chainwayReaderSDK.startInventory();
+                }
+
                 allAttributeMode.rfidModes = RFIDModes.INVENTORY;
             }
         }
-        Log.i(TAG, "onKeyUp: TRIGGERED!!!!!" + allAttributeMode.currentReadMode.name());
-        Log.i(TAG, "onKeyUp: TRIGGERED!!!!!" + allAttributeMode.currentTriggerMode.name());
-        Log.i(TAG, "onKeyUp: TRIGGERED!!!!!" + keyCode);
+
+        Log.i(TAG, "onKeyUp: TRIGGERED!" + allAttributeMode.currentReadMode.name());
+        Log.i(TAG, "onKeyUp: TRIGGERED!" + allAttributeMode.currentTriggerMode.name());
+        Log.i(TAG, "onKeyUp: TRIGGERED!" + keyCode);
 
 
         return super.onKeyUp(keyCode, event);
@@ -356,8 +467,9 @@ public class MainActivity extends FlutterActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         allAttributeMode.currentTriggerMode = TriggerModes.STOPPED;
         if (allAttributeMode.currentReadMode == ReaderModes.BARCODE_MODE) {
-            Log.i(TAG, "onKeyDown(Barcode):" + customBarcodeManager.barcodeTag);
+            Log.i(TAG, "onKeyDown(Barcode):" + allAttributeMode.currentTriggerMode);
         }
+
         allAttributeMode.currentTriggerMode = TriggerModes.IDLE;
         return super.onKeyDown(keyCode, event);
     }

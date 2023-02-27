@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/line/global_providers.dart';
 import 'package:kumas_topu/models/barcode_info.dart';
 import 'package:kumas_topu/models/create_result_epc.dart';
+import 'package:kumas_topu/models/epc_detail.dart';
 import 'package:kumas_topu/models/serial_number.dart';
 
 import '../../../models/encode_standarts.dart';
@@ -19,6 +20,18 @@ import 'locator.dart';
 class Repository extends LocaleBase {
   final localService = locator<LocaleService>();
   final networkManager = NetworkManager.instance;
+
+  static Repository? _instance;
+
+
+
+  static Repository? get instance {
+    _instance ??= Repository._();
+    return _instance;
+  }
+
+  Repository._();
+
 
   @override
   Future<String?> getToken() async {
@@ -149,6 +162,23 @@ class Repository extends LocaleBase {
         if (token != null) {
           return await networkManager!.getInventories(token,isShipment).then((value) {
             return value!;
+          });
+        } else {
+          return null;
+        }
+      });
+    } catch (e) {
+      debugPrint('Error: $e');
+      return null;
+    }
+  }
+
+  Future<EpcDetail?> getCurrentDetailThenSet(String epc) async {
+    try {
+      return localService.getToken().then((token) async {
+        if (token != null) {
+          return await networkManager!.getEpcDetail(token,epc).then((value) {
+            return value;
           });
         } else {
           return null;

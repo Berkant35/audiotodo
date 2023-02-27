@@ -5,7 +5,6 @@ import 'package:kumas_topu/line/viewmodel/scan_stop_manager.dart';
 import 'package:kumas_topu/utilities/components/custom_elevated_button.dart';
 import 'package:kumas_topu/utilities/components/inventory_save_alert_dialog.dart';
 import 'package:kumas_topu/utilities/constants/extension/context_extensions.dart';
-import 'package:kumas_topu/utilities/constants/extension/edge_extension.dart';
 import 'package:lottie/lottie.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:segment_display/segment_display.dart';
@@ -35,12 +34,12 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
               if (ref.watch(scanStopStateProvider) != ScanModes.scan) {
                 ref
                     .read(currentTriggerModeProvider.notifier)
-                    .nativeManager
+                    .nativeManager!
                     .stopScan()
                     .then((value) {
                   ref
                       .read(currentTriggerModeProvider.notifier)
-                      .nativeManager
+                      .nativeManager!
                       .clear()
                       .then((value) {
                     ref
@@ -58,12 +57,12 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
                 if (ref.watch(scanStopStateProvider) != ScanModes.scan) {
                   ref
                       .read(currentTriggerModeProvider.notifier)
-                      .nativeManager
+                      .nativeManager!
                       .stopScan()
                       .then((value) {
                     ref
                         .read(currentTriggerModeProvider.notifier)
-                        .nativeManager
+                        .nativeManager!
                         .clear()
                         .then((value) {
                       ref
@@ -89,12 +88,12 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
               if (ref.watch(scanStopStateProvider) != ScanModes.scan) {
                 ref
                     .read(currentTriggerModeProvider.notifier)
-                    .nativeManager
+                    .nativeManager!
                     .stopScan()
                     .then((value) {
                   ref
                       .read(currentTriggerModeProvider.notifier)
-                      .nativeManager
+                      .nativeManager!
                       .clear()
                       .then((value) {
                     ref
@@ -189,12 +188,12 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
                             ScanModes.scan) {
                           ref
                               .read(currentTriggerModeProvider.notifier)
-                              .nativeManager
+                              .nativeManager!
                               .startScan();
                         } else {
                           ref
                               .read(currentTriggerModeProvider.notifier)
-                              .nativeManager
+                              .nativeManager!
                               .stopScan();
                         }
                       },

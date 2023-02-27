@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:kumas_topu/models/create_success.dart';
+import 'package:kumas_topu/models/epc_detail.dart';
 
 import '../../models/create_result_epc.dart';
 import '../../models/encode_status.dart';
@@ -27,8 +28,7 @@ part 'network_base.dart';
 class NetworkManager extends NetworkManagerBase {
   static NetworkManager? _instance;
 
-  final urlConstans = locator<UrlConstants>();
-  final localService = locator<LocaleService>();
+
 
   static NetworkManager? get instance {
     _instance ??= NetworkManager._();
@@ -36,7 +36,8 @@ class NetworkManager extends NetworkManagerBase {
   }
 
   NetworkManager._();
-
+  final urlConstans = locator<UrlConstants>();
+  final localService = locator<LocaleService>();
   @override
   Future<LoginSuccess?> login(String email, String password) async {
     try {
@@ -167,7 +168,7 @@ class NetworkManager extends NetworkManagerBase {
   Future<void> _tokenExpiredLogout() {
     return localService.saveToken("").then((value) {
       NavigationService.instance
-          .navigateToPage(path: NavigationConstants.loginPage);
+          .navigateToPageClear(path: NavigationConstants.loginPage);
       return null;
     });
   }
@@ -268,7 +269,6 @@ class NetworkManager extends NetworkManagerBase {
   Future<CreateSuccess?> addInventory(
       String title, String accessToken, bool isShipment) async {
     try {
-
       debugPrint("Shipment State $isShipment");
 
       return await urlConstans.getUrl().then((value) async {
@@ -280,12 +280,14 @@ class NetworkManager extends NetworkManagerBase {
         };
         DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        final response = await _dio.post('$value/${isShipment ? "shipment": "inventories"}/create', data: {
-          "access_token": accessToken,
-          isShipment ? "shipment_name" :"inventory_name": title,
-          "device_id": androidInfo.id,
-          "device_name": androidInfo.device
-        });
+        final response = await _dio.post(
+            '$value/${isShipment ? "shipment" : "inventories"}/create',
+            data: {
+              "access_token": accessToken,
+              isShipment ? "shipment_name" : "inventory_name": title,
+              "device_id": androidInfo.id,
+              "device_name": androidInfo.device
+            });
 
         debugPrint("Response: ${response.toString()}");
 
@@ -324,10 +326,7 @@ class NetworkManager extends NetworkManagerBase {
   Future<InventoryList?> getInventories(
       String accessToken, bool isShipment) async {
     try {
-
-
       debugPrint("Shıpment: $isShipment}");
-
 
       return await urlConstans.getUrl().then((value) async {
         (_dio.httpClientAdapter as DefaultHttpClientAdapter)
@@ -337,9 +336,11 @@ class NetworkManager extends NetworkManagerBase {
           return dioClient;
         };
 
-        final response = await _dio.post('$value/${isShipment ? "shipment": "inventories"}/list', data: {
-          "access_token": accessToken,
-        });
+        final response = await _dio.post(
+            '$value/${isShipment ? "shipment" : "inventories"}/list',
+            data: {
+              "access_token": accessToken,
+            });
 
         debugPrint("Response Data: ${response.data.toString()}");
 
@@ -347,7 +348,8 @@ class NetworkManager extends NetworkManagerBase {
 
         if (response.statusCode == 200 &&
             !response.data.toString().contains("TOKEN WRONG")) {
-          final inventoryListResult = InventoryList.fromJson(response.data,isShipment);
+          final inventoryListResult =
+              InventoryList.fromJson(response.data, isShipment);
 
           if (inventoryListResult.code == 200) {
             return inventoryListResult;
@@ -404,15 +406,17 @@ class NetworkManager extends NetworkManagerBase {
         AndroidDeviceInfo androidInfo = await _deviceInfo.androidInfo;
         Map<String, dynamic> data = {
           "access_token": accessToken,
-           isShipment ? "shipment_id" : "inventories_id": inventory.iD,
+          isShipment ? "shipment_id" : "inventories_id": inventory.iD,
           "device_id": androidInfo.id,
           "device_name": androidInfo.device,
-          isShipment ? "shipment_close" : "inventories_close": saveAndClose ? "1" : "0",
+          isShipment ? "shipment_close" : "inventories_close":
+              saveAndClose ? "1" : "0",
           "tag_list": readEpcList
         };
         debugPrint(data.toString());
-        final response =
-            await _dio.post('$value/${isShipment ? "shipment": "inventories"}/record', data: data);
+        final response = await _dio.post(
+            '$value/${isShipment ? "shipment" : "inventories"}/record',
+            data: data);
 
         debugPrint("Response: ${response.toString()}");
 
@@ -430,5 +434,49 @@ class NetworkManager extends NetworkManagerBase {
     } catch (e) {
       debugPrint("addInventory error: $e");
     }
+  }
+
+  Future<EpcDetail?> getEpcDetail(String accessToken, String epc) async {
+    try {
+      return await urlConstans.getUrl().then((value) async {
+        (_dio.httpClientAdapter as DefaultHttpClientAdapter)
+            .onHttpClientCreate = (HttpClient dioClient) {
+          dioClient.badCertificateCallback =
+              ((X509Certificate cert, String host, int port) => true);
+          return dioClient;
+        };
+
+        Map<String, dynamic> data = {"access_token": accessToken, "epc": epc};
+
+        final response =
+            await _dio.post('$value/encode/encode_checker', data: data);
+
+        debugPrint("Response: ${response.toString()}");
+
+        debugPrint("Res:${response.statusCode}");
+
+        if (response.statusCode == 200 &&
+            !response.data.toString().contains("TOKEN WRONG")) {
+          var epcDetail = EpcDetail.fromJson(response.data);
+
+          if (epcDetail.code == 200) {
+
+            return epcDetail;
+          } else {
+
+
+            return null;
+          }
+        } else {
+          if (response.data.toString().contains("TOKEN WRONG")) {
+            _tokenExpiredLogout();
+          }
+          return null;
+        }
+      });
+    } catch (e) {
+      debugPrint("addInventory error: $e");
+    }
+    return null;
   }
 }

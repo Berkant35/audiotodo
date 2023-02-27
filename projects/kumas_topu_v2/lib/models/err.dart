@@ -4,15 +4,17 @@ class Err {
 
   Err({this.code, this.message});
 
-  Err.fromJson(Map<String, dynamic> json) {
+  Err.fromJson(Map<String, dynamic> json)
+  {
     code = json['code'];
     message = json['message'];
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this.code;
-    data['message'] = this.message;
+  Map<String, dynamic> toJson()
+  {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['code'] = code;
+    data['message'] = message;
     return data;
   }
 }

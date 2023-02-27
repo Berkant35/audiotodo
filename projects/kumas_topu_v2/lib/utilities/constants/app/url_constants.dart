@@ -5,8 +5,7 @@ import '../../../line/repository/repository/locator.dart';
 
 class UrlConstants extends LocaleService {
   final localService = locator<LocaleService>();
-  //https://demo.uniqueid.nl/connector/ Demo
-  //https://crosspoint.uniqueid.nl/connector <!--->
+
   var baseURL = "https://connector.kumastopu.com/";
 
   Future<void> setUrl(String url) async {

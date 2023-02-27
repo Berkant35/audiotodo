@@ -9,4 +9,5 @@ class NavigationConstants{
   static const inventoryMainPage = '/InventoryMain';
   static const doInventoryPage = '/DoInventory';
   static const shipmentMainPage = '/ShipmentMain';
+  static const detailOfProductPage = '/DetailOfProduct';
 }

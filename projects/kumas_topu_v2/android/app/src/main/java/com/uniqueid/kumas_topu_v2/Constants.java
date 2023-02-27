@@ -14,6 +14,7 @@ public class Constants {
     public static final String mainSupportChannel = "mainSupportChannel";
     public static final String eventChannel = "eventChannel";
     public static final String inventoryEventChannel = "inventoryEventChannel";
+    public static final String singleInventoryEventChannel = "singleInventoryEventChannel";
 
     public static final String barcodeModeOn = "barcodeModeOn";
     public static final String scanToMatchEventChannel = "scanToMatchEventChannel";
@@ -27,7 +28,12 @@ public class Constants {
     public static final String scanBarcodeButton = "scanBarcodeButton";
     public static final String scanToMatchStatus = "setScanToMatchStatus";
 
+    public static final String password = "00000000";
+
+
 }
+
+
 
 
 

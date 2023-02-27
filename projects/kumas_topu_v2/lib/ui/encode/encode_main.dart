@@ -83,7 +83,7 @@ class _EncodeMainState extends ConsumerState<EncodeMain> {
   Future<void> barcodeModeOn(WidgetRef ref) async {
     ref
         .read(currentTriggerModeProvider.notifier)
-        .nativeManager
+        .nativeManager!
         .scanBarcode(ref, false);
   }
 }

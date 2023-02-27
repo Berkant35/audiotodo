@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:kumas_topu/models/current_epc_detail.dart';
 import 'package:kumas_topu/models/encode_status.dart';
 import 'package:kumas_topu/utilities/components/dialogs.dart';
 import 'package:kumas_topu/utilities/init/navigation/navigation_constants.dart';
@@ -20,6 +21,15 @@ import '../viewmodel/scan_stop_manager.dart';
 part 'native_interface.dart';
 
 class NativeManager extends NativeInterface {
+  static NativeManager? _instance;
+
+  static NativeManager? get instance {
+    _instance ??= NativeManager._();
+    return _instance;
+  }
+
+  NativeManager._();
+
   @override
   Future<RFIDDevice?> connectRFIDDevice() async {
     try {
@@ -100,10 +110,8 @@ class NativeManager extends NativeInterface {
               .prefix!
               .split(",")
               .contains(event.toString().substring(0, 4))) {
-
-            var addedTimeFormatUTC =
-            DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now().toUtc());
-
+            var addedTimeFormatUTC = DateFormat("yyyy-MM-dd HH:mm:ss")
+                .format(DateTime.now().toUtc());
             ref
                 .read(currentInventoryProvider.notifier)
                 .addTag(event, addedTimeFormatUTC);
@@ -180,8 +188,21 @@ class NativeManager extends NativeInterface {
   }
 
   @override
-  Future<void> singleInventory() async {
-    await _methodChannel.invokeMethod(InvokeMethods.singleInventory.name);
+  Future<void> singleInventory(WidgetRef ref) async {
+    await _methodChannel
+        .invokeMethod(InvokeMethods.singleInventory.name)
+        .then((value) {
+      ref
+          .read(currentEpcDetailInfoProvider.notifier)
+          .changeState(CurrentEpcDetail(currentEpc: "", epcDetail: null));
+      var currentEpcDetail = ref.read(currentEpcDetailInfoProvider);
+      if (value != null) {
+        currentEpcDetail!.currentEpc = value;
+      }
+      ref
+          .read(currentEpcDetailInfoProvider.notifier)
+          .changeState(currentEpcDetail);
+    });
   }
 
   @override
@@ -223,19 +244,17 @@ class NativeManager extends NativeInterface {
 
         var getResult = showDialogFromSuccessOrWrite(valueMap["status"]);
 
-        debugPrint("Flutter TID:" + valueMap['tid']);
-
         if (getResult) {
           ref
               .read(viewModelStateProvider.notifier)
-              .repository
+              .repository!
               .localService
               .getToken()
               .then((token) {
             if (token != null) {
               ref
                   .read(viewModelStateProvider.notifier)
-                  .repository
+                  .repository!
                   .networkManager!
                   .encodeStatusOK(epc, "1", token, valueMap['tid'])
                   .then((value) {
@@ -269,19 +288,18 @@ class NativeManager extends NativeInterface {
 
       var getResult = showDialogFromSuccessOrWrite(valueMap["status"]);
 
-      debugPrint("Flutter TID:" + valueMap['tid']);
 
       if (getResult) {
         ref
             .read(viewModelStateProvider.notifier)
-            .repository
+            .repository!
             .localService
             .getToken()
             .then((token) {
           if (token != null) {
             ref
                 .read(viewModelStateProvider.notifier)
-                .repository
+                .repository!
                 .networkManager!
                 .encodeStatusOK(epc, "1", token, valueMap['tid'])
                 .then((value) {
@@ -313,7 +331,46 @@ class NativeManager extends NativeInterface {
       Dialogs.showSuccess("Yazma İşlemi Başarılı bir şekilde gerçekleştirildi");
       return true;
     } else {
+      Dialogs.showFailed("Bir şeyler ters gitti!");
       return false;
+    }
+  }
+
+  @override
+  Future<void> listenAndSingleInventory(WidgetRef ref) async {
+    try {
+      _singleInventoryEventChannel.receiveBroadcastStream().listen((event) {
+        debugPrint("listenAndSingleInventory!!!!: ${event.toString()}");
+        //Clear Option
+        if (event.toString() == '-1') {
+          if (ref.read(scanStopStateProvider) == ScanModes.scan) {
+            ref
+                .read(scanStopStateProvider.notifier)
+                .changeState(ScanModes.stop);
+          }
+        } else if (event.toString() == "1") {
+          if (ref.read(scanStopStateProvider) == ScanModes.stop ||
+              ref.read(scanStopStateProvider) == ScanModes.idle) {
+            ref
+                .read(scanStopStateProvider.notifier)
+                .changeState(ScanModes.scan);
+          }
+        } else {
+          ref
+              .read(currentEpcDetailInfoProvider.notifier)
+              .changeState(
+                CurrentEpcDetail(
+                    currentEpc: event
+                )
+          );
+
+          ref
+              .read(currentEpcDetailInfoProvider.notifier)
+              .getCurrentDetailThenSet(ref,true);
+        }
+      });
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 }
