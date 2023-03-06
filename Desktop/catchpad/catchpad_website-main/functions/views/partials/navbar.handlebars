@@ -1,0 +1,87 @@
+<div id="navbar_top" class="container-fluied fixed-top bg-dark">
+    <div class="navbar navbar-expand-lg navbar-dark cp-offer-navbar px-4">
+        <div class="row justify-content-center d-md-none">
+            <div class="col-12 text-uppercase">
+                {{be_the_first_to_try}}
+            </div>
+            <div class="col-12 text-uppercase">
+                <a href="/{{lang}}/{{routes_products}}">{{pre_order_discount}}</a>
+            </div>
+        </div>
+        <div class="d-none d-md-block text-uppercase">
+            <span>{{be_the_first_to_try}} </span>
+            <a href="/{{lang}}/{{routes_products}}">{{pre_order_discount}}</a>
+        </div>
+    </div>
+    <div class="mx-2">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-expand-lg navbar-dark cp-main-navbar">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <li class="nav-item">
+                        <div class="cp_ni cp_ni_light" id="cp_logo">
+                            <a href="/{{lang}}">
+                                <CPImg path="cp_logo.png" alt="Catchpad Logo" />
+                            </a>
+                        </div>
+                    </li>
+                    {{!--
+                    notice how this flag button is repeated,
+                    bcz if we show it downside in small screen,
+                    it will appear in nav menu
+                    --}}
+                    <div class="collapse navbar-collapse mx-4" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="cp_ni cp_ni_light cp_ni_index nav-link"
+                                    href="/{{lang}}#{{routes_sports}}">{{sports}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="cp_ni cp_ni_light cp_ni_index nav-link"
+                                    href="/{{lang}}#{{routes_education}}">{{education}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="cp_ni cp_ni_light cp_ni_index nav-link"
+                                    href="/{{lang}}#{{routes_pad}}">{{the_pad}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="cp_ni cp_ni_light cp_ni_index nav-link"
+                                    href="/{{lang}}#{{routes_app}}">{{app}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="cp_ni cp_ni_light nav-link" href="/{{lang}}/{{routes_about}}">{{about_us}}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="cp_ni cp_ni_light nav-link"
+                                    href="/{{lang}}/{{routes_about}}#contact-form">{{contact_us_tab}}</a>
+                            </li>
+                            {{!-- <li class="nav-item">
+                                <a class="cp_ni cp_ni_light nav-link"
+                                    href="/{{lang}}/{{routes_presentation}}">{{presentation_tab}}</a> --}}
+                            </li>
+                            <li class="nav-item">
+                                <a id="navbar_pre_btn"
+                                    class="cp_ni cp_ni_light nav-link pre_btn navbar_btn navbar_products_btn"
+                                    href="/{{lang}}/{{routes_products}}">{{pre_order}}</a>
+                            </li>
+                            <li class="nav-item d-lg-none">
+                                <a class="lang-btn nav-link" href="/{{reverse_lang}}" target="_top">
+                                    <span class="fi fi-{{reverse_country}}"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <li class="nav-item d-none d-lg-inline">
+                        <a class="lang-btn nav-link" href="/{{reverse_lang}}" target="_top">
+                            <span class="fi fi-{{reverse_country}}"></span>
+                        </a>
+                    </li>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>

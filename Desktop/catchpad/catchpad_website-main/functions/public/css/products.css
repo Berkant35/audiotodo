@@ -1,0 +1,40 @@
+.cp-prod-item {
+    flex-direction: column;
+    display: flex;
+    height: 100%;
+}
+
+.cp-prod-card {
+    flex-grow: 1;
+}
+
+.cp-prod-body {
+    /* flex-grow: 1; */
+    overflow: auto;
+    color: #000;
+}
+
+.cp-price {
+    font-weight: 600;
+    font-size: 1.8em;
+    color: #00a0e4;
+}
+
+.cp-old-price {
+    font-weight: 300;
+    font-size: 1.5em;
+    color: #363636;
+}
+
+.cp-product-title {
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+.details-btn {
+    width: 100%;
+}
+
+.cp-description {
+    padding: .75em 0!important;
+}

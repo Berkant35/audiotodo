@@ -1,0 +1,13 @@
+{
+    "routes_sports": "spor",
+    "routes_education": "egitim",
+    "routes_app": "app",
+    "routes_pad": "pad",
+    "routes_contact": "iletisim",
+    "routes_pre_order": "urunler",
+    "routes_about": "hakkimizda",
+    "routes_presentation": "sunum",
+    "routes_products": "urunler",
+    "routes_product": "urun",
+    "routes_cookie-policy": "cerez-politikasi"
+}

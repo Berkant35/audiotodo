@@ -1,0 +1,92 @@
+{
+    "prods": [
+        {
+            "id": "standard-pad-set",
+            "en": {
+                "name": "Standard Pad Set - 6pcs",
+                "description": "<b>For those who enjoy sports, education, or entertainment.</b> Includes 6 Pads with plenty of predefined activities and the ability to create your own for enhancing your activities.",
+                "features": [
+                    "Powerful RGB LEDs with 8 color options",
+                    "Durable: Water resistant (IP65), UV protected",
+                    "Simple and intuitive",
+                    "Portable: small and lightweight",
+                    "Lift the Pods off the ground with our unique CatchPad adapters",
+                    "Rechargeable Li-Ion battery with up to 8 hours of operation on a single charge",
+                    "Space saving smart stack & charge",
+                    "Bluetooth low energy (BLE) communication with immediate smartphone pairing and up to 40 meter device-to-pad range"
+                ],
+                "props": [
+                    "CatchPad case for 6 Pads",
+                    "CatchPad App (iOS & Android)"
+                ],
+                "base_price": 780,
+                "currency": "$"
+            },
+            "tr": {
+                "name": "Standart Pad Seti - 6 Adet",
+                "description": "<b>Spordan, eğitimden veya eğlenceden hoşlananlar için.</b> Çok sayıda önceden tanımlanmış aktiviteye ve aktivitelerinizi geliştirmek için kendinizinkini yaratma yeteneğine sahip 6 Pad içerir.",
+                "features": [
+                    "8 renk seçeneği ile güçlü RGB LED'ler",
+                    "Dayanıklı: Suya dayanıklı (IP65), UV korumalı",
+                    "Basit ve sezgisel",
+                    "Taşınabilir: küçük ve hafif",
+                    "Aparatlar ile farklı zeminlerde kulllanabilir",
+                    "Tek bir şarjla 8 saate kadar çalışabilen şarj edilebilir Li-Ion pil",
+                    "Portatif, hafif ve kolay şarj",
+                    "Anında akıllı telefon eşleştirme ve 40 metreye kadar cihazdan pad aralığına sahip Bluetooth düşük enerjili (BLE) iletişim"
+                ],
+                "props": [
+                    "6 Pad için CatchPad kılıfı",
+                    "CatchPad Uygulaması (iOS & Android)"
+                ],
+                "base_price": 13160,
+                "currency": "₺"
+            },
+            "discount": 30
+        },
+        {
+            "id": "pro-pad-set",
+            "en": {
+                "name": "Pro Pad Set - 12pcs",
+                "description": "<b>For those who enjoy sports, education, or entertainment.</b> Includes 12 Pads with plenty of predefined activities and the ability to create your own for enhancing your activities.",
+                "features": [
+                    "Powerful RGB LEDs with 8 color options",
+                    "Durable: Water resistant (IP65), UV protected",
+                    "Simple and intuitive",
+                    "Portable: small and lightweight",
+                    "Lift the Pods off the ground with our unique CatchPad adapters",
+                    "Rechargeable Li-Ion battery with up to 8 hours of operation on a single charge",
+                    "Space saving smart stack & charge",
+                    "Bluetooth low energy (BLE) communication with immediate smartphone pairing and up to 40 meter device-to-pad range"
+                ],
+                "props": [
+                    "CatchPad case for 12 Pads",
+                    "CatchPad App (iOS & Android)"
+                ],
+                "base_price": 1440,
+                "currency": "$"
+            },
+            "tr": {
+                "name": "Pro Pad Seti - 12 Adet",
+                "description": "<b>Spordan, eğitimden veya eğlenceden hoşlananlar için.</b> Çok sayıda önceden tanımlanmış aktiviteye ve aktivitelerinizi geliştirmek için kendinizinkini yaratma yeteneğine sahip 12 Pad içerir.",
+                "features": [
+                    "8 renk seçeneği ile güçlü RGB LED'ler",
+                    "Dayanıklı: Suya dayanıklı (IP65), UV korumalı",
+                    "Basit ve sezgisel",
+                    "Taşınabilir: küçük ve hafif",
+                    "Aparatlar ile farklı zeminlerde kulllanabilir",
+                    "Tek bir şarjla 8 saate kadar çalışabilen şarj edilebilir Li-Ion pil",
+                    "Portatif, hafif ve kolay şarj",
+                    "Anında akıllı telefon eşleştirme ve 40 metreye kadar cihazdan pad aralığına sahip Bluetooth düşük enerjili (BLE) iletişim"
+                ],
+                "props": [
+                    "12 Pad için CatchPad kılıfı",
+                    "CatchPad Uygulaması (iOS & Android)"
+                ],
+                "base_price": 24120,
+                "currency": "₺"
+            },
+            "discount": 30
+        }
+    ]
+}

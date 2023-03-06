@@ -1,0 +1,13 @@
+{
+    "routes_sports": "sports",
+    "routes_education": "education",
+    "routes_app": "app",
+    "routes_pad": "pad",
+    "routes_contact": "contact",
+    "routes_pre_order": "products",
+    "routes_about": "about",
+    "routes_presentation": "presentation",
+    "routes_products": "products",
+    "routes_product": "product",
+    "routes_cookie-policy": "cookie-policy"
+}

@@ -1,0 +1,237 @@
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/index-style.min.css">
+<link rel="stylesheet" href="/css/animate.min.css">
+
+<style>
+img {
+  border-radius: 50%;
+}
+</style>
+<div id="vid_wrapper" class="cp_trailer_video_wrapper">
+	<video id="cp_trailer_video" class="cp_trailer_video"autoplay muted loop playsinline>
+		<source src="/assets/vid.mp4" type="video/mp4" id="main_vid">
+		Your browser does not support HTML5 video.
+	</video>
+
+	<div class="content title-on-vid">
+		<h1 data id="tagline">{{tagline}}</h1>
+		<a data href="/{{lang}}/{{routes_products}}" class="pre_btn index_btn">{{pre_order}}</a>
+		{{!-- TODO: maybe open embed downside --}}
+		<a data href="{{yt_vid_link}}" target="_blank" class="watch_vid_btn index_btn">{{watch_video}}</a>
+	</div>
+</div>
+<section id="{{routes_sports}}" class="cp_section">
+	<div class="row m-0 split-column">
+
+		<div class="wow fadeIn" data-wow-duration="1.5s">
+			<div class="row paddingimg">
+				<div class="col-lg-7 col-sm-12 p-sm-5">
+					<CPIMG path="main_page/sports/gorsel3.jpg" alt="{{img_alt_mainpage_sports_1}}"
+						class="fill-parent-wp borderimg" />
+				</div>
+				<div class="col-lg-5 col-sm-12 py-3 px-5 my-auto">
+					<h2 class="image_header_text">{{sports_sec_title_1}}</h2>
+					<p class="index_desc">{{sports_sec_desc_1}}</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="wow fadeIn" data-wow-duration="1.5s">
+			<div class="row paddingimg">
+				<div class="col-lg-5 py-3 px-5 my-auto d-none d-lg-inline">
+					<div>
+						<h2 class="image_header_text">{{sports_sec_title_2}}</h2>
+						<p class="index_desc">{{sports_sec_desc_2}}</p>
+					</div>
+				</div>
+				<div class="col-lg-7 col-sm-12 p-sm-5">
+					<CPIMG path="main_page/sports/gorsel4.jpg" alt="{{img_alt_mainpage_sports_2}}"
+						class="fill-parent-w borderimg" />
+				</div>
+
+				<div class="col-12 py-3 px-5 my-auto d-inline d-lg-none">
+					<div>
+						<h2 class="image_header_text">{{sports_sec_title_2}}</h2>
+						<p class="index_desc">{{sports_sec_desc_2}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="wow fadeIn" data-wow-duration="1.5s">
+			<div class="row paddingimg">
+				<div class="col-lg-7 col-sm-12 p-sm-5">
+					<CPIMG path="main_page/sports/gorsel5.jpg" alt="{{img_alt_mainpage_sports_3}}"
+						class="fill-parent-w borderimg" />
+				</div>
+				<div class="col-lg-5 col-sm-12 py-3 px-5 my-auto">
+					<div>
+						<h2 class="image_header_text">{{sports_sec_title_3}}</h2>
+						<p class="index_desc">{{sports_sec_desc_3}}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section id="{{routes_pad}}" class="cp_section">
+	<CPIMG path="{{lang}}/main_page/pad/pad_specs.png" class="fill-parent-w borderimg" />
+
+	{{!-- <div class="the-pad">
+		<div class="row justify-content-center">
+			<div class="col-10">
+				<div class="row">
+
+					<div class="col-md-6 px-3 text-center the-pad-img">
+						<CPIMG path="main_page/pad/main.png" class="fill-parent-w" />
+					</div>
+					<div class="col-md-6 px-3 the-pad-features">
+						<div class="wow fadeIn" data-wow-duration="1.5s">
+							<div class="row section-header v3">
+								<h2 class="col-12 index-section-title">{{the_pad}}</h2>
+								<p>{{pad_desc}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="py-3 d-none d-md-block"></div>
+				<div class="row">
+					<div class="col-12 px-3 the-pad-features">
+						<ul class="nav">
+							<div class="wow fadeIn" data-wow-duration="1.5s">
+								<div class="row justify-content-center">
+									<li class="col-12 col-md-6">{{pad_feature_1}}</li>
+									<li class="col-12 col-md-6">{{pad_feature_2}}</li>
+									<li class="col-12 col-md-6">{{pad_feature_3}}</li>
+									<li class="col-12 col-md-6">{{pad_feature_4}}</li>
+									<li class="col-12 col-md-6">{{pad_feature_5}}</li>
+									<li class="col-12 col-md-6">{{pad_feature_6}}</li>
+									<li class="col-12 col-md-6">{{pad_feature_7}}</li>
+									<li class="col-12 col-md-6">{{pad_feature_8}}</li>
+								</div>
+							</div>
+						</ul>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> --}}
+</section>
+
+<section id="{{routes_education}}" class="cp_section">
+	<div class="row m-0 split-column">
+
+		<div class="wow fadeIn" data-wow-duration="1.5s">
+			<div class="row paddingimg">
+				<div class="col-lg-7 col-sm-12 p-sm-5">
+					<CPIMG path="main_page/edu/gorsel1.jpg" alt="{{img_alt_mainpage_edu_1}}"
+						class="fill-parent-w borderimg" />
+				</div>
+				<div class="col-lg-5 col-sm-12 py-3 px-5 my-auto">
+					<h2 class="image_header_text">{{ed_sec_title_1}}</h2>
+					<p class="index_desc">{{ed_sec_desc_1}}</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="wow fadeIn" data-wow-duration="1.5s">
+			<div class="row paddingimg">
+				<div class="col-lg-5 col-sm-12 py-3 px-5 my-auto d-lg-block d-none">
+					<h2 class="image_header_text">{{ed_sec_title_2}}</h2>
+					<p class="index_desc">{{ed_sec_desc_2}}</p>
+				</div>
+				<div class="col-lg-7 col-sm-12 p-sm-5">
+					<CPIMG path="main_page/edu/gorsel2.jpg" alt="{{img_alt_mainpage_edu_2}}"
+						class="fill-parent-w borderimg" />
+				</div>
+				{{!-- <div class="col-lg-6 col-sm-12 py-3 px-5 my-auto d-lg-none d-block">
+					<h2>{{ed_sec_title_2}}</h2>
+					<p>{{ed_sec_desc_2}}</p>
+				</div> --}}
+			</div>
+		</div>
+
+	</div>
+</section>
+
+<section id="{{routes_app}}" class="cp_section">
+	<div class="the-pad pb-0 mb-0">
+		<div class="row justify-content-center">
+
+			<div class="col-10">
+				<div class="row">
+
+					<div class="col-md-4 px-3 the-pad-features">
+						<div class="wow fadeIn" data-wow-duration="1.5s">
+							<div class=" section-header v3">
+								<h2 class="col-12 index-section-title">{{app_sec_title_1}}</h2>
+								<p>{{app_sec_desc_1}}</p>
+							</div>
+						</div>
+						<div class="wow fadeIn" data-wow-duration="1.5s">
+							<div class="row section-header v3">
+								<h2 class="col-12 index-section-title">{{app_sec_title_2}}</h2>
+								<p>{{app_sec_desc_2}}</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4 py-2 px-3 text-center the-pad-img">
+						<CPIMG path="main_page/app/app.png" class="fill-parent-w borderimg" />
+					</div>
+
+					<div class="col-md-4 px-3 the-pad-features">
+						<div class="wow fadeIn" data-wow-duration="1.5s">
+							<div class="row section-header v3">
+								<h2 class="col-12 index-section-title">{{app_sec_title_3}}</h2>
+								<p>{{app_sec_desc_3}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+</section>
+
+<footer>
+	{{> contact-form}}
+</footer>
+
+<script defer src="/js/webjs"></script>
+<script defer src="/js/wow.min.js"></script>
+<script defer src="/js/wowInit.min.js"></script>
+<script defer>
+	let initTitle = document.title;
+
+	var focused = true;
+
+
+	window.addEventListener("focus", function () {
+		focused = true;
+		document.title = initTitle;
+	});
+
+	window.addEventListener("blur", function () {
+		focused = false;
+		document.title = "{{pre_order_discount}}";
+	});
+
+
+	var i = 0;
+	setInterval(function () {
+		if (focused) {
+			var titles = [initTitle, "{{pre_order_discount}}"];
+			if (i === titles.length) {
+				i = 0;
+			}
+			document.title = titles[i];
+			i++;
+		}
+	}, 3000);
+
+
+
+</script>

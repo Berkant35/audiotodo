@@ -1,0 +1,36 @@
+body {
+    background-color: #190E2E;
+}
+
+.cookie {
+    width: 100%;
+    background-color: #fff;
+    position: fixed;
+    padding: 6px 20px;
+    font-size: 16px;
+    bottom: 0;
+}
+
+.cookie .txt p {
+    color: #1D2D35;
+}
+
+.cookie .accept {
+    border-radius: 10px;
+    padding: 4px 12px;
+    min-width: 130px;
+    color: #fff !important;
+    background-color: #ffc300;
+    max-height: 30px;
+    margin: auto;
+}
+
+.cookie .accept:hover {
+    color: #fff !important;
+    background-color: #ffc300;
+}
+
+.cookie-policy-consent {
+    font-size: .9em!important;
+    line-height: 1.5em!important;
+}

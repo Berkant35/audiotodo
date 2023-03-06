@@ -1,0 +1,56 @@
+<link rel="stylesheet" href="/css/partials/news-letter-bar.css">
+
+<div id="news-letter-bar" class="news-letter-div  bottom-bar">
+    <div class="modal-newsletter">
+        <div class="modal-content">
+
+            <div id="modal-body" class="modal-body news-letter-body card">
+                <div id="modal-body-wrapper">
+                    <button id="dismiss-news-letter" type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true"><span>&times;</span></button>
+                    <form id="newsLetterForm" name="newsLetterForm" onsubmit="return false;">
+
+                        <div class="row">
+
+                            <div id="news-letter-texts-wrapper">
+                                <h4 class="text-left d-inline">{{news-letter-title}}</h4>
+                                <p class="d-inline">{{news-letter-description}}</p>
+                            </div>
+
+                            <div id="news-letter-input-wrapper" class="d-inline-flex">
+                                <div>
+
+                                    <input type="email"
+                                        class="form-control mx-2 news-letter-field news-letter-email-field" name="email"
+                                        placeholder="{{news-letter-enter-your-email}}">
+                                    <small id="email-error"
+                                        class="form-text error invalid-feedback">{{plz_enter_valid_email}}</small>
+                                </div>
+
+                                <div class="mx-2 d-inline"></div>
+
+                                <div class="d-inline">
+                                    <button id="news-letter-submit-btn"
+                                        class="btn btn-primary mx-2 news-letter-submit-btn news-letter-field">
+                                        <i id="send-msg-loading" class="fa fa-circle-o-notch fa-spin d-none"></i>
+                                        <span id="send-msg-text">{{news-letter-button}}</span>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </form>
+                    <div>
+                        <div id="form-failed-warning" class="my-2 bottom-bar text-center">
+                            {{smth_went_wrong}}</div>
+                    </div>
+                </div>
+
+                <div id="form-message-success" class="my-2 bottom-bar text-center">
+                    {{news-letter-submission-success}}</div>
+            </div>
+
+        </div>
+    </div>
+</div>

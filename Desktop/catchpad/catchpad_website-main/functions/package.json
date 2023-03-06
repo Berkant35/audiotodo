@@ -1,0 +1,42 @@
+{
+    "name": "catchpad_website",
+    "engines": {
+        "node": "16"
+    },
+    "dependencies": {
+        "compression": "^1.7.4",
+        "cookie-parser": "^1.4.6",
+        "ejs": "^3.1.6",
+        "express": "^4.17.2",
+        "express-handlebars": "^6.0.2",
+        "firebase-admin": "^10.0.2",
+        "firebase-functions": "^4.0.1",
+        "font-awesome": "^4.7.0",
+        "fs": "^0.0.1-security",
+        "geoip-lite": "^1.4.3",
+        "glob": "^7.2.0",
+        "handlebars": "^4.7.7",
+        "help": "^3.0.2",
+        "mkdirp": "^1.0.4",
+        "nodemailer": "^6.7.2",
+        "nodemailer-smtp-transport": "^2.4.2"
+    },
+    "devDependencies": {
+        "firebase-functions-test": "^0.2.0",
+        "gulp": "^4.0.2",
+        "gulp-sharp-responsive": "^0.3.0"
+    },
+    "scripts": {
+        "img": "gulp img",
+        "lint": "./node_modules/.bin/eslint --max-warnings=0 .",
+        "ipv4": "ipconfig getifaddr en0",
+        "serve": "firebase serve -o 192.168.0.10 --port=5002",
+        "shell": "firebase functions:shell",
+        "start": "npm run shell",
+        "deploy": "npm run img && firebase deploy",
+        "deploy-hosting": "firebase deploy --only hosting",
+        "logs": "firebase functions:log",
+        "compile": "cp ../../tsconfig.template.json ./tsconfig-compile.json && tsc --project tsconfig-compile.json"
+    },
+    "private": true
+}

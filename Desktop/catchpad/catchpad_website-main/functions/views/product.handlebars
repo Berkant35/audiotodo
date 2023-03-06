@@ -1,0 +1,128 @@
+<link rel='stylesheet' href='/css/products.css'>
+
+{{!-- https://bbbootstrap.com/snippets/bootstrap-ecommerce-single-product-page-image-carousels-41782754 --}}
+<link rel='stylesheet' href='/css/lightslider.min.css'>
+<link rel='stylesheet' href='/css/buy.css'>
+<div id="buy_page_Wrapper">
+    <div class="container-fluid mt-2 mb-3">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="row no-gutters">
+                    <div class="col-lg-6 px-2">
+                        <ul id="lightSlider">
+                            {{!-- TODO --}}
+                            {{#each prod.images}}
+                            <li data-thumb="/assets/{{this}}.png" class="px-1">
+                                <CPIMG path="/{{this}}.png" />
+                            </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-6 prod_desc_sec">
+                        <div class="about">
+                            <h1 class="cp-product-title">{{{prod.name}}}</h1>
+                            {{!-- <span class="cp-price">
+                                {{prod.currency_symbol}}{{prod.new_price}}
+                            </span>
+                            <s class="cp-old-price">
+                                {{prod.currency_symbol}}{{prod.old_price}}
+                            </s> --}}
+                        </div>
+                        <p class="cp-prod-body">{{{prod.description}}}</p>
+                        <button class="btn btn-warning btn-long buy btn btn-primary w-100" data-toggle="modal"
+                            data-target="#orderModal">{{order_now}}</button>
+                        <hr>
+                        <div class="prod-props">
+                            <div class="mt-2">
+                                <ul>
+                                    {{#each prod.props}}
+                                    <li>{{this}}</li>
+                                    {{/each}}
+                                </ul>
+                                <h6>*{{buy_prod_note}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    {{!-- <div class="col-12" style="padding-top: 6em;"></div> --}}
+
+                    {{!-- <div class="col-lg-6 px-2">
+                        <div class="prod-features">
+                            <div class="mt-2">
+                                <h4 class="font-weight-bold">{{buy_prod_features}}</h4>
+                                <ul>
+                                    {{#each prod.features}}
+                                    <li>{{this}}</li>
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 px-2">
+                        <CPIMG path="/{{prod.images.[0]}}" />
+                    </div> --}}
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <CPIMG path="{{lang}}/main_page/pad/pad_specs.png" class="fill-parent-w pb-5" />
+
+</div>
+
+<script src="/js/lightslider.js"></script>
+
+<script>
+    $('#lightSlider').lightSlider({
+        gallery: true,
+        item: 1,
+        loop: true,
+        slideMargin: 0,
+        thumbItem: 9
+    });
+</script>
+
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0 ">
+                <div class="cls-btn">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="contact-wrap w-100 p-md-5 p-4">
+                    <div id="form-message-warning" class="mb-4"></div>
+                    <div id="form-failed-warning" class="mb-4 no-display">
+                        {{smth_went_wrong}}</div>
+                    <div id="form-message-success" class="mb-4">{{order_taken_success}}</div>
+                    <form id="orderForm" name="orderForm">
+                        <input type="hidden" name="prod_id" value="{{prod.id}}">
+                        <input type="hidden" name="prod_name" value="{{prod.name}}">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="name" id="name" placeholder="{{full_name}}">
+                            <small id="name-error"
+                                class="form-text error invalid-feedback">{{plz_enter_valid_name}}</small>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" class="form-control" name="email" id="email"
+                                placeholder="{{email_input}}">
+                            <small id="email-error"
+                                class="form-text error invalid-feedback">{{plz_enter_valid_email}}</small>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i id="send-msg-loading" class="fa fa-circle-o-notch fa-spin d-none"></i>
+                                <span id="send-msg-text">{{order}}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script defer src="/js/forms/order-form.js"></script>

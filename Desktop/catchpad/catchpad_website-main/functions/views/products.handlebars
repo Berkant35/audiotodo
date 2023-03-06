@@ -1,0 +1,41 @@
+<link rel='stylesheet' href='/css/products.css'>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        {{#each prods}}
+        <div class="col-sm-8 col-md-6 col-lg-4 my-2 cp-prod-item">
+            {{!-- about the @`s: https://stackoverflow.com/a/32797108/12555423 --}}
+            <div class="cp-prod-card card">
+                <a href="/{{@root.lang}}/{{@root.routes_product}}/{{this.id}}">
+                    <div class="cp-prod-img">
+                        <CPIMG path="/{{this.images.[0]}}" class="card-img-top" />
+                    </div>
+                </a>
+
+
+                <div class="cp-prod-body">
+                    <div class="card-body text-center">
+                        <h3 class="card-title cp-product-title">{{{this.name}}}</h3>
+                        {{!-- <span class="cp-price">
+                            {{{this.currency_symbol}}}{{{this.new_price}}}
+                        </span>
+                        <s class="cp-old-price">
+                            {{{this.currency_symbol}}}{{{this.old_price}}}
+                        </s> --}}
+
+                        <div class="cp-description">
+                            {{{this.description}}}
+                        </div>
+
+                        <a href="/{{@root.lang}}/{{@root.routes_product}}/{{this.id}}"
+                            class="btn btn-primary details-btn">
+                            <span id="send-msg-text">{{@root.details}}</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>

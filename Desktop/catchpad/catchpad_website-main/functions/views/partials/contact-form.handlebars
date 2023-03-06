@@ -1,0 +1,141 @@
+<div id="contact-form" class="container contact-form">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-12">
+            <div class="wrapper">
+                <div class="row no-gutters">
+                    <div class="col-md-7 d-flex align-items-stretch">
+                        <div class="contact-wrap w-100 p-md-5 p-4">
+                            <h3 class="mb-4">{{get_in_touch}}</h3>
+                            <div id="form-message-warning" class="mb-4"></div>
+                            <div id="form-failed-warning" class="mb-4 no-display">
+                                {{smth_went_wrong}}</div>
+                            <div id="form-message-success" class="mb-4">{{msg_sent_success}}</div>
+                            <form id="contactForm" name="contactForm">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="name" id="name"
+                                                placeholder="{{full_name}}">
+                                            <small id="name-error"
+                                                class="form-text error invalid-feedback">{{plz_enter_valid_name}}</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="email" class="form-control" name="email" id="email"
+                                                placeholder="{{email_input}}">
+                                            <small id="email-error"
+                                                class="form-text error invalid-feedback">{{plz_enter_valid_email}}</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="subject" id="subject"
+                                                placeholder="{{subject}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <textarea name="message" class="form-control" id="message" cols="30"
+                                                rows="7" placeholder="{{message}}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i id="send-msg-loading"
+                                                    class="fa fa-circle-o-notch fa-spin d-none"></i>
+                                                <span id="send-msg-text">{{send_message}}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-5 d-flex align-items-stretch">
+                        <div class="info-wrap bg-primary w-100 p-lg-5 p-4">
+                            <h3 class="mb-4 mt-md-4">{{contact_us}}</h3>
+
+                            <div class="dbox">
+                                <a href="https://goo.gl/maps/E9eRKFqeETU8R9tP6">
+                                    <div class="dbox w-100 d-flex align-items-start">
+                                        <div class="icon d-flex align-items-center justify-content-center">
+                                            <span class="fa fa-map-marker"></span>
+                                        </div>
+                                        <div class="text pl-3">
+                                            <p>
+                                                <span>{{address}}</span>
+                                                <br />
+
+                                                Reşitpaşa Mah. Katar Cad.  ARI 3 Binası No: 4 / B204 Sarıyer /
+                                                İstanbul
+                                                34467
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="dbox">
+                                <a href="tel://+905308259440">
+                                    <div class="dbox w-100 d-flex align-items-center">
+                                        <div class="icon d-flex align-items-center justify-content-center">
+                                            <span class="fa fa-phone"></span>
+                                        </div>
+                                        <div class="text pl-3">
+                                            <p>
+                                                <span>{{phone}}</span>
+                                                <br />
+                                                +90 530 825 94 40
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div class="dbox">
+                                <a href="mailto:info@catchpad.com">
+                                    <div class="dbox w-100 d-flex align-items-center">
+                                        <div class="icon d-flex align-items-center justify-content-center">
+                                            <span class="fa fa-envelope"></span>
+                                        </div>
+                                        <div class="text pl-3">
+                                            <p>
+                                                <span>{{email}}</span>
+                                                <br />
+                                                info@catchpad.com
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <span class="social_title">{{follow_social}}</span><br>
+
+                            <div class="social_links">
+                                <a class="social_media_link" target="_blank"
+                                    href="https://www.instagram.com/catchpad/">
+                                    <span class="fa fa-instagram"></span>
+                                </a>
+
+                                <a class="social_media_link" target="_blank"
+                                    href="https://www.linkedin.com/company/catchpad/">
+                                    <span class="fa fa-linkedin"></span>
+                                </a>
+
+                                <a class="social_media_link" target="_blank"
+                                    href="https://www.youtube.com/channel/UCyek62HeggtHmgksgFSOw6Q">
+                                    <span class="fa fa-youtube-play"></span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script defer src="/js/forms/contact-form.js"></script>

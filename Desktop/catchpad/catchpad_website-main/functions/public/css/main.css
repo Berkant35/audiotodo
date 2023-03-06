@@ -1,0 +1,302 @@
+/*  
+   // yellow
+    #ffc300
+    255,195,0
+
+    // red
+    #e4010a
+    228,1,10
+
+    // blue
+    #00a0e4
+    0,160,228
+
+    // green
+    #00963f
+    0,150,63
+*/
+
+html {
+    scroll-behavior: smooth;
+}
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+    background-color: #ffffff !important;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+#pre {
+    display: block;
+}
+
+#tagline {
+    color: #f1f1f1 !important;
+    font-size: 2.9em;
+}
+
+.social_links {
+    margin: 12px 0;
+}
+
+.social_media_link {
+    color: white !important;
+    padding: 10px;
+    font-size: 20px;
+}
+
+.social_title {
+    font-weight: 400;
+    font-size: 20px;
+    color: #fff;
+}
+
+.navbar .nav-item {
+    list-style: none;
+    margin-right: 0.5em !important;
+    margin-left: 0.5em !important;
+}
+
+.bg-dark {
+    background-color: #000000 !important;
+    -webkit-transition: background 0.6s;
+    /* For Safari 3.0 to 6.0 */
+    transition: background 0.6s;
+    /* For modern browsers */
+}
+
+.bg-primary {
+    background-color: rgb(0, 160, 228) !important;
+}
+
+.btn.btn-primary,
+.btn.btn-primary:hover,
+.btn.btn-primary:active,
+.btn.btn-primary:focus {
+    background: rgb(255, 195, 0) !important;
+    border: none;
+    color: #1f1f1f !important;
+}
+
+.no-display {
+    display: none !important;
+}
+
+.block-display {
+    display: block !important;
+}
+
+.cp-main-navbar {
+    padding: 3px;
+}
+
+.cp-offer-navbar {
+    background-color: #000000;
+    padding: 3px 0;
+    margin: 0 auto;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    flex-direction: column;
+}
+
+.cp-offer-navbar a {
+    text-decoration: underline;
+    color: #ffc300;
+}
+
+.fill-parent-w {
+    width: 100%;
+}
+
+.fill-parent-wp {
+    width: 100%;
+}
+
+.borderimg {
+    overflow:hidden;
+    border-radius: 5%;
+}
+
+.paddingimg { 
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 2.5%;
+    padding-top: 2.5%;
+}
+
+.contact_section {
+    padding-top: 100px !important;
+}
+
+.image_header_text {
+    font-weight: 700;
+    color: #000000;
+}
+
+.index_desc {
+    font-size: 21px;
+    color: #1e1e1e;
+}
+
+#cp_logo img {
+    width: auto;
+    display: block;
+    height: 60px;
+    margin: 0 auto;
+}
+
+.cp_ni_dark {
+    color: #f1f1f1 !important;
+}
+
+.cp_ni_dark:hover {
+    color: #ccc !important;
+}
+
+.cp_ni_light {
+    color: #fff !important;
+}
+
+.cp_ni_light:hover {
+    color: #ccc !important;
+}
+
+.cp_ni {
+    font-size: .8em;
+    text-transform: capitalize;
+}
+
+@media only screen and (max-width: 768px) {
+    .index_btn {
+        font-size: 0.8em !important;
+        padding: 0.4em 1.2em !important;
+        margin: 0.1em !important;
+    }
+    #tagline {
+        font-size: 1.5em;
+    }
+    .cp-offer-navbar {
+        font-size: 0.8em;
+    }
+    .nav-link {
+        padding: 0.25rem 0.5rem;
+    }
+    .navbar-toggler-icon {
+        width: 1em;
+        height: 1em;
+    }
+    #cp_logo img {
+        height: 30px;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .cp_ni {
+        font-size: 1.05em;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    #cp_logo img {
+        height: 40px;
+    }
+}
+
+@media only screen and (min-width: 1440px) {
+    #cp_logo img {
+        height: 60px;
+    }
+}
+
+s,
+strike {
+    text-decoration: none;
+    position: relative;
+}
+
+s::before,
+strike::before {
+    top: 50%;
+    /*tweak this to adjust the vertical position if it's off a bit due to your font family */
+    background: #363636;
+    /*this is the color of the line*/
+    opacity: 0.7;
+    content: "";
+    width: 110%;
+    position: absolute;
+    height: 0.1em;
+    border-radius: 0.1em;
+    left: -5%;
+    white-space: nowrap;
+    display: block;
+    transform: rotate(-15deg);
+}
+
+s.straight::before,
+strike.straight::before {
+    transform: rotate(0deg);
+    left: -1%;
+    width: 102%;
+}
+
+.navbar_products_btn {
+    color: rgb(0 0 0)!important;
+    padding: 0 10px!important;
+}
+
+.navbar_btn {
+    margin: 6px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-align: center;
+    max-width: 13em;
+}
+
+.pre_btn {
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    background-color: rgb(255, 195, 0);
+    color: #1f1f1f;
+}
+
+.pre_btn:hover {
+    color: #1f1f1f;
+}
+
+.index_btn {
+    display: inline-block;
+    padding: 0.5em 1.7em;
+    margin: 0.3em 0.4em;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 300;
+    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    text-align: center;
+    font-size: 1.2em;
+    text-transform: uppercase;
+}
+
+.center-vertical {
+    display: flex;
+    align-items: center;
+}
+
+
+/* this if for all the stuff that come from bottom
+like cookie or news letter bar */
+
+.bottom-bar {
+    /* using d-none would use !important,
+     which won't be overriden by
+      jquery .show()  */
+    display: none;
+}

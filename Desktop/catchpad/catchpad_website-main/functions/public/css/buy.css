@@ -1,0 +1,279 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap");
+
+body {
+    background-color: #eee;
+    font-family: "Poppins", sans-serif;
+}
+
+.card {
+    background-color: #fff;
+    padding: 14px;
+    border: none;
+}
+
+.demo {
+    width: 100%;
+}
+
+img {
+    display: block;
+    height: auto;
+    width: 100%;
+}
+
+.stars i {
+    color: #f6d151;
+}
+
+.stars span {
+    font-size: 13px;
+}
+
+hr {
+    color: #d4d4d4;
+}
+
+.badge {
+    padding: 5px !important;
+    padding-bottom: 6px !important;
+}
+
+.badge i {
+    font-size: 10px;
+}
+
+.profile-image {
+    width: 35px;
+}
+
+.comment-ratings i {
+    font-size: 13px;
+}
+
+.username {
+    font-size: 12px;
+}
+
+.date span {
+    font-size: 12px;
+}
+
+.p-ratings i {
+    color: #f6d151;
+    font-size: 12px;
+}
+
+.btn-long {
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.buttons {
+    margin-top: 15px;
+}
+
+.buttons .btn {
+    height: 46px;
+}
+
+.followers {
+    font-size: 9px;
+    color: #d6d4d4;
+}
+
+.store-image {
+    width: 42px;
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.bullet-text {
+    font-size: 12px;
+}
+
+.my-color {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+label.radio {
+    cursor: pointer;
+}
+
+label.radio input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+label.radio span {
+    border: 2px solid #8f37aa;
+    display: inline-block;
+    color: #8f37aa;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    text-transform: uppercase;
+    transition: 0.5s all;
+}
+
+label.radio .red {
+    background-color: red;
+    border-color: red;
+}
+
+label.radio .blue {
+    background-color: blue;
+    border-color: blue;
+}
+
+label.radio .green {
+    background-color: green;
+    border-color: green;
+}
+
+label.radio .orange {
+    background-color: orange;
+    border-color: orange;
+}
+
+label.radio input:checked + span {
+    color: #fff;
+    position: relative;
+}
+
+label.radio input:checked + span::before {
+    opacity: 1;
+    content: "\2713";
+    position: absolute;
+    font-size: 13px;
+    font-weight: bold;
+    left: 4px;
+}
+
+.card-body {
+    padding: 0.3rem 0.3rem 0.2rem;
+}
+
+.prod_desc_sec {
+    margin: auto 0;
+}
+#lightSlider ul {
+    list-style: none outside none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+#lightSlider li {
+    display: block;
+    float: left;
+    margin-right: 6px;
+    cursor: pointer;
+}
+.prod-props li {
+    font-size: 0.9em;
+}
+.prod-features li {
+    font-size: 1.1em;
+}
+
+li {
+    color: #000000;
+}
+
+.modal,
+.fade,
+.show {
+    transition: 0.3s;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.modal-content {
+    transition: 0.3s;
+    border: none;
+    background: transparent;
+}
+
+.cls-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.close {
+    z-index: 1;
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 1;
+    color: black;
+}
+
+.modal-body {
+    position: relative;
+    border: none;
+    background-color: white;
+    padding-bottom: 5px;
+}
+
+.close.focus,
+.close:focus {
+    outline: 0;
+    box-shadow: none !important;
+}
+
+.form-control {
+    width: 80%;
+    height: 50px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0px 0.5px 0px 0px #dae0e5 !important;
+    color: #63686c;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.form-control.focus {
+    border: none;
+    border-color: #fff;
+    border-bottom: 1px solid #000;
+    outline: 0;
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.25);
+}
+
+@media (min-width: 599px) {
+    .modal-dialog {
+        max-width: 47rem;
+    }
+
+    .details {
+        padding: 60px 0 40px 50px;
+    }
+
+    .text-muted a {
+        color: #c0bfbf;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    small.para {
+        font-weight: bold;
+        font-size: 14px;
+        color: #63686c;
+    }
+}
+
+#buy_page_Wrapper {
+    padding-top: 5em;
+}

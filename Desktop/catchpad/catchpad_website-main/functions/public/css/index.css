@@ -1,0 +1,141 @@
+#vid_wrapper {
+    color: #000000;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+#vid_wrapper video {
+    width: 100%;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+#main_vid {
+    display: block;
+}
+
+.watch_vid_btn {
+    border: 0.16em solid rgba(255, 255, 255, 1);
+    color: #f1f1f1;
+}
+
+.watch_vid_btn:hover {
+    color: #f1f1f1;
+}
+
+.pre_btn {
+    border: 0.16em solid rgba(255, 255, 255, 0);
+    background-color: rgb(255, 195, 0);
+    color: #1f1f1f;
+}
+
+.pre_btn:hover {
+    color: #1f1f1f;
+}
+
+.imagepad {
+    border: #ffc300;
+    border-radius: 12px;
+    border-width: 2px;
+    padding-inline: 12px;
+    padding: 12px;
+}
+
+.index_btn {
+    display: inline-block;
+    padding: 0.5em 1.7em;
+    margin: 0.3em 0.4em;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 300;
+    text-shadow: 0 0.04em 0.04em rgba(0, 0, 0, 0.35);
+    text-align: center;
+    font-size: 1.2em;
+    text-transform: uppercase;
+}
+
+.title-on-vid {
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    color: #f1f1f1;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+@media (min-width: 992px) {
+    .title-on-vid {
+        position: absolute;
+        bottom: 15%;
+        left: 0;
+        right: 0;
+    }
+}
+
+@media (max-width: 992px) {
+    .title-on-vid {
+        background-color: #000000;
+        padding-top: 2em;
+        padding-bottom: 2em;
+    }
+    /*
+     for some reason, there is a tiny bit under the video 
+     we dont wanna highlight it, however, on small devices,
+     when we put the title-on-vid under the video, that space 
+     appears
+     */
+    #vid_wrapper {
+        background-color: #000000;
+    }
+}
+
+.fadeIn {
+    -webkit-animation-name: fadeIn;
+    animation-name: fadeIn;
+}
+
+.cp_section_item_img {
+    height: 100%;
+}
+
+
+/* as its after will have negative bottom,
+    we have to give this bottom padding
+    to avoid stuff crashing into each other
+*/
+
+.index-section-title {
+    padding-bottom: 2%;
+    margin-bottom: 7%;
+    /* we had to wrap this with
+        col, whcih provides
+        padding-left and padding-right
+        */
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.index-section-title::after {
+    background: #ffc300 none repeat scroll 0 0;
+    bottom: -10%;
+    content: "";
+    height: 2px;
+    left: 0;
+    position: absolute;
+    width: 4em;
+}
+
+.cp_trailer_video_wrapper {
+    box-shadow: 0px 4px 8px #888888;
+    margin-bottom: 4%;
+}
+
+.the-pad-features li {
+    margin-bottom: 4px;
+}
+
+.cp_section {
+    padding-bottom: 4%;
+}
