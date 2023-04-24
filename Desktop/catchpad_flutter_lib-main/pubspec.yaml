@@ -1,0 +1,33 @@
+name: catchpad_flutter_lib
+description: A new Flutter package project.
+version: 0.0.1
+publish_to: "none"
+
+environment:
+  sdk: ">=2.17.1 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_reactive_ble: ^5.0.2
+  web_socket_channel: ^2.1.0
+  flutter_riverpod: ^2.0.0-dev.4
+  freezed_annotation:
+  intl: ^0.17.0
+  xrandom: ^0.7.2
+  go_router: ^5.0.5
+  json_serializable: ^6.2.0
+  json_annotation: ^4.5.0
+  async: ^2.8.2
+  logger: ^1.1.0
+
+dev_dependencies:
+  test:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.1
+  freezed:
+  build_runner:
+
+flutter:
