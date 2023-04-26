@@ -1,0 +1,27 @@
+{
+  "@@locale": "tr",
+  "meeting": "Toplantı",
+  "or": "veya",
+  "sign_up": "Kayıt Ol",
+  "sign_in": "Giriş Yap",
+  "welcome_to_audiotodo": "AudioToDo'ya Hoşgeldiniz",
+  "username": "Ad",
+  "surname": "Soyad",
+  "email": "Email",
+  "blank_empty": "Boş bırakılamaz",
+  "password": "Şifre",
+  "again_password": "Şifre Yeniden",
+  "password_min_eight_character": "En az 8 karakterli bir şifre girebilirsiniz",
+  "passwords_not_same": "Şifreleriniz uyuşmuyor",
+  "cancel": "Vazgeç",
+  "create_user_success_dialog_title": "Başarılı Bir Şekilde Oluşturuldu!",
+  "welcome_please_enter_with_login": "Oluşturmuş olduğunuz mail adresiyle giriş yapabilirsiniz",
+  "user_creation_failed": "Kullanıcı Oluşturma Hatası!",
+  "email_already_in_use": "Böyle bir kullanıcı zaten bulunmaktadır",
+  "invalid_email_format": "E-mail uygun formatta değil",
+  "please_enter_a_strong_password": "Lütfen güçlü bir şifre girin",
+  "an_error_occurred" : "Bir Hata meydana geldi",
+  "wrong_password" : "Yanlış Şifre",
+  "login_failed" : "Giriş Başarısız!"
+
+}

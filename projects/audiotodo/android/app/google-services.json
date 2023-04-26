@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "157451864109",
+    "project_id": "audiotodo-46de0",
+    "storage_bucket": "audiotodo-46de0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157451864109:android:d749715c2410d21c2dd0a4",
+        "android_client_info": {
+          "package_name": "com.audiotodo.audiotodo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "157451864109-14ul1ic3h01ikvj7evufn03ddb4tndet.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQOWlaHxtu4QTluaroxYlSpHu68gkL2_g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "157451864109-14ul1ic3h01ikvj7evufn03ddb4tndet.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
