@@ -118,9 +118,10 @@ class _FilesOfCustomersState extends ConsumerState<FilesOfCustomers> {
                                       "Aranacak bir kullanıcı bulunmamaktadır");
                             }
                           },
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.search,
                             color: CustomColors.secondaryColor,
+                            size: 3.75.h,
                           ))
                     ],
                   ),
@@ -145,9 +146,10 @@ class _FilesOfCustomersState extends ConsumerState<FilesOfCustomers> {
                           Fluttertoast.showToast(msg: "Dosya Seçilemedi!");
                         }
                       },
-                      icon: const Icon(
+                      icon:  Icon(
                         Icons.add_box_outlined,
                         color: CustomColors.secondaryColor,
+                        size: 3.75.h,
                       ))
                 ],
               ),

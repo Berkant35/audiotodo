@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:osgb/line/viewmodel/global_providers.dart';
+import 'package:osgb/main.dart';
 import 'package:osgb/ui/auth/login_page.dart';
+import 'package:osgb/utilities/constants/app/application_constants.dart';
 import 'package:osgb/utilities/constants/app/enums.dart';
-
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LandingPage extends ConsumerStatefulWidget {
   const LandingPage({
@@ -17,8 +21,9 @@ class LandingPage extends ConsumerStatefulWidget {
 class _LandingPageState extends ConsumerState<LandingPage> {
   @override
   void initState() {
+    prepareLogin(ref);
     super.initState();
-    prepareLogin();
+
   }
 
   @override
@@ -32,20 +37,26 @@ class _LandingPageState extends ConsumerState<LandingPage> {
     );
   }
 
-  Future<void> prepareLogin() async {
+  Future<void> prepareLogin(WidgetRef ref) async {
 
-    Future.delayed(
-        const Duration(seconds: 2), () async {
-          if(ref.read(currentLoadingState) != LoadingStates.loading){
-            ref.read(currentLoadingState.notifier)
-                .changeState(LoadingStates.loading);
-          }else{
-            ref.read(currentLoadingState.notifier).changeState(LoadingStates.loaded);
-            ref.read(currentLoadingState.notifier)
+    logger.i("Prepare Login");
+
+
+
+    Future.delayed(const Duration(seconds: 2), () async {
+      if (ref.read(currentLoadingState) != LoadingStates.loading) {
+        ref
+            .read(currentLoadingState.notifier)
             .changeState(LoadingStates.loading);
-          }
-          await ref.read(currentRole.notifier)
-                   .checkLoggedAnyUser(ref);
+      } else {
+        ref
+            .read(currentLoadingState.notifier)
+            .changeState(LoadingStates.loaded);
+        ref
+            .read(currentLoadingState.notifier)
+            .changeState(LoadingStates.loading);
+      }
+      await ref.read(currentRole.notifier).checkLoggedAnyUser(ref);
     });
   }
 }

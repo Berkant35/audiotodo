@@ -68,7 +68,9 @@ class CustomCard extends ConsumerWidget {
             child: Text(navigationContentText,
                 style: ThemeValueExtension.subtitle2.copyWith(
                     fontWeight: FontWeight.w400,
-                    color: CustomColors.secondaryColor)),
+                    color: CustomColors.secondaryColor,
+
+                )),
           ),
         ),
       ),
@@ -77,7 +79,7 @@ class CustomCard extends ConsumerWidget {
 
   Expanded colCard() {
     return Expanded(
-        flex: 10,
+        flex: 20,
         child: SizedBox(
           height: buildOfHeight(),
           child: Column(
@@ -92,7 +94,7 @@ class CustomCard extends ConsumerWidget {
 
   Expanded headerCard(BuildContext context) {
     return Expanded(
-        flex: 4,
+        flex: 7,
         child: specificIconData != null
             ? Icon(
                 specificIconData,
@@ -147,7 +149,7 @@ class CustomCard extends ConsumerWidget {
         ),
       );
 
-  double buildOfHeight() => 13.7.h;
+  double buildOfHeight() => 10.7.h;
 
   Expanded buildExpanded(String title, String content) {
     return Expanded(flex: 2, child: rowInfoOfCards(title, content));
@@ -155,7 +157,7 @@ class CustomCard extends ConsumerWidget {
 
   Padding rowInfoOfCards(String title, String content) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 1.25.h),
+      padding: EdgeInsets.symmetric(vertical: 0.7.h,horizontal: 0.1.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,14 +168,14 @@ class CustomCard extends ConsumerWidget {
               title,
               style: ThemeValueExtension.subtitle2
                   .copyWith(fontWeight: FontWeight.bold),
-              overflow: TextOverflow.clip,
+
             ),
           ),
           Flexible(
               flex: 9,
               child: Text(
                 content,
-                overflow: TextOverflow.visible,
+
                 style: ThemeValueExtension.subtitle2
                     .copyWith(fontWeight: FontWeight.w500),
                 textAlign: TextAlign.end,

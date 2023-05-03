@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:osgb/models/customer.dart';
 import 'package:osgb/models/doctor.dart';
 import 'package:osgb/utilities/components/custom_elevated_button.dart';
+import 'package:osgb/utilities/components/dialogs/custom_dialogs.dart';
 import 'package:osgb/utilities/components/seperate_padding.dart';
 import 'package:osgb/utilities/constants/extension/context_extensions.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -27,6 +27,7 @@ import '../../../../utilities/init/theme/custom_colors.dart';
 class DetailsOfCustomer extends ConsumerStatefulWidget {
   final Customer customer;
   final Function(String value) onSaved;
+
   const DetailsOfCustomer({
     Key? key,
     required this.onSaved,
@@ -38,6 +39,9 @@ class DetailsOfCustomer extends ConsumerStatefulWidget {
 }
 
 class _DetailsOfCustomerState extends ConsumerState<DetailsOfCustomer> {
+  late String _currentEmail;
+  bool _needUpdateEmail = false;
+
   late TextEditingController nameAndSurnameCustomerController;
   late TextEditingController customerEmail;
   late TextEditingController customerPassword;
@@ -59,7 +63,6 @@ class _DetailsOfCustomerState extends ConsumerState<DetailsOfCustomer> {
   String? choosedDoctor;
   String? choosedDoctorID;
   String? onSavedForDaily;
-
   Doctor? doctor;
 
   CityListOfTurkey listCities =
@@ -73,6 +76,9 @@ class _DetailsOfCustomerState extends ConsumerState<DetailsOfCustomer> {
       doctor = Doctor.fromJson(widget.customer.definedDoctor);
     }
     super.initState();
+
+    _currentEmail = widget.customer.email!;
+
     district = widget.customer.customerDistrict;
     city = widget.customer.customerCity;
     address = widget.customer.customerAddress;
@@ -116,7 +122,6 @@ class _DetailsOfCustomerState extends ConsumerState<DetailsOfCustomer> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(choosedDoctor);
     return Form(
       key: _updateCustomerKey,
       child: Padding(
@@ -132,6 +137,15 @@ class _DetailsOfCustomerState extends ConsumerState<DetailsOfCustomer> {
               "Güncelle",
               style: ThemeValueExtension.subtitle
                   .copyWith(fontWeight: FontWeight.bold),
+            ),
+            RowFormField(
+              headerName: "İş Yeri Email",
+              editingController: customerEmail,
+              visibleStatus: null,
+              canEdit: false,
+              hintText: ApplicationConstants.hintEmail,
+              custValidateFunction: (value) =>
+                  value != "" ? null : "Bu alan boş bırakılamaz",
             ),
             SizedBox(
               height: 2.h,
@@ -252,60 +266,88 @@ class _DetailsOfCustomerState extends ConsumerState<DetailsOfCustomer> {
     return ref.watch(currentButtonLoadingState) != LoadingStates.loading
         ? Padding(
             padding: EdgeInsets.only(top: 4.h),
-            child: CustomElevatedButton(
-                onPressed: () async {
-                  if (choosedExpertID != null &&
-                      _updateCustomerKey.currentState!.validate()) {
-                    var expert = await ref
-                        .read(currentAdminWorksState.notifier)
-                        .getRoleUser(choosedExpertID!);
+            child: Column(
+              children: [
+                CustomElevatedButton(
+                    onPressed: ref.read(currentRole) == Roles.admin
+                        ? () async {
+                            if (choosedExpertID != null &&
+                                _updateCustomerKey.currentState!.validate()) {
+                              var expert = await ref
+                                  .read(currentAdminWorksState.notifier)
+                                  .getRoleUser(choosedExpertID!);
 
-                    dynamic doctor;
+                              dynamic doctor;
 
-                    if (choosedDoctorID != null) {
-                      doctor = await ref
-                          .read(currentAdminWorksState.notifier)
-                          .getRoleUser(choosedDoctorID!);
-                    }
+                              if (choosedDoctorID != null) {
+                                doctor = await ref
+                                    .read(currentAdminWorksState.notifier)
+                                    .getRoleUser(choosedDoctorID!);
+                              }
 
-                    var currentCustomer = Customer(
-                        customerCity: city,
-                        customerAddress: addressController.text,
-                        customerDistrict: district,
-                        rootUserID: widget.customer.rootUserID,
-                        customerID: null,
-                        photoURL: widget.customer.photoURL,
-                        dangerLevel: dangerLevel,
-                        qrCodeURL: widget.customer.qrCodeURL,
-                        customerName: nameAndSurnameCustomerController.text,
-                        customerPhoneNumber: phoneNumberController.text,
-                        companyDetectNumber: companyRecordNumberController.text,
-                        customerSector: sectorController.text,
-                        representativePerson:
-                            presentationNameAndSurnameController.text,
-                        representativePersonPhone:
-                            presentationPhoneNumberController.text,
-                        accidentCaseList: [],
-                        email: customerEmail.text,
-                        definedDoctor:
-                            doctor != null ? (doctor as Doctor).toJson() : null,
-                        definedExpert: (expert as Expert).toJson(),
-                        dailyPeriod: onSavedForDaily,
-                        password: customerPassword.text,
-                        typeOfUser: 'customer');
+                              var currentCustomer = Customer(
+                                  customerCity: city,
+                                  customerAddress: addressController.text,
+                                  customerDistrict: district,
+                                  rootUserID: widget.customer.rootUserID,
+                                  customerID: null,
+                                  photoURL: widget.customer.photoURL,
+                                  dangerLevel: dangerLevel,
+                                  qrCodeURL: widget.customer.qrCodeURL,
+                                  customerName:
+                                      nameAndSurnameCustomerController.text,
+                                  customerPhoneNumber:
+                                      phoneNumberController.text,
+                                  companyDetectNumber:
+                                      companyRecordNumberController.text,
+                                  customerSector: sectorController.text,
+                                  representativePerson:
+                                      presentationNameAndSurnameController.text,
+                                  representativePersonPhone:
+                                      presentationPhoneNumberController.text,
+                                  accidentCaseList: [],
+                                  email: customerEmail.text,
+                                  definedDoctor: doctor != null
+                                      ? (doctor as Doctor).toJson()
+                                      : null,
+                                  definedExpert: (expert as Expert).toJson(),
+                                  dailyPeriod: onSavedForDaily,
+                                  password: customerPassword.text,
+                                  typeOfUser: 'customer');
 
-                    ref
-                        .read(currentAdminWorksState.notifier)
-                        .updateCustomer(currentCustomer, ref, logoLocalPath).then((value){
-                          widget.onSaved("On Saved");
-                    });
-                  } else {
-                    Fluttertoast.showToast(
-                        msg: "Lütfen belirtilen alanları doldurunuz");
-                  }
-                },
-                inButtonText: "Durumu Güncelle",
-                primaryColor: CustomColors.orangeColorM),
+                              ref
+                                  .read(currentAdminWorksState.notifier)
+                                  .updateCustomer(
+                                      currentCustomer,
+                                      ref,
+                                      logoLocalPath,
+                                      _needUpdateEmail,
+                                      _currentEmail)
+                                  .then((value) {
+                                if (value) {
+                                  _currentEmail = customerEmail.text;
+                                }
+                                widget.onSaved("On Saved");
+                              });
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Lütfen belirtilen alanları doldurunuz");
+                            }
+                          }
+                        : null,
+                    inButtonText: "Durumu Güncelle",
+                    primaryColor: ref.read(currentRole) == Roles.admin
+                        ? CustomColors.orangeColorM
+                        : CustomColors.customCardBackgroundColorM),
+                SizedBox(height: 4.h),
+                CustomElevatedButton(
+                  onPressed: () => CustomDialogs.deleteConsumer(
+                      ref, widget.customer.rootUserID!),
+                  inButtonText: "Müşteriyi Sil",
+                  primaryColor: CustomColors.errorColorM,
+                )
+              ],
+            ),
           )
         : const Center(
             child: CircularProgressIndicator.adaptive(),

@@ -8,7 +8,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:nanoid/async.dart';
 import 'package:osgb/line/viewmodel/global_providers.dart';
 import 'package:osgb/models/accident_case.dart';
-import 'package:osgb/utilities/components/add_worker_dialog.dart';
 import 'package:osgb/utilities/components/custom_elevated_button.dart';
 import 'package:osgb/utilities/components/seperate_padding.dart';
 import 'package:osgb/utilities/constants/app/enums.dart';
@@ -297,7 +296,7 @@ class _AddCrisesState extends ConsumerState<AddCrises> {
                     decoration: BoxDecoration(
                         color: CustomColors.customCardBackgroundColor,
                         border: Border.all(
-                            strokeAlign: StrokeAlign.inside,
+                            strokeAlign: 2,
                             color: CustomColors.secondaryColor),
                         borderRadius: BorderRadius.all(
                             Radius.circular(EdgeExtension.lowEdge.edgeValue))),

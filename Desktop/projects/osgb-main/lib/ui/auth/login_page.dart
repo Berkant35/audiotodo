@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:osgb/line/viewmodel/global_providers.dart';
+import 'package:osgb/ui/auth/auth_widgets/accept_policy.dart';
 import 'package:osgb/ui/auth/auth_widgets/logo.dart';
 import 'package:osgb/utilities/components/custom_elevated_button.dart';
 import 'package:osgb/utilities/components/input_form_field.dart';
@@ -23,6 +25,7 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   late TextEditingController emailController;
   late TextEditingController passwordController;
+  bool isAcceptedPolicy = false;
   final _authFormKey = GlobalKey<FormState>();
 
   @override
@@ -109,18 +112,32 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           hintText: "Şifre",
                           iconData: const Icon(Icons.lock_outline_rounded),
                         ),
+                        AcceptPolicy(
+                            onChanged: (value) {
+                              setState(() {
+                                isAcceptedPolicy = value;
+                              });
+                            },
+                            isAccept: isAcceptedPolicy),
                         getSpaceColumn(3),
                         Center(
                           child: ref.watch(currentButtonLoadingState) !=
                                   LoadingStates.loading
                               ? CustomElevatedButton(
                                   onPressed: () {
-                                    _authFormKey.currentState!.save();
-                                    if (_authFormKey.currentState!.validate()) {
-                                      ref.read(currentRole.notifier).signIn(
-                                          emailController.text,
-                                          passwordController.text,
-                                          ref);
+                                    if (isAcceptedPolicy) {
+                                      _authFormKey.currentState!.save();
+                                      if (_authFormKey.currentState!
+                                          .validate()) {
+                                        ref.read(currentRole.notifier).signIn(
+                                            emailController.text,
+                                            passwordController.text,
+                                            ref);
+                                      }
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              "Lütfen gizlilik politikalarını kabul edin");
                                     }
                                   },
                                   inButtonText: "Giriş Yap",

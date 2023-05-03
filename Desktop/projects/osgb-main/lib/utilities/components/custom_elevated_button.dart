@@ -17,7 +17,7 @@ class CustomElevatedButton extends StatelessWidget {
   final double? borderRadius;
   final MaterialStateProperty<double?>? elevation;
   final double? height;
-  final Function onPressed;
+  final Function? onPressed;
   final Widget? inButtonWidget;
   final String? inButtonText;
 

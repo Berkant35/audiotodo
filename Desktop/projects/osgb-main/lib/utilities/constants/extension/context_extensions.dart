@@ -98,98 +98,114 @@ extension DurationExtension on BuildContext {
 
 extension ThemeValueExtension on BuildContext {
   static TextStyle get headline1 => TextStyle(
-      fontSize:  72.sp ,
+      fontSize: 72.sp,
       fontWeight: FontWeight.w300,
       letterSpacing: -1.5.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get headline2 => TextStyle(
-      fontSize:  56.sp ,
+      fontSize: 56.sp,
       fontWeight: FontWeight.w300,
       letterSpacing: -0.5.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get headline3 => TextStyle(
-      fontSize:  48.sp ,
+      fontSize: 48.sp,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get headline4 => TextStyle(
-      fontSize:  36.sp ,
+      fontSize: 36.sp,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.25.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get headline5 => TextStyle(
-      fontSize:  30.sp ,
+      fontSize: 30.sp,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get headline6 => TextStyle(
-      fontSize:  21.sp ,
+      fontSize: 21.sp,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.15.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get subtitle => TextStyle(
-      fontSize:  16.sp ,
+      fontSize: 16.sp,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.15.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get subtitle2 => TextStyle(
-      fontSize:  14.sp ,
+      fontSize: 14.sp,
       fontWeight: FontWeight.w700,
       letterSpacing: 0.1.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get subtitle3 => TextStyle(
-      fontSize:  14.sp ,
+      fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.5.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get subtitle4 => TextStyle(
-      fontSize:  12.sp ,
+      fontSize: 12.sp,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.25.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get subtitle5 => TextStyle(
-      fontSize:  13.sp ,
+      fontSize: 13.sp,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.1.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get body => TextStyle(
-      fontSize:  14.sp ,
+      fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.5.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get body2 => TextStyle(
-      fontSize:  13.sp ,
+      fontSize: 13.sp,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.25.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get caption => TextStyle(
-      fontSize:  12.sp ,
+      fontSize: 12.sp,
       fontWeight: FontWeight.normal,
       letterSpacing: 0.4.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get overline => TextStyle(
-      fontSize:  12.sp ,
+      fontSize: 12.sp,
       fontWeight: FontWeight.normal,
       letterSpacing: 1.5.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 
   static TextStyle get buttonTextStyle => TextStyle(
-      fontSize:  14.sp ,
+      fontSize: 14.sp,
       fontWeight: FontWeight.w100,
       letterSpacing: 0.15.sp,
-      fontFamily: ApplicationConstants.customFontFamily);
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
 }

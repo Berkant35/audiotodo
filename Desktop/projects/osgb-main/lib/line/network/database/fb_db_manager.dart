@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:osgb/custom_functions.dart';
+import 'package:osgb/line/network/auth/auth_manager.dart';
 import 'package:osgb/line/viewmodel/global_providers.dart';
+import 'package:osgb/main.dart';
 import 'package:osgb/models/accident_case.dart';
 import 'package:osgb/models/accountant.dart';
 import 'package:osgb/models/custom_file.dart';
@@ -26,6 +29,7 @@ import '../../../models/expert.dart';
 import '../../../models/monthly.dart';
 import '../../../models/root_user.dart';
 import '../../../models/search_user.dart';
+import '../../../models/version.dart';
 
 part 'fb_db_base.dart';
 
@@ -94,33 +98,52 @@ class FirebaseDbManager extends FirebaseDbBase {
     return expertList;
   }
 
-  Future<List<Customer>> getCustomerList(WidgetRef ref) async {
+  Future<List<Customer>> getCustomerList(WidgetRef ref,
+      {String? expertId, String? doctorId}) async {
     var customerList = <Customer>[];
     QuerySnapshot<Map<String, dynamic>> snapshot;
+
+    logger.i("Doctor Id:$doctorId");
 
     snapshot = await dbBase
         .collection("users")
         .where('typeOfUser', isEqualTo: "customer")
-
         .get();
 
-
-
-    for (var expertJSON in snapshot.docs) {
-      var perCustomer  =Customer.fromJson(expertJSON.data());
-      if(ref.read(currentBaseModelState).expert != null ){
-        if(Expert.fromJson(perCustomer.definedExpert).rootUserID == ref.read(currentBaseModelState).expert!.rootUserID){
+    for (var customerMap in snapshot.docs) {
+      var perCustomer = Customer.fromJson(customerMap.data());
+      if (ref.read(currentBaseModelState).expert != null) {
+        if (Expert.fromJson(perCustomer.definedExpert).rootUserID ==
+            ref.read(currentBaseModelState).expert!.rootUserID) {
           customerList.add(perCustomer);
         }
-      }else{
-        customerList.add(perCustomer);
+      } else {
+        if (doctorId != null && perCustomer.definedDoctor != null) {
+          var doctor = Doctor.fromJson(perCustomer.definedDoctor);
 
+          if (doctor.rootUserID == doctorId) {
+            customerList.add(perCustomer);
+          }
+        }
+
+        if (expertId != null) {
+          var expert = Expert.fromJson(perCustomer.definedExpert);
+          if (expert.rootUserID == expertId) {
+            customerList.add(perCustomer);
+          }
+        }
+
+        if (expertId == null && doctorId == null) {
+          customerList.add(perCustomer);
+        }
       }
     }
+
     return customerList;
   }
 
-  Future<List<dynamic>> getCustomerListWithMap() async {
+  Future<List<dynamic>> getCustomerListWithMap(
+      String rootUserID, Roles role) async {
     var customerList = <dynamic>[];
 
     var snapshot = await dbBase
@@ -129,7 +152,28 @@ class FirebaseDbManager extends FirebaseDbBase {
         .get();
 
     for (var expertJSON in snapshot.docs) {
-      customerList.add(Customer.fromJson(expertJSON.data()).toJson());
+      var customer = Customer.fromJson(expertJSON.data());
+
+      if (role != Roles.admin) {
+        if (customer.definedDoctor != null) {
+          var customerDoctor = Doctor.fromJson(customer.definedDoctor);
+
+          if (customerDoctor.rootUserID == rootUserID) {
+            customerList.add(customer.toJson());
+          }
+        }
+
+        if (customer.definedExpert != null) {
+          var customerExpert = Expert.fromJson(customer.definedExpert);
+
+          if (rootUserID == customerExpert.rootUserID) {
+            customerList.add(customer.toJson());
+          }
+        }
+      } else {
+        debugPrint("Triggered!");
+        customerList.add(customer.toJson());
+      }
     }
     return customerList;
   }
@@ -314,14 +358,15 @@ class FirebaseDbManager extends FirebaseDbBase {
       bool filterIsDone, String? filterUserID, Roles? roles) async {
     try {
       List<Inspection> inspectionList = [];
+
       QuerySnapshot<Map<String, dynamic>> documentSnapshot;
       if (filterUserID == null) {
         documentSnapshot = await dbBase
             .collection("inspections")
             .where("inspectionIsDone", isEqualTo: filterIsDone)
+            .orderBy("updatedDate", descending: true)
             .get();
       } else {
-        debugPrint(roles.toString());
         documentSnapshot = await dbBase
             .collection("inspections")
             .where("inspectionIsDone", isEqualTo: filterIsDone)
@@ -332,6 +377,7 @@ class FirebaseDbManager extends FirebaseDbBase {
                         ? "customerID"
                         : "expertID",
                 isEqualTo: filterUserID)
+            .orderBy("updatedDate", descending: true)
             .get();
       }
 
@@ -339,7 +385,7 @@ class FirebaseDbManager extends FirebaseDbBase {
         var inspection = Inspection.fromJson(perInspectionJSON.data());
         inspectionList.add(inspection);
       }
-
+      logger.i("Inspection List: ${inspectionList.toString()}");
       return inspectionList;
     } catch (e) {
       debugPrint(e.toString());
@@ -383,10 +429,10 @@ class FirebaseDbManager extends FirebaseDbBase {
 
   Future<void> finishInspection(String inspectionID) async {
     try {
-      await dbBase
-          .collection("inspections")
-          .doc(inspectionID)
-          .update({"inspectionIsDone": true}).then((value) {
+      await dbBase.collection("inspections").doc(inspectionID).update({
+        "inspectionIsDone": true,
+        "updatedDate": DateTime.now().toString().substring(0, 16)
+      }).then((value) {
         Fluttertoast.showToast(msg: "Denetim Kaydedildi!");
       });
     } catch (e) {
@@ -548,7 +594,8 @@ class FirebaseDbManager extends FirebaseDbBase {
   @override
   Future<bool> confirmDemand(DemandWorker demandWorker) async {
     try {
-      debugPrint("Confirmed Demand oluyor mu aq ${demandWorker.toJson().toString()}");
+      debugPrint(
+          "Confirmed Demand oluyor mu aq ${demandWorker.toJson().toString()}");
       var result = await dbBase
           .collection("workers")
           .doc(demandWorker.demandWorker!.rootUserID)
@@ -566,26 +613,25 @@ class FirebaseDbManager extends FirebaseDbBase {
               .doc(demandWorker.demandID)
               .delete()
               .then((value) async {
+            debugPrint("Confirmed Demand oluyor mu aq4");
+            return await dbBase
+                .collection("search_users")
+                .doc(demandWorker.demandWorker!.rootUserID)
+                .set(SearchUser(
+                        typeOfUser: "worker",
+                        rootUserID: demandWorker.demandWorker!.rootUserID,
+                        role: "worker",
+                        userName: demandWorker.demandWorker!.workerName)
+                    .toJson())
+                .then((value) {
+              debugPrint("Confirmed Demand oluyor mu aq5 ");
 
-              debugPrint("Confirmed Demand oluyor mu aq4");
-              return await dbBase
-                  .collection("search_users")
-                  .doc(demandWorker.demandWorker!.rootUserID)
-                  .set(SearchUser(
-                  typeOfUser: "worker",
-                  rootUserID: demandWorker.demandWorker!.rootUserID,
-                  role: "worker",
-                  userName: demandWorker.demandWorker!.workerName)
-                  .toJson())
-                  .then((value) {
-                debugPrint("Confirmed Demand oluyor mu aq5 ");
-
-                Fluttertoast.showToast(msg: "Başarılı");
-                return true;
-              });
+              Fluttertoast.showToast(msg: "Başarılı");
+              return true;
             });
           });
         });
+      });
 
       debugPrint("Service Result $result");
       return result;
@@ -830,7 +876,7 @@ class FirebaseDbManager extends FirebaseDbBase {
 
   @override
   Future<void> updatePushToken(String pushToken, String rootUserID) async {
-    await dbBase
+    return await dbBase
         .collection("users")
         .doc(rootUserID)
         .update({"pushToken": pushToken});
@@ -863,6 +909,7 @@ class FirebaseDbManager extends FirebaseDbBase {
       var snapshot = await dbBase
           .collection("files")
           .where("customerID", isEqualTo: rootUserID)
+          .orderBy("uploadingDate", descending: true)
           .get();
 
       for (var perFileJson in snapshot.docs) {
@@ -882,8 +929,9 @@ class FirebaseDbManager extends FirebaseDbBase {
       return await dbBase
           .collection("files")
           .doc(customFile.fileID)
-          .set(customFile.toJson()).then((value){
-            return true;
+          .set(customFile.toJson())
+          .then((value) {
+        return true;
       });
     } catch (e) {
       debugPrint("Error 'uploadFileToCustomer' $e ");
@@ -892,33 +940,85 @@ class FirebaseDbManager extends FirebaseDbBase {
   }
 
   Future<int> getWorkerCount(String customerID) async {
-
-    try{
+    try {
       return await dbBase
           .collection("workers")
-          .where("workerCompanyID" ,isEqualTo: customerID)
-          .get().then((value){
-            return value.docs.length;
+          .where("workerCompanyID", isEqualTo: customerID)
+          .get()
+          .then((value) {
+        return value.docs.length;
       });
-    }catch(e){
+    } catch (e) {
       debugPrint('$e<-err');
       return 0;
     }
   }
 
   Future<Customer?> getCustomer(String rootUserID) async {
-    try{
+    try {
       return await dbBase
           .collection("users")
           .doc(rootUserID)
-          .get().then((value){
+          .get()
+          .then((value) {
         return Customer.fromJson(value.data()!);
       });
-    }catch(e){
+    } catch (e) {
       debugPrint('$e<-err');
       return null;
     }
   }
 
+  Future<Version?> getVersionFromCloud() async {
+    try {
+      return await dbBase
+          .collection("version")
+          .doc("versionData")
+          .get()
+          .then((value) {
+        logger.i(value.toString());
 
+        return Version.fromJson(value.data()!);
+      });
+    } catch (e) {
+      debugPrint('$e<-err');
+      return null;
+    }
+  }
+
+  Future<void> deleteCustomer(String rootUserID) async {
+    try {
+      var listOfFuture = <Future>[];
+
+      var listOfFutureGetLists = <Future>[];
+
+      listOfFutureGetLists
+          .add(getInspections(true, rootUserID, Roles.customer));
+      listOfFutureGetLists
+          .add(getInspections(false, rootUserID, Roles.customer));
+
+      await Future.wait(listOfFutureGetLists).then((value) {
+        for (var perList in value) {
+          List<Inspection>? list = perList as List<Inspection>?;
+          list?.forEach((deletePerInspection) {
+            if (deletePerInspection.customerID == rootUserID) {
+              listOfFuture.add(dbBase
+                  .collection("inspections")
+                  .doc(deletePerInspection.inspectionID)
+                  .delete());
+            }
+          });
+        }
+      });
+
+      listOfFuture.add(dbBase.collection("users").doc(rootUserID).delete());
+      listOfFuture
+          .add(dbBase.collection("search_users").doc(rootUserID).delete());
+
+      await Future.wait(listOfFuture);
+    } catch (e) {
+      debugPrint('$e<-err');
+      return;
+    }
+  }
 }

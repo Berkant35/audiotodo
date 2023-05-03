@@ -5,7 +5,7 @@ abstract class FirebaseDbBase {
 
   Dio get manager => _dio;
 
-  FirebaseDbBase();
+
 
   void init(String baseUrl,Map<String, dynamic>? headers){
 
@@ -15,7 +15,10 @@ abstract class FirebaseDbBase {
 
 
   }
+  FirebaseDbBase();
   final FirebaseFirestore dbBase = FirebaseFirestore.instance;
+
+
 
   Future<dynamic> readUser(String userID);
 

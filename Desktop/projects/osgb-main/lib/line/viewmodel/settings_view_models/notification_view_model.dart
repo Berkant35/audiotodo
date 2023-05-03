@@ -7,6 +7,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 import '../../../models/notification_model.dart';
+import '../../../models/version.dart';
 import '../../../utilities/constants/app/enums.dart';
 import '../../../utilities/constants/extension/context_extensions.dart';
 import '../../../utilities/init/theme/custom_colors.dart';
@@ -18,6 +19,15 @@ class NotificationManager extends StateNotifier<String?> {
 
   changePushToken(String token) {
     state = token;
+  }
+
+  Future<Version?> getVersionFromCloud() async {
+    try {
+      return await db.getVersionFromCloud();
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
   }
 
   Future<void> initializeNotificationState(WidgetRef ref,String rootUserID) async {
@@ -113,7 +123,7 @@ class NotificationManager extends StateNotifier<String?> {
 
   Future<void> updatePushToken(String pushToken, String rootUserID) async {
     try {
-      await db.updatePushToken(pushToken, rootUserID);
+      return await db.updatePushToken(pushToken, rootUserID);
     } catch (e) {
       debugPrint("Err(sendPush): $e");
     }

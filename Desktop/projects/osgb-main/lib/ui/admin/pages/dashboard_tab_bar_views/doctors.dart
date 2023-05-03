@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:osgb/models/doctor.dart';
-import 'package:osgb/ui/details/expert/common_doctor_detail.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../line/viewmodel/app_view_models/appBar_managers/custom_flexible_model.dart';
 import '../../../../line/viewmodel/global_providers.dart';
 import '../../../../utilities/components/custom_card.dart';
 import '../../../../utilities/constants/extension/context_extensions.dart';
+import '../../../details/expert/common_doctor_detail.dart';
 
 class Doctors extends ConsumerStatefulWidget {
   const Doctors({

@@ -278,7 +278,7 @@ class _AddWaitFixState extends ConsumerState<AddWaitFix> {
                     decoration: BoxDecoration(
                         color: CustomColors.customCardBackgroundColor,
                         border: Border.all(
-                            strokeAlign: StrokeAlign.inside,
+                            strokeAlign: 2,
                             color: CustomColors.secondaryColor),
                         borderRadius: BorderRadius.all(
                             Radius.circular(EdgeExtension.lowEdge.edgeValue))),

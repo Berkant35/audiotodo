@@ -143,9 +143,17 @@ class _DoneInspectionDetailsState extends ConsumerState<DoneInspectionDetails> {
                                       '{"inspectionID":"${currentInspection.inspectionID}","customerID":"${currentInspection.customerID}","customerName":"${currentInspection.customerName}","customerPhotoURL":"${currentInspection.customerPhotoURL}","expertID":"${currentInspection.expertID}","expertName":"${currentInspection.expertName}","doctorID":"${currentInspection.doctorID}","customerPushToken":"${currentInspection.customerPushToken}","doctorName":"${currentInspection.doctorName}","inspectionExplain":"${currentInspection.inspectionExplain}","inspectionTitle":"","inspectionDate":"${currentInspection.inspectionDate}","inspectionIsStarted":${currentInspection.inspectionIsStarted},"currentHasMustFixCount":${currentInspection.currentHasMustFixCount},"highDanger":${currentInspection.highDanger},"customerSector":"${currentInspection.customerSector}","customerAddress":"${currentInspection.customerAddress}","dangerLevelOfCustomer":"${currentInspection.dangerLevelOfCustomer}","customerPresentationName":"${currentInspection.customerPresentationName}","normalDanger":${currentInspection.normalDanger},"lowDanger":${currentInspection.lowDanger},"workerCount":${currentInspection.workerCount},"waitFixList":[${stringBuffer.toString()}],"inspectionIsDone":true}' //
                                 },
                               );
+                              debugPrint(response.body.toString());
+                              if(Platform.isAndroid)
+                              {
+                                launch("https://osgb.linksible.com/pdfler/${response.body.toString()}");
+                              }else
+                              {
+                                launchUrl(
+                                    Uri.parse("https://osgb.linksible.com/pdfler/${response.body.toString()}"));
+                              }
 
-                              launch(
-                                  "https://osgb.linksible.com/pdfler/${response.body.toString()}");
+
                             } catch (e) {
                               debugPrint(e.toString());
                             } finally {

@@ -23,6 +23,7 @@ class UserModelManager extends StateNotifier<BaseUserModel> {
 
   Future<void> logOut(WidgetRef ref) async {
     String currentRootUserID = "";
+
     switch (ref.read(currentRole)) {
       case Roles.none:
         // TODO: Handle this case.
@@ -44,19 +45,24 @@ class UserModelManager extends StateNotifier<BaseUserModel> {
         currentRootUserID = state.doctor!.rootUserID!;
         break;
       case Roles.worker:
-        // TODO: Handle this case.
         break;
     }
 
-    state = BaseUserModel(
+    BaseUserModel baseUserModel = BaseUserModel(
         admin: null, expert: null, customer: null, accountant: null);
 
-    auth.signOut().then((value) {
-      ref
-          .read(currentPushNotificationState.notifier)
-          .updatePushToken("", currentRootUserID);
-      NavigationService.instance
-          .navigateToPageClear(path: NavigationConstants.landingPage);
+    changeState(baseUserModel);
+
+    auth.signOut().then((value) async {
+      debugPrint(value.toString());
+
+      if (value) {
+        NavigationService.instance
+            .navigateToPageClear(path: NavigationConstants.landingPage);
+        await ref
+            .read(currentPushNotificationState.notifier)
+            .updatePushToken("", currentRootUserID);
+      }
     });
   }
 
@@ -87,7 +93,6 @@ class UserModelManager extends StateNotifier<BaseUserModel> {
 
   Future<Expert?> getExpert(String rootUserID) async {
     try {
-
       return await auth.getExpert(rootUserID);
     } catch (e) {
       debugPrint(e.toString());
@@ -97,7 +102,6 @@ class UserModelManager extends StateNotifier<BaseUserModel> {
 
   Future<Customer?> getCustomer(String rootUserID) async {
     try {
-
       return await auth.getCustomer(rootUserID);
     } catch (e) {
       debugPrint(e.toString());

@@ -16,12 +16,15 @@ class CurrentInspectionManager extends StateNotifier<Inspection?> {
     var inspection = Inspection(
       inspectionID: state!.inspectionID,
       customerID: state!.customerID,
+      customerName: state!.customerName,
       doctorID: state!.doctorID,
       expertID: state!.expertID,
       inspectionIsStarted: state!.inspectionIsStarted,
       inspectionIsDone: state!.inspectionIsDone,
       inspectionExplain: state!.inspectionExplain,
       inspectionDate: state!.inspectionDate,
+      createdDate: state!.createdDate ?? DateTime.now().toString().substring(0,16),
+      updatedDate:  DateTime.now().toString().substring(0,16),
       doctorName: state!.doctorName,
       waitFixList: state!.waitFixList,
       lowDanger: state!.lowDanger! +
@@ -96,6 +99,8 @@ class CurrentInspectionManager extends StateNotifier<Inspection?> {
       inspectionIsDone: state!.inspectionIsDone,
       inspectionExplain: state!.inspectionExplain,
       inspectionDate: state!.inspectionDate,
+      createdDate: state!.createdDate ?? DateTime.now().toString().substring(0,16),
+      updatedDate: DateTime.now().toString().substring(0,16),
       doctorName: state!.doctorName,
       waitFixList: state!.waitFixList!,
       lowDanger: (state!.lowDanger! +

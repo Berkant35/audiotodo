@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
 import 'package:osgb/models/monthly.dart';
 import 'package:osgb/models/yearly.dart';
 import 'package:osgb/utilities/components/custom_elevated_button.dart';
@@ -114,45 +113,3 @@ class _DrawerBudgetsState extends ConsumerState<DrawerBudgets> {
         ),
       );
 }
-
-/* Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                Text("Beklenen Toplam Ödeme:",
-                    style: ThemeValueExtension.subtitle2
-                        .copyWith(fontWeight: FontWeight.w600)),
-                SizedBox(
-                  width: 0.5.w,
-                ),
-                Text(expectedPayMoney.toString(),
-                    style: ThemeValueExtension.subtitle2.copyWith(
-                      fontWeight: FontWeight.w500,
-                      color: CustomColors.orangeColor,
-                    )),
-                  ],
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(width: 0.5),
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(
-                          EdgeExtension.lowEdge.edgeValue
-                      ))
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text("Ödenen Toplam Miktar:",
-                          style: ThemeValueExtension.subtitle2
-                              .copyWith(fontWeight: FontWeight.w600)),
-                      SizedBox(
-                        width: 0.5.w,
-                      ),
-                      Text(paidMoney.toString(),
-                          style: ThemeValueExtension.subtitle2.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: CustomColors.secondaryColor,
-                          )),
-                    ],
-                  ),
-                ),*/

@@ -185,6 +185,9 @@ class _AddInspectionState extends ConsumerState<AddInspection> {
                       expertName: expert.expertName,
                       expertID: expert.rootUserID,
                       inspectionDate: dateController.text,
+                      createdDate: DateTime.now().toString().substring(0,16),
+                      updatedDate: DateTime.now().toString().substring(0,16),
+
                       inspectionExplain: inspectionExplain.text,
                       inspectionIsDone: false,
                       inspectionIsStarted: false,

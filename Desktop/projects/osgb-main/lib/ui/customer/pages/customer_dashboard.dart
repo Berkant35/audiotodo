@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:osgb/line/viewmodel/global_providers.dart';
 import 'package:osgb/ui/customer/pages/dashboard_pages/customer_accountant.dart';
 import 'package:osgb/ui/customer/pages/dashboard_pages/customer_visits.dart';
-import 'package:osgb/ui/details/customer/customer_tab_views/company_of_workers.dart';
 
 import '../../../custom_functions.dart';
 import '../../../utilities/constants/extension/context_extensions.dart';

@@ -33,6 +33,7 @@ class FirebaseStorageService {
       return null;
     }
   }
+  
   Future<String?> getPhotoLink(File? photo) async {
     try{
       final firebaseStorageRef = FirebaseStorage.instance.ref(photo?.path);
@@ -59,9 +60,10 @@ class FirebaseStorageService {
         .writeAsBytes(
         buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
   }
+
+
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
-
     return directory.path;
   }
 

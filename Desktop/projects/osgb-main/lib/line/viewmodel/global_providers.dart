@@ -9,6 +9,7 @@ import 'package:osgb/line/viewmodel/app_view_models/tabBar_managers/add_user_tab
 import 'package:osgb/line/viewmodel/app_view_models/tabBar_managers/admin_dashboard_tab_manager.dart';
 import 'package:osgb/line/viewmodel/app_view_models/tabBar_managers/customer_details_tab_manager.dart';
 import 'package:osgb/line/viewmodel/app_view_models/tabBar_managers/customer_visit_tab_manager.dart';
+import 'package:osgb/line/viewmodel/app_view_models/tabBar_managers/expert_customer_detail_tab_manager.dart';
 import 'package:osgb/line/viewmodel/app_view_models/tabBar_managers/expert_tab_manager.dart';
 import 'package:osgb/line/viewmodel/app_view_models/tabBar_managers/visit_tab_manager.dart';
 import 'package:osgb/line/viewmodel/app_view_models/user_role_manager.dart';
@@ -23,7 +24,9 @@ import 'package:osgb/models/payment.dart';
 import 'package:osgb/utilities/constants/app/enums.dart';
 
 import 'app_view_models/appBar_managers/flexible_content_manager.dart';
+import 'app_view_models/search_text_manager.dart';
 import 'app_view_models/tabBar_managers/customer_dashboard_tabbar_manager.dart';
+import 'app_view_models/tabBar_managers/expert_details_tab_manager.dart';
 import 'customer_view_models/current_crisis_manager.dart';
 import 'customer_view_models/customer_works.dart';
 import 'files_view_models/file_view_model.dart';
@@ -80,6 +83,9 @@ final currentCustomerVisitTabIndexState = StateNotifierProvider<CustomerVisitsTa
 final currentCustomerDetailsTabIndexState = StateNotifierProvider<CustomerDetailsTabBarManager, int>(
         (ref) => CustomerDetailsTabBarManager(0));
 
+final currentExpertDetailsTabIndexState = StateNotifierProvider<ExpertDetailsTabBarManager, int>(
+        (ref) => ExpertDetailsTabBarManager(0));
+
 final currentAdminDashboardTabManager = StateNotifierProvider<AdminDashboardTabManager, int>(
         (ref) => AdminDashboardTabManager(0));
 
@@ -105,3 +111,9 @@ final currentFileState = StateNotifierProvider<FileViewModel, String?>(
         (ref) => FileViewModel(""));
 final currentPushNotificationState = StateNotifierProvider<NotificationManager, String?>(
         (ref) => NotificationManager(""));
+
+final currentSearchText = StateNotifierProvider<SearchTextManager, String?>(
+        (ref) => SearchTextManager(""));
+
+final currentExpertCustomerDetailTabBarManager = StateNotifierProvider<ExpertCustomerDetailTabManager, int>(
+        (ref) => ExpertCustomerDetailTabManager(0));

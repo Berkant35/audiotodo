@@ -9,7 +9,7 @@ part 'inspection.g.dart';
 
 
 @JsonSerializable()
-class Inspection {
+class Inspection{
   final String? inspectionID;
   final String? customerID;
   final String? customerName;
@@ -26,6 +26,8 @@ class Inspection {
   final String? inspectionTitle;
   final String? dangerLevelOfCustomer;
   final String? inspectionDate;
+   String? createdDate;
+   String? updatedDate;
   final bool? inspectionIsStarted;
   final int? currentHasMustFixCount;
   final int? workerCount;
@@ -45,6 +47,8 @@ class Inspection {
       required this.customerAddress,
       required this.customerSector,
       required this.dangerLevelOfCustomer,
+      required this.createdDate,
+      required this.updatedDate,
       this.workerCount,
       this.inspectionDate,
       this.doctorName,
@@ -61,6 +65,9 @@ class Inspection {
       this.currentHasMustFixCount,
       this.waitFixList,
       this.inspectionIsDone});
+
+
+
   factory Inspection.fromJson(Map<String, dynamic> json) {
     return _$InspectionFromJson(json);
   }
@@ -69,4 +76,8 @@ class Inspection {
   Map<String, dynamic> toJson() {
     return _$InspectionToJson(this);
   }
+
+
+
+
 }

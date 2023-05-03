@@ -14,8 +14,12 @@ import 'package:osgb/models/search_user.dart';
 import 'package:osgb/utilities/constants/app/enums.dart';
 import 'package:osgb/utilities/init/navigation/navigation_constants.dart';
 import 'package:osgb/utilities/init/navigation/navigation_service.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../../main.dart';
 import '../../../models/customer.dart';
+import '../../../utilities/constants/app/application_constants.dart';
 import '../../local/local_manager.dart';
 
 class UserRoleManager extends StateNotifier<Roles> {
@@ -31,7 +35,33 @@ class UserRoleManager extends StateNotifier<Roles> {
   Future<void> checkLoggedAnyUser(WidgetRef ref) async {
     try {
       var result = await _authManager.currentUser();
-      await currentUser(result, ref);
+      await currentUser(result, ref).then((value) {
+        PackageInfo.fromPlatform().then((versionValue) async {
+          logger.i(versionValue.buildNumber);
+          await ref
+              .read(currentPushNotificationState.notifier)
+              .getVersionFromCloud()
+              .then((appVersion) {
+
+            String deviceVersion = versionValue.version;
+            String? serverVersion = appVersion?.versionNumber;
+
+            logger.i("Device Version: $deviceVersion Server Version: $serverVersion");
+
+            int deviceVersionValue =
+                int.parse(deviceVersion.replaceAll(".", ""));
+            int serverVersionValue =
+                int.parse(serverVersion!.replaceAll(".", ""));
+            if (serverVersionValue > deviceVersionValue &&
+                appVersion!.isRequiredForceUpdate!) {
+              launchUrl(Platform.isAndroid
+                  ? Uri.parse(ApplicationConstants.googlePlayLink)
+                  : Uri.parse(
+                      "https://apps.apple.com/tr/developer/apple/id284417353?l=tr&see-all=i-phone-apps"));
+            }
+          });
+        });
+      });
     } catch (e) {
       debugPrint('$e<--');
     } finally {
@@ -126,8 +156,6 @@ class UserRoleManager extends StateNotifier<Roles> {
     ref
         .read(currentPushNotificationState.notifier)
         .initializeNotificationState(ref, currentModel.rootUserID);
-
-
   }
 
   void goToLogin(String path) =>

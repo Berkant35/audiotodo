@@ -74,6 +74,7 @@ class _GetExpansionChooseListState extends State<GetExpansionChooseList> {
                       ? removeListTile()
                       : const SizedBox(),
                   ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: list.length,
                       itemBuilder: (context, index) {
@@ -105,13 +106,19 @@ class _GetExpansionChooseListState extends State<GetExpansionChooseList> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              list[index][widget.keyOfMap],
-              style: ThemeValueExtension.subtitle3,
+            Expanded(
+              flex: 8,
+              child: Text(
+                list[index][widget.keyOfMap],
+                style: ThemeValueExtension.subtitle3,
+              ),
             ),
-            const Icon(
-              Icons.add_box_outlined,
-              color: CustomColors.secondaryColor,
+            const Expanded(
+              flex: 1,
+              child: Icon(
+                Icons.add_box_outlined,
+                color: CustomColors.secondaryColor,
+              ),
             )
           ],
         ),

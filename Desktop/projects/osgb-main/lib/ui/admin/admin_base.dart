@@ -238,9 +238,10 @@ class _AdminBaseState extends ConsumerState<AdminBase> {
       BottomNavigationBarItem(
           icon: Padding(
             padding: EdgeInsets.symmetric(vertical: 0.5.h),
-            child: const Icon(
+            child:  Icon(
               Icons.abc_outlined,
               color: Colors.transparent,
+              size: 4.h,
             ),
           ),
           label: 'Yönetim'),
@@ -254,7 +255,7 @@ class _AdminBaseState extends ConsumerState<AdminBase> {
     return BottomNavigationBarItem(
         icon: Padding(
           padding: EdgeInsets.symmetric(vertical: 0.5.h),
-          child: Icon(iconData),
+          child: Icon(iconData,size: 4.h,),
         ),
         label: label);
   }

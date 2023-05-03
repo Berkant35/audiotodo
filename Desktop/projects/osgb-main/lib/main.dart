@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
+import 'package:logger/logger.dart';
+import 'package:osgb/god_mode.dart';
 import 'package:osgb/line/network/database/fb_db_manager.dart';
 import 'package:osgb/ui/landing_page.dart';
 import 'package:osgb/utilities/constants/app/application_constants.dart';
@@ -17,17 +19,28 @@ import 'package:path_provider/path_provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'firebase_options.dart';
+var logger = Logger(
+  filter: null, // Use the default LogFilter (-> only log in debug mode)
+  printer: PrettyPrinter(), // Use the PrettyPrinter to format and print log
+  output: null, // Use the default LogOutput (-> send everything to console)
+);
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async
+{
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true, // Required to display a heads up notification
     badge: true,
     sound: true,
   );
+
   String badge = "";
-  if (Platform.isIOS) {
+
+  if (Platform.isIOS)
+  {
     badge = message.notification!.apple!.badge!;
-  } else {
+  }
+    else
+  {
     badge = message.notification!.android!.count.toString();
   }
 
@@ -35,6 +48,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
 
   Directory appDocDirectory = await getApplicationDocumentsDirectory();
@@ -42,13 +56,16 @@ Future<void> main() async {
 
   runApp(const ProviderScope(child: Osgb()));
 
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+
 }
 
 class Osgb extends ConsumerWidget {

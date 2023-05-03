@@ -15,6 +15,7 @@ class RowFormField extends StatefulWidget {
   final int? maxLength;
   final TextAlign? textAlign;
   final String? Function(String? value) custValidateFunction;
+  final String? Function(String? value)? customOnChanged;
 
   const RowFormField(
       {Key? key,
@@ -26,6 +27,7 @@ class RowFormField extends StatefulWidget {
       this.inputType,
       this.textAlign,
       this.hintText,
+      this.customOnChanged,
       this.maxLines,
       this.maxLength})
       : super(key: key);
@@ -56,6 +58,8 @@ class _RowFormFieldState extends State<RowFormField> {
           textAlign: widget.textAlign,
           maxLength: widget.maxLength,
           hintText: widget.hintText,
+          customOnChanged: widget.customOnChanged,
+          canEdit: widget.canEdit,
         ),
       ],
     );

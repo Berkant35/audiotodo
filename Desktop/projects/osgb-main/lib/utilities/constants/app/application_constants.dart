@@ -10,6 +10,8 @@ class ApplicationConstants {
       "key=AAAAnhPnNc8:APA91bHLd0mJ-wh2tgIZ8WANsodKV8JyOMWJWryz9Bq3kjlxSlQj_TrrAaL0c9nzq4P6mKDZ-qcMsFLO01-2zipjrh0-bOp9KPJ7zkRjAP1a22QABOs6IJMZLDyQzDD5GGsYaPZK7qgS";
   static const firebaseNotificationBaseUrl =
       "https://fcm.googleapis.com/fcm/send";
+
+  static const googlePlayLink = "https://play.google.com/store/apps/details?id=com.osgb.osgb";
 }
 
 class CountriesInfo {

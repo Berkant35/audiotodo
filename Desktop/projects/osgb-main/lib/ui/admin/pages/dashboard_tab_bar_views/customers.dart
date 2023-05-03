@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:osgb/ui/details/customer/customer_details.dart';
-import 'package:osgb/ui/details/customer/customer_tab_views/files_of_customers.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import '../../../../line/viewmodel/app_view_models/appBar_managers/custom_flexible_model.dart';
@@ -9,6 +8,7 @@ import '../../../../line/viewmodel/global_providers.dart';
 import '../../../../models/customer.dart';
 import '../../../../utilities/components/custom_card.dart';
 import '../../../../utilities/constants/extension/context_extensions.dart';
+import '../../../expert/pages/expert_customer_detail.dart';
 
 class Customers extends ConsumerStatefulWidget {
   const Customers({
@@ -72,11 +72,12 @@ class _CustomersState extends ConsumerState<Customers> {
                                                 photoUrl: perCustomer.photoURL,
                                                 backAppBarTitle:
                                                     "İş Yeri Detay",
-                                                content4: perCustomer.companyDetectNumber,
+                                                content4: perCustomer
+                                                    .companyDetectNumber,
                                                 header4: "Sicil No",
                                                 header5: "Ziyaret Periyotu",
-                                                content5: perCustomer.dailyPeriod
-                                            ));
+                                                content5:
+                                                    perCustomer.dailyPeriod));
 
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
@@ -87,20 +88,15 @@ class _CustomersState extends ConsumerState<Customers> {
                                                       setState(() {}),
                                                 )));
                                   } else {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                            builder: (context) => Scaffold(
-                                                  appBar: AppBar(
-                                                    centerTitle: false,
-                                                    leadingWidth: 5.w,
-                                                    title: Text("Müşteri Dosya İşlemleri",
-                                                    style: ThemeValueExtension.subtitle,),
-                                                  ),
-                                                  body: FilesOfCustomers(
-                                                      customer: perCustomer),
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ExpertCustomerDetail(
+                                                  customer: perCustomer,
                                                 )));
                                   }
-                                }),
+                                }
+                                ),
                           );
                         })
                     : Center(

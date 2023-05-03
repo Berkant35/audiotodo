@@ -131,7 +131,7 @@ class AdminWorkManager extends StateNotifier<int> {
                     typeOfUser: doctor.typeOfUser));
           });
         }).then((value) {
-          debugPrint(value.toString()+'<-');
+          debugPrint(value.toString() + '<-');
           if (value) {
             ref.read(currentAdminDashboardTabManager.notifier).changeState(2);
             NavigationService.instance
@@ -303,10 +303,9 @@ class AdminWorkManager extends StateNotifier<int> {
     }
   }
 
-  Future<List<Customer>> getCustomerList(WidgetRef ref) async {
+  Future<List<Customer>> getCustomerList(WidgetRef ref,{String? expertId,String? doctorId}) async {
     try {
-
-      return await fb.getCustomerList(ref);
+      return await fb.getCustomerList(ref,expertId:expertId,doctorId: doctorId);
     } catch (e) {
       debugPrint(e.toString());
       return [];
@@ -315,7 +314,19 @@ class AdminWorkManager extends StateNotifier<int> {
 
   Future<List<dynamic>> getCustomerListWithMap(WidgetRef ref) async {
     try {
-      return await fb.getCustomerListWithMap();
+      if (ref.read(currentRole) == Roles.expert) {
+        return await fb.getCustomerListWithMap(
+            ref.read(currentBaseModelState).expert!.rootUserID!,
+            ref.read(currentRole));
+      } else if (ref.read(currentRole) == Roles.doctor) {
+        return await fb.getCustomerListWithMap(
+            ref.read(currentBaseModelState).doctor!.rootUserID!,
+            ref.read(currentRole));
+      } else {
+        return await fb.getCustomerListWithMap(
+            ref.read(currentBaseModelState).admin!.rootUserID!,
+            ref.read(currentRole));
+      }
     } catch (e) {
       debugPrint(e.toString());
       return [];
@@ -397,6 +408,7 @@ class AdminWorkManager extends StateNotifier<int> {
     }
   }
 
+
   Future<List<DemandWorker>?> getDemands() async {
     try {
       return await fb.getDemands();
@@ -415,8 +427,8 @@ class AdminWorkManager extends StateNotifier<int> {
     }
   }
 
-  Future<bool> updateCustomer(
-      Customer customer, WidgetRef ref, File? localPhoto) async {
+  Future<bool> updateCustomer(Customer customer, WidgetRef ref,
+      File? localPhoto, bool needUpdateEmail, String? email) async {
     try {
       ref
           .read(currentButtonLoadingState.notifier)
@@ -427,19 +439,20 @@ class AdminWorkManager extends StateNotifier<int> {
         if (onlinePhotoLink != "" && onlinePhotoLink != null) {
           customer.photoURL = onlinePhotoLink;
         }
+
         return await fb.updateCustomer(customer).then((value) {
           if (value) {
             ref
                 .read(currentCustomFlexibleAppBarState.notifier)
                 .changeContentFlexibleManager(CustomFlexibleModel(
-                    header1: "İş Yeri",
-                    content1: customer.customerName,
-                    header2: "Tehlike Durumu",
-                    content2: customer.dangerLevel,
-                    header3: "E-Mail",
-                    content3: customer.email,
-                    photoUrl: customer.photoURL,
-                    backAppBarTitle: "İş Yeri Detay"));
+                header1: "İş Yeri",
+                content1: customer.customerName,
+                header2: "Tehlike Durumu",
+                content2: customer.dangerLevel,
+                header3: "E-Mail",
+                content3: customer.email,
+                photoUrl: customer.photoURL,
+                backAppBarTitle: "İş Yeri Detay"));
           }
           return value;
         });
@@ -565,8 +578,7 @@ class AdminWorkManager extends StateNotifier<int> {
     } catch (e) {
       debugPrint('$e<-err');
       Fluttertoast.showToast(
-          msg: "Bir şeyler ters gitti",
-          toastLength: Toast.LENGTH_LONG);
+          msg: "Bir şeyler ters gitti", toastLength: Toast.LENGTH_LONG);
     } finally {
       ref
           .read(currentButtonLoadingState.notifier)
@@ -631,6 +643,26 @@ class AdminWorkManager extends StateNotifier<int> {
     }
   }
 
+  Future<void> deleteCustomer(String? rootUserID,WidgetRef ref) async {
+    try {
+      ref
+          .read(currentButtonLoadingState.notifier)
+          .changeState(LoadingStates.loading);
+      await fb.deleteCustomer(rootUserID!).then((value) {
+        ref.read(currentAdminDashboardTabManager.notifier).changeState(0);
+        NavigationService.instance
+            .navigateToPageClear(path: NavigationConstants.adminBasePage);
+      });
+    } catch (e) {
+      debugPrint('$e<-err');
+    } finally {
+      ref
+          .read(currentButtonLoadingState.notifier)
+          .changeState(LoadingStates.loaded);
+    }
+  }
+
+
   Future<List<SearchUser>> getSearchUsers() async {
     try {
       return await fb.getSearchUsers();
@@ -649,16 +681,15 @@ class AdminWorkManager extends StateNotifier<int> {
         ref
             .read(currentCustomFlexibleAppBarState.notifier)
             .changeContentFlexibleManager(CustomFlexibleModel(
-                header1: "İş Yeri",
-                content1: value.customerName,
-                header2: "Tehlike Durumu",
-                content2: value.dangerLevel,
-                header3: "Sektör",
-                content3: value.customerSector,
-                photoUrl: value.photoURL,
-                backAppBarTitle: "İş Yeri Detay",
-
-        ));
+              header1: "İş Yeri",
+              content1: value.customerName,
+              header2: "Tehlike Durumu",
+              content2: value.dangerLevel,
+              header3: "Sektör",
+              content3: value.customerSector,
+              photoUrl: value.photoURL,
+              backAppBarTitle: "İş Yeri Detay",
+            ));
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => CustomerDetails(
                   customer: value,

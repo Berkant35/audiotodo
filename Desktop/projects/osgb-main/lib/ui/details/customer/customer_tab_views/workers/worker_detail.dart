@@ -84,7 +84,8 @@ class _WorkerDetailState extends ConsumerState<WorkerDetail> {
       body: GestureDetector(
           onTap: () {
             FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) {
+            if (!currentFocus.hasPrimaryFocus)
+            {
               currentFocus.unfocus();
             }
           },

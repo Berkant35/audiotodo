@@ -36,7 +36,7 @@ class _SinglePhotoAreaState extends State<SinglePhotoArea> {
       decoration: BoxDecoration(
           color: CustomColors.customCardBackgroundColor,
           border: Border.all(
-              strokeAlign: StrokeAlign.inside,
+
               color: CustomColors.secondaryColor),
           borderRadius: BorderRadius.all(
               Radius.circular(EdgeExtension.lowEdge.edgeValue))),

@@ -1,20 +1,24 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:osgb/ui/details/expert/doctor_tab_views/doctor_info.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-import '../../../line/viewmodel/global_providers.dart';
-import '../../../models/doctor.dart';
-import '../../../utilities/components/custom_elevated_button.dart';
-import '../../../utilities/components/custom_flexible_bar.dart';
-import '../../../utilities/components/row_form_field.dart';
-import '../../../utilities/components/seperate_padding.dart';
-import '../../../utilities/components/single_photo_container.dart';
-import '../../../utilities/constants/app/application_constants.dart';
-import '../../../utilities/constants/app/enums.dart';
-import '../../../utilities/constants/extension/context_extensions.dart';
-import '../../../utilities/init/theme/custom_colors.dart';
+import '../../../../line/viewmodel/global_providers.dart';
+import '../../../../models/doctor.dart';
+import '../../../../utilities/components/custom_elevated_button.dart';
+import '../../../../utilities/components/custom_flexible_bar.dart';
+import '../../../../utilities/components/row_form_field.dart';
+import '../../../../utilities/components/seperate_padding.dart';
+import '../../../../utilities/components/single_photo_container.dart';
+import '../../../../utilities/constants/app/application_constants.dart';
+import '../../../../utilities/constants/app/enums.dart';
+import '../../../../utilities/constants/extension/context_extensions.dart';
+import '../../../../utilities/init/theme/custom_colors.dart';
+import '../../../custom_functions.dart';
+import 'doctor_tab_views/customer_of_doctor.dart';
 
 class CommonDoctorDetail extends ConsumerStatefulWidget {
   final Doctor doctor;
@@ -25,27 +29,24 @@ class CommonDoctorDetail extends ConsumerStatefulWidget {
   ConsumerState createState() => _CommonDoctorDetailState();
 }
 
-class _CommonDoctorDetailState extends ConsumerState<CommonDoctorDetail> {
-  final _doctorFormKey = GlobalKey<FormState>();
-
-  late TextEditingController doctorNameController;
-  late TextEditingController doctorPhoneNumberController;
-  File? doctorPhotoFile;
+class _CommonDoctorDetailState extends ConsumerState<CommonDoctorDetail>
+    with TickerProviderStateMixin {
+  late TabController tabController;
 
   @override
   void initState() {
     super.initState();
-    doctorNameController =
-        TextEditingController(text: widget.doctor.doctorName);
-    doctorPhoneNumberController =
-        TextEditingController(text: widget.doctor.doctorPhoneNumber);
+    tabController = TabController(
+        length: 2,
+        vsync: this,
+        initialIndex: ref.read(currentExpertDetailsTabIndexState));
+    tabController.addListener(_handleTabSelection);
   }
 
   @override
   void dispose() {
     super.dispose();
-    doctorNameController.dispose();
-    doctorPhoneNumberController.dispose();
+    tabController.dispose();
   }
 
   @override
@@ -66,122 +67,82 @@ class _CommonDoctorDetailState extends ConsumerState<CommonDoctorDetail> {
           role: Roles.expert,
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: seperatePadding(),
-          child: Form(
-            key: _doctorFormKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: 2.h),
-                Text("Düzenle",
-                    style: ThemeValueExtension.headline6
-                        .copyWith(fontWeight: FontWeight.bold)),
-                SizedBox(height: 2.h),
-                RowFormField(
-                  editingController: doctorNameController,
-                  headerName: 'Hekim Adı ve Soyadı',
-                  inputType: TextInputType.name,
-                  hintText: "Adı",
-                  custValidateFunction: (value) =>
-                      value != "" ? null : "Bu alan boş bırakılamaz",
-                ),
-                colAddPhoto(),
-                RowFormField(
-                  editingController: doctorPhoneNumberController,
-                  headerName: 'Hekim Telefon',
-                  hintText: ApplicationConstants.hintPhoneNumber,
-                  custValidateFunction: (value) {
-                    String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                    RegExp regExp = RegExp(patttern);
+      body: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(2.0),
+              child: SizedBox(
+                child: TabBar(
+                  isScrollable: true,
+                  controller: tabController,
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorColor: Colors.transparent,
+                  indicatorWeight: CustomFunctions.isPhone() ? 1 : 5,
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        'Detay',
+                        style: ThemeValueExtension.subtitle3.copyWith(
+                            color:
+                            ref.watch(currentExpertDetailsTabIndexState) ==
+                                0
+                                ? CustomColors.secondaryColor
+                                : Colors.black,
+                            fontWeight:
+                            ref.watch(currentExpertDetailsTabIndexState) ==
+                                0
+                                ? FontWeight.bold
+                                : FontWeight.w500,
+                            fontSize:
+                            ref.watch(currentExpertDetailsTabIndexState) ==
+                                0
+                                ? ThemeValueExtension.subtitle2.fontSize
+                                : ThemeValueExtension.subtitle3.fontSize),
+                      ),
+                    ),
+                    Tab(
+                      child: Text('Sorumlu İş Yerleri',
+                          style: ThemeValueExtension.subtitle3.copyWith(
+                              color: ref.watch(
+                                  currentExpertDetailsTabIndexState) ==
+                                  1
+                                  ? CustomColors.secondaryColor
+                                  : Colors.black,
+                              fontWeight: ref.watch(
+                                  currentExpertDetailsTabIndexState) ==
+                                  1
+                                  ? FontWeight.bold
+                                  : FontWeight.w500,
+                              fontSize: ref.watch(
+                                  currentExpertDetailsTabIndexState) ==
+                                  1
+                                  ? ThemeValueExtension.subtitle2.fontSize
+                                  : ThemeValueExtension.subtitle3.fontSize)),
+                    ),
 
-                    if (value!.isEmpty) {
-                      return "Lütfen telefon numarası giriniz";
-                    } else if (!regExp.hasMatch(value)) {
-                      return "Lütfen geçerli bir telefon numarası giriniz";
-                    } else {
-                      return null;
-                    }
-                  },
-                  inputType: TextInputType.phone,
+                  ],
                 ),
-                SizedBox(height: 2.h),
-                buttonCases(),
-                SizedBox(height: 40.h),
-              ],
+              )),
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
+        ),
+        body: TabBarView(
+          controller: tabController,
+          children: [
+            DoctorInfo(
+              doctor: widget.doctor,
             ),
-          ),
+            CustomerOfDoctor(doctor: widget.doctor)
+          ],
         ),
       ),
     );
   }
 
-  Center buttonCases() {
-    return ref.watch(currentButtonLoadingState) != LoadingStates.loading
-        ? Center(
-            child: Column(
-              children: [
-                CustomElevatedButton(
-                  onPressed: () {
-                    _doctorFormKey.currentState!.save();
-                    if (_doctorFormKey.currentState!.validate()) {
-                      var doctor = Doctor(
-                        rootUserID: widget.doctor.rootUserID,
-                        typeOfUser: 'doctor',
-                        doctorMail: widget.doctor.doctorMail,
-                        photoURL: widget.doctor.photoURL,
-                        pushToken: widget.doctor.pushToken,
-                        doctorName: doctorNameController.text,
-                        doctorPhoneNumber: doctorPhoneNumberController.text,
-                      );
-                      ref.read(currentAdminWorksState.notifier).updateDoctor(
-                          doctor, ref, doctorPhotoFile, Roles.doctor);
-                    }
-                  },
-                  inButtonText: "Hekim Güncelle",
-                  primaryColor: CustomColors.secondaryColorM,
-                ),
-                SizedBox(
-                  height: 4.h,
-                ),
-                CustomElevatedButton(
-                  onPressed: () {
-                    ref.read(currentAdminWorksState.notifier).deleteExpert(
-                        widget.doctor.rootUserID, ref, Roles.doctor);
-                  },
-                  inButtonText: "Hekim Sil",
-                  primaryColor: CustomColors.errorColorM,
-                )
-              ],
-            ),
-          )
-        : const Center(
-            child: CircularProgressIndicator.adaptive(),
-          );
-  }
-
-  Column colAddPhoto() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: seperatePadding(),
-          child: Text(
-            "Uzman Fotoğraf(opsiyonel)",
-            style: ThemeValueExtension.subtitle,
-          ),
-        ),
-        Center(
-          child: SinglePhotoArea(
-            photoUrl: widget.doctor.photoURL,
-            onSaved: (value) {
-              doctorPhotoFile = value;
-            },
-            showInArea: true,
-          ),
-        ),
-      ],
-    );
+  void _handleTabSelection() {
+    ref
+        .read(currentExpertDetailsTabIndexState.notifier)
+        .changeState(tabController.index);
   }
 }

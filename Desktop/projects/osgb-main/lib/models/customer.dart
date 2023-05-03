@@ -32,6 +32,7 @@ class Customer extends RootUser {
   final String? companyDetectNumber;
   final dynamic definedExpert;
   final dynamic definedDoctor;
+  final bool? stateOfCompany;
   final List<Worker>? workerList;
   final List<Inspection>? inspectionList;
   final List<AccidentCase>? accidentCaseList;
@@ -52,6 +53,7 @@ class Customer extends RootUser {
       this.representativePerson,
       this.representativePersonPhone,
       this.purserName,
+      this.stateOfCompany,
       this.purserPhoneNumber,
       this.dangerLevel,
       this.qrCodeURL,

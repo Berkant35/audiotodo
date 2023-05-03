@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:osgb/line/network/database/fb_db_manager.dart';
+import 'package:osgb/main.dart';
 import 'package:osgb/models/accountant.dart';
 import 'package:osgb/models/admin.dart';
 import 'package:osgb/models/customer.dart';
@@ -34,4 +35,8 @@ abstract class AuthManager {
   Future<void> updatePassword(String currentPassword,String newPassword);
 
   Future<Admin?> getAdminToken();
+
+  Future<bool> updateEmail(String email,String password);
+
+  Future<bool> deleteUser(String rootUserID);
 }

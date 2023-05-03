@@ -16,6 +16,7 @@ class CustomFormField extends StatefulWidget {
   final int? maxLength;
   final TextInputType? inputType;
   String? Function(String? value) validateFunction;
+  String? Function(String? value)? customOnChanged;
 
   CustomFormField(
       {Key? key,
@@ -28,6 +29,7 @@ class CustomFormField extends StatefulWidget {
       this.textAlign,
       this.canEdit,
       this.hintStyle,
+      this.customOnChanged,
       this.inputType,
       required this.validateFunction,
       this.iconData})
@@ -42,10 +44,11 @@ class _CustomFormFieldState extends State<CustomFormField> {
   Widget build(BuildContext context) {
     return Center(
       child: TextFormField(
-
+        onChanged: widget.customOnChanged,
         keyboardType: widget.inputType ?? TextInputType.text,
         controller: widget.authEditingFormController,
         textAlign: widget.textAlign ?? TextAlign.start,
+        readOnly: widget.canEdit != null ? !widget.canEdit! : false,
         style: ThemeValueExtension.subtitle
             .copyWith(color: Colors.black, fontWeight: FontWeight.w400),
         cursorColor: CustomColors.secondaryColor,

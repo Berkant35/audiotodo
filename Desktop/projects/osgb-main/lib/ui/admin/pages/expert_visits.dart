@@ -6,6 +6,7 @@ import 'package:osgb/ui/admin/pages/visit_tab_bar_views/done_visits.dart';
 import 'package:osgb/ui/admin/pages/visit_tab_bar_views/wait_visits.dart';
 
 import '../../../custom_functions.dart';
+import '../../../utilities/components/custom_animated_search_bar.dart';
 import '../../../utilities/constants/extension/context_extensions.dart';
 import '../../../utilities/init/theme/custom_colors.dart';
 
@@ -42,6 +43,8 @@ class _ExpertVisitsState extends ConsumerState<ExpertVisits>   with TickerProvid
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(context),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
+      floatingActionButton: const CustomAnimatedSearchBar(),
       resizeToAvoidBottomInset: false,
       body: TabBarView(
           controller: tabController,

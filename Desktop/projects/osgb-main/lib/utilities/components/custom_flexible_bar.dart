@@ -44,19 +44,20 @@ class CustomFlexibleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(fourInfo.toString()+'<-four info');
     return Container(
-      height: 30.h,
+
       color: CustomColors.primaryColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           const Spacer(
-            flex: 2,
+            flex: 1,
           ),
           Expanded(
               flex: 2,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   IconButton(
                       onPressed: goBackFunction ??
@@ -64,6 +65,7 @@ class CustomFlexibleBar extends StatelessWidget {
                       icon: const Icon(
                         Icons.arrow_back_ios,
                         color: Colors.white,
+
                       )),
                   Text(
                     appBarTitle,
@@ -81,8 +83,8 @@ class CustomFlexibleBar extends StatelessWidget {
                 children: [
                   Center(
                     child: Container(
-                      width: 30.w,
-                      height: 30.w,
+                      width: 20.w,
+                      height: 20.w,
                       decoration: BoxDecoration(
                           border: Border.all(
                               width: 1.25, color: CustomColors.secondaryColor),
@@ -110,8 +112,7 @@ class CustomFlexibleBar extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: 60.w,
-                    height: 100.h,
+                    width: 65.w,
                     child: fourInfo != null ? Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,

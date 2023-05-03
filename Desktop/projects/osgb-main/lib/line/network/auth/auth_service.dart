@@ -24,11 +24,9 @@ class AuthService extends AuthManager {
       return await signOut().then((value) async {
         var email = await _localManager.getEmail();
         var password = await _localManager.getPassword();
-        return
-            await signIn(email, password).then(
-                    (value) {
-                return userCredential.user;
-            });
+        return await signIn(email, password).then((value) {
+          return userCredential.user;
+        });
       });
     } catch (e) {
       if (e.toString().contains("email-already-in-use")) {
@@ -166,31 +164,62 @@ class AuthService extends AuthManager {
 
   @override
   Future<Admin?> getAdminToken() async {
-    try{
+    try {
       return await _dataBase.getAdmin();
-    }catch(e){
+    } catch (e) {
       debugPrint(e.toString());
       return null;
     }
-
   }
 
   Future<Expert?> getExpert(String rootUserID) async {
-    try{
+    try {
       return await _dataBase.getExpert(rootUserID);
-    }catch(e){
+    } catch (e) {
       debugPrint(e.toString());
       return null;
     }
   }
 
   Future<Customer?> getCustomer(String rootUserID) async {
-    try{
+    try {
       return await _dataBase.getCustomer(rootUserID);
-    }catch(e){
+    } catch (e) {
       debugPrint(e.toString());
       return null;
     }
+  }
 
+  @override
+  Future<bool> updateEmail(String email, String password) async {
+    try {
+
+
+      await _firebaseAuth.signOut();
+
+      await _firebaseAuth
+          .signInWithEmailAndPassword(email: email, password: password);
+
+
+
+      await _firebaseAuth.currentUser!.updateEmail(email);
+
+
+
+      await _firebaseAuth.signOut();
+
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: "admin@gmail.com", password: "1234567");
+
+      return true;
+    } catch (e) {
+      logger.e(e.toString());
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> deleteUser(String rootUserID) async {
+    return false;
   }
 }
