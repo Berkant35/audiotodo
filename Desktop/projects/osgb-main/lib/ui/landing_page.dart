@@ -41,8 +41,6 @@ class _LandingPageState extends ConsumerState<LandingPage> {
 
     logger.i("Prepare Login");
 
-
-
     Future.delayed(const Duration(seconds: 2), () async {
       if (ref.read(currentLoadingState) != LoadingStates.loading) {
         ref
