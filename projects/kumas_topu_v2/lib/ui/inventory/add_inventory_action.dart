@@ -4,7 +4,6 @@ import 'package:kumas_topu/line/global_providers.dart';
 import 'package:kumas_topu/utilities/components/custom_elevated_button.dart';
 import 'package:kumas_topu/utilities/components/row_form_field.dart';
 import 'package:kumas_topu/utilities/constants/app/enums.dart';
-import 'package:kumas_topu/utilities/init/navigation/navigation_constants.dart';
 import 'package:kumas_topu/utilities/init/navigation/navigation_service.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 

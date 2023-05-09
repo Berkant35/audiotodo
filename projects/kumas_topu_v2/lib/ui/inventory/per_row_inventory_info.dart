@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/line/global_providers.dart';
 import 'package:kumas_topu/models/current_inventory.dart';
 import 'package:kumas_topu/models/inventory_list.dart';
-import 'package:kumas_topu/utilities/components/seperate_padding.dart';
 import 'package:kumas_topu/utilities/constants/extension/context_extensions.dart';
 import 'package:kumas_topu/utilities/init/navigation/navigation_constants.dart';
 import 'package:kumas_topu/utilities/init/navigation/navigation_service.dart';
@@ -14,8 +13,8 @@ import '../../utilities/init/theme/custom_colors.dart';
 
 class PerRowInventoryInfo extends ConsumerWidget {
   final Inventory perInventory;
-
-  const PerRowInventoryInfo({Key? key, required this.perInventory})
+  final bool isShipment;
+  const PerRowInventoryInfo({Key? key, required this.perInventory,required this.isShipment})
       : super(key: key);
 
   @override
@@ -24,7 +23,14 @@ class PerRowInventoryInfo extends ConsumerWidget {
       onTap: () {
         //Mevcut Saıyımı Ayarla
         ref.read(currentInventoryProvider.notifier).changeState(
-            CurrentInventory(inventory: perInventory, readEpcList: []));
+            CurrentInventory(inventory: perInventory, readEpcList: [],readEpcMap: {}));
+
+
+        if(isShipment){
+          ref
+              .read(currentInventoryProvider.notifier)
+              .getReadListAndSet(perInventory.iD);
+        }
 
         ref.read(inventoryTagsProvider.notifier).listen(ref);
 
@@ -35,7 +41,7 @@ class PerRowInventoryInfo extends ConsumerWidget {
         height: 15.h,
         child: Center(
           child: Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 2.w),
+            padding: EdgeInsets.symmetric(horizontal: 2.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -51,9 +57,8 @@ class PerRowInventoryInfo extends ConsumerWidget {
                           width: 68.w,
                           child: Text(
                             perInventory.inventoryName!,
-                            style: ThemeValueExtension.subtitle.copyWith(
-                              fontWeight: FontWeight.w700
-                            ),
+                            style: ThemeValueExtension.subtitle
+                                .copyWith(fontWeight: FontWeight.w700),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -74,8 +79,7 @@ class PerRowInventoryInfo extends ConsumerWidget {
                             style: ThemeValueExtension.subtitle.copyWith(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.white
-                            ),
+                                color: Colors.white),
                           ),
                           SizedBox(
                             width: context.lowValue,
@@ -88,7 +92,6 @@ class PerRowInventoryInfo extends ConsumerWidget {
                         ],
                       ),
                     ),
-
                   ],
                 ),
                 const Divider()

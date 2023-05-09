@@ -58,6 +58,7 @@ public class ChainwayReaderSDK {
 
     private BarcodeModes barcodeScanStatus = BarcodeModes.IDLE;
 
+    private Thread inventoryThread = new InventoryThread();
 
     public RFIDWithUHFUART mReader;
 
@@ -178,6 +179,7 @@ public class ChainwayReaderSDK {
         try {
             if (context.allAttributeMode.rfidModes != RFIDModes.STOPPED_INVENTORY) {
                 mReader.stopInventory();
+                context.allAttributeMode.rfidModes = RFIDModes.IDLE;
                 tempTags.clear();
             }
         } catch (Exception e) {
@@ -209,6 +211,7 @@ public class ChainwayReaderSDK {
 
 
     synchronized public void clearTempTags() {
+
         if (tempTags != null) {
             tempTags.clear();
         }
@@ -223,9 +226,12 @@ public class ChainwayReaderSDK {
         }
 
 
+
         if (context.allAttributeMode.currentReadMode == ReaderModes.INVENTORY_MODE
                 && context.currentInventoryEventSink != null) {
-            new InventoryThread().start();
+            inventoryThread = new InventoryThread();
+            inventoryThread.start();
+
         } else {
             Log.e(
                     TAG,
@@ -289,7 +295,7 @@ public class ChainwayReaderSDK {
             }, 0, 15, TimeUnit.MILLISECONDS);
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -506,13 +512,20 @@ public class ChainwayReaderSDK {
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         public void run() {
+
             mReader.startInventoryTag();
 
+
+
             while (context.allAttributeMode.rfidModes == RFIDModes.INVENTORY) {
+
                 UHFTAGInfo uhftagInfo = mReader.readTagFromBuffer();
 
+
+                Log.i(TAG, "run: --");
+
                 if (uhftagInfo != null && !tempTags.contains(uhftagInfo.getEPC())) {
-                    Log.i("EPC", uhftagInfo.getEPC());
+
 
                     tempTags.add(uhftagInfo.getEPC());
 
@@ -527,9 +540,12 @@ public class ChainwayReaderSDK {
                     });
                 }
             }
+            mReader.stopInventory();
 
 
         }
+
+
     }
 
     public boolean isReaderConnected() {

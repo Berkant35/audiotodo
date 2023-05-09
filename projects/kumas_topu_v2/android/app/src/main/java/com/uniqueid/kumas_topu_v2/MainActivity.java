@@ -282,6 +282,7 @@ public class MainActivity extends FlutterActivity {
                 break;
             case Constants.startInventory:
                 Log.i(TAG, "configureFlutterEngine: Start Inventory...");
+                Log.i(TAG, "FlutterActions:"+allAttributeMode.rfidModes.name());
                 allAttributeMode.rfidModes = RFIDModes.INVENTORY;
                 if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
                     zebraReaderSDK.performInventory();
@@ -293,7 +294,7 @@ public class MainActivity extends FlutterActivity {
                 }
                 break;
             case Constants.clearInventory:
-                Log.i(TAG, "configureFlutterEngine: Start Inventory...");
+                Log.i(TAG, "configureFlutterEngine: clearInventory...");
                 if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
                     zebraReaderSDK.clearTempTags();
                 } else {
@@ -306,7 +307,7 @@ public class MainActivity extends FlutterActivity {
                 if (Objects.equals(Build.BRAND.toUpperCase(Locale.ROOT), "ZEBRA")) {
                     zebraReaderSDK.stopInventory();
                 } else {
-                    chainwayReaderSDK.startInventory();
+                    chainwayReaderSDK.stopInventory();
                 }
 
                 allAttributeMode.rfidModes = RFIDModes.STOPPED_INVENTORY;

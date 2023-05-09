@@ -1,4 +1,3 @@
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kumas_topu/line/viewmodel/current_barcode_info_manager.dart';
 import 'package:kumas_topu/line/viewmodel/current_barcode_standart.dart';
@@ -26,78 +25,78 @@ import '../models/rfid_device.dart';
 import '../models/uhf_tag_info.dart';
 import '../utilities/constants/app/enums.dart';
 
-
 final rfidStateProvider =
-StateNotifierProvider<RFIDDeviceStateManager, RFIDDevice?>((ref) {
+    StateNotifierProvider<RFIDDeviceStateManager, RFIDDevice?>((ref) {
   return RFIDDeviceStateManager(null);
 });
 
 final inventoryTagsProvider =
-StateNotifierProvider<InventoryTagsManager, Map<String, UHFTagInfo>>((ref) {
+    StateNotifierProvider<InventoryTagsManager, Map<String, UHFTagInfo>>((ref) {
   return InventoryTagsManager({});
 });
 
 final loginButtonStateProvider =
-StateNotifierProvider<LoginButtonStateManager, LoadingStates>((ref) {
+    StateNotifierProvider<LoginButtonStateManager, LoadingStates>((ref) {
   return LoginButtonStateManager(LoadingStates.loaded);
 });
 
 final currentBarcodeStandartProvider =
-StateNotifierProvider<CurrentBarcodeStandartManager, PerStandart?>((ref) {
+    StateNotifierProvider<CurrentBarcodeStandartManager, PerStandart?>((ref) {
   return CurrentBarcodeStandartManager(null);
 });
 final stateManagerProvider =
-StateNotifierProvider<StateManager, LoadingStates>((ref) {
+    StateNotifierProvider<StateManager, LoadingStates>((ref) {
   return StateManager(LoadingStates.loaded);
 });
 
 final operationStatusStateProvider =
-StateNotifierProvider<OperationStatusStateManager, OperationStatus>((ref) {
+    StateNotifierProvider<OperationStatusStateManager, OperationStatus>((ref) {
   return OperationStatusStateManager(OperationStatus.IDLE);
 });
 final scanStopStateProvider =
-StateNotifierProvider<ScanModeStateManager, ScanModes>((ref) {
+    StateNotifierProvider<ScanModeStateManager, ScanModes>((ref) {
   return ScanModeStateManager(ScanModes.idle);
 });
 final scanToMatchProvider =
-StateNotifierProvider<ScanToMatchStateManager, ScanToMatchStatus>((ref) {
+    StateNotifierProvider<ScanToMatchStateManager, ScanToMatchStatus>((ref) {
   return ScanToMatchStateManager(ScanToMatchStatus.IDLE);
 });
 final viewModelStateProvider = StateNotifierProvider<ViewModel, void>((ref) {
   return ViewModel();
 });
 final writeModeStateProvider =
-StateNotifierProvider<WriteModeManager, String>((ref) {
+    StateNotifierProvider<WriteModeManager, String>((ref) {
   return WriteModeManager("SGTIN");
 });
 
 final currentBarcodeInfoProvider =
-StateNotifierProvider<CurrentBarcodeInfoManager, BarcodeInfo>((ref) {
+    StateNotifierProvider<CurrentBarcodeInfoManager, BarcodeInfo>((ref) {
   return CurrentBarcodeInfoManager(BarcodeInfo());
 });
 
-
 final currentEpcDetailInfoProvider =
-StateNotifierProvider<CurrentEpcDetailManager, CurrentEpcDetail?>((ref) {
-  return CurrentEpcDetailManager(CurrentEpcDetail(currentEpc: "",epcDetail: null));
+    StateNotifierProvider<CurrentEpcDetailManager, CurrentEpcDetail?>((ref) {
+  return CurrentEpcDetailManager(
+      CurrentEpcDetail(currentEpc: "", epcDetail: null));
 });
 
-final currentTriggerModeProvider=
-StateNotifierProvider<TriggerModeManager, TriggerModeStatus>((ref) {
+final currentTriggerModeProvider =
+    StateNotifierProvider<TriggerModeManager, TriggerModeStatus>((ref) {
   return TriggerModeManager(TriggerModeStatus.IDLE);
 });
 
-final currentInventoryProvider=
-StateNotifierProvider<CurrentInventoryState, CurrentInventory?>((ref) {
-  return CurrentInventoryState(null);
+final currentInventoryProvider =
+    StateNotifierProvider<CurrentInventoryState, CurrentInventory?>((ref) {
+  return CurrentInventoryState(
+      CurrentInventory(readEpcMap: {}, readEpcList: [], inventory: null));
 });
 
-final currentIsShipmentProvider=
-StateNotifierProvider<CurrentIsShipmentManager, bool>((ref) {
+final currentIsShipmentProvider =
+    StateNotifierProvider<CurrentIsShipmentManager, bool>((ref) {
   return CurrentIsShipmentManager(false);
 });
 
-final currentPowerValueProvider=
-StateNotifierProvider<CurrentPowerValueManager, int>((ref) {
+final currentPowerValueProvider =
+    StateNotifierProvider<CurrentPowerValueManager, int>((ref) {
   return CurrentPowerValueManager(15);
 });

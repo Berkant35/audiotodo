@@ -28,7 +28,7 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
     return Scaffold(
       appBar: AppBar(
         title: InkWell(
-          onTap: (){
+          onTap: () {
             ref.read(currentInventoryProvider.notifier).clearInventory();
             NavigationService.instance.navigatePopUp().then((value) {
               if (ref.watch(scanStopStateProvider) != ScanModes.scan) {
@@ -51,7 +51,7 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
             });
           },
           child: InkWell(
-            onTap: (){
+            onTap: () {
               ref.read(currentInventoryProvider.notifier).clearInventory();
               NavigationService.instance.navigatePopUp().then((value) {
                 if (ref.watch(scanStopStateProvider) != ScanModes.scan) {
@@ -74,7 +74,8 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
               });
             },
             child: Text(
-              ref.watch(currentInventoryProvider)!.inventory?.inventoryName ?? "-",
+              ref.watch(currentInventoryProvider)!.inventory?.inventoryName ??
+                  "-",
               style: ThemeValueExtension.headline6
                   .copyWith(overflow: TextOverflow.ellipsis),
             ),
@@ -82,7 +83,7 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
         ),
         leadingWidth: 8.w,
         leading: IconButton(
-          onPressed:   () {
+          onPressed: () {
             ref.read(currentInventoryProvider.notifier).clearInventory();
             NavigationService.instance.navigatePopUp().then((value) {
               if (ref.watch(scanStopStateProvider) != ScanModes.scan) {
@@ -111,14 +112,22 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
         ),
         actions: [
           IconButton(
-              onPressed: ref.watch(currentInventoryProvider)!.readEpcList!.isNotEmpty
-                  ? () => showDialog(
-                      context: context,
-                      builder: (BuildContext dialogContext) {
-                        return  InventorySaveAlertDialog(isShipment: ref.read(currentIsShipmentProvider));
-                      }).then((value) {
-                    setState(() {});
-                  }) : null,
+              onPressed:
+
+                          ref
+                              .watch(currentInventoryProvider)!
+                              .readEpcMap
+                              .isNotEmpty
+                      ? () => showDialog(
+                              context: context,
+                              builder: (BuildContext dialogContext) {
+                                return InventorySaveAlertDialog(
+                                    isShipment:
+                                        ref.read(currentIsShipmentProvider));
+                              }).then((value) {
+                            setState(() {});
+                          })
+                      : null,
               icon: Icon(
                 Icons.save,
                 size: 4.h,
@@ -129,18 +138,21 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
         children: [
           Align(
             alignment: Alignment.topCenter,
-            child: ref.watch(currentInventoryProvider)!.readEpcList!.isNotEmpty
+            child:  ref.watch(currentInventoryProvider)!.readEpcMap.isNotEmpty
                 ? Padding(
                     padding: EdgeInsets.only(bottom: 15.h),
                     child: ListView.builder(
                         itemCount: ref
                             .watch(currentInventoryProvider)!
-                            .readEpcList!
+                            .readEpcMap
+                            .values
                             .length,
                         itemBuilder: (context, index) {
                           var hashMap = ref
                               .watch(currentInventoryProvider)!
-                              .readEpcList![index];
+                              .readEpcMap
+                              .values
+                              .toList()[index];
                           return SizedBox(
                             child: Card(
                               child: ListTile(
@@ -239,7 +251,8 @@ class _DoInventoryState extends ConsumerState<DoInventory> {
                         SevenSegmentDisplay(
                           value: ref
                               .watch(currentInventoryProvider)!
-                              .readEpcList!
+                              .readEpcMap
+                              .values
                               .length
                               .toString(),
                           size: 4.0,

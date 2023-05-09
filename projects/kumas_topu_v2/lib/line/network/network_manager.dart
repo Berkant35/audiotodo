@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kumas_topu/models/create_success.dart';
 import 'package:kumas_topu/models/epc_detail.dart';
+import 'package:kumas_topu/models/read_epc.dart';
 
 import '../../models/create_result_epc.dart';
 import '../../models/encode_status.dart';
@@ -14,6 +15,7 @@ import '../../models/inventory_list.dart';
 import '../../models/login_success.dart';
 
 import '../../models/encode_standarts.dart';
+import '../../models/read_list.dart';
 import '../../models/serial_number.dart';
 import '../../utilities/components/dialogs.dart';
 import '../../utilities/constants/app/url_constants.dart';
@@ -28,16 +30,16 @@ part 'network_base.dart';
 class NetworkManager extends NetworkManagerBase {
   static NetworkManager? _instance;
 
-
-
   static NetworkManager? get instance {
     _instance ??= NetworkManager._();
     return _instance;
   }
 
   NetworkManager._();
+
   final urlConstans = locator<UrlConstants>();
   final localService = locator<LocaleService>();
+
   @override
   Future<LoginSuccess?> login(String email, String password) async {
     try {
@@ -395,7 +397,8 @@ class NetworkManager extends NetworkManagerBase {
   Future<void> sendTags(String accessToken, Inventory inventory,
       List<dynamic> readEpcList, bool saveAndClose, bool isShipment) async {
     try {
-      debugPrint("isShipment $isShipment");
+      debugPrint("--${readEpcList.toList()}");
+
       return await urlConstans.getUrl().then((value) async {
         (_dio.httpClientAdapter as DefaultHttpClientAdapter)
             .onHttpClientCreate = (HttpClient dioClient) {
@@ -460,11 +463,8 @@ class NetworkManager extends NetworkManagerBase {
           var epcDetail = EpcDetail.fromJson(response.data);
 
           if (epcDetail.code == 200) {
-
             return epcDetail;
           } else {
-
-
             return null;
           }
         } else {
@@ -478,5 +478,43 @@ class NetworkManager extends NetworkManagerBase {
       debugPrint("addInventory error: $e");
     }
     return null;
+  }
+
+  @override
+  Future<List<ReadEpc>> getReadList(
+      {String? accessToken, String? shipmentId}) async {
+    try {
+      return await urlConstans.getUrl().then((value) async {
+        (_dio.httpClientAdapter as DefaultHttpClientAdapter)
+            .onHttpClientCreate = (HttpClient dioClient) {
+          dioClient.badCertificateCallback =
+              ((X509Certificate cert, String host, int port) => true);
+          return dioClient;
+        };
+
+        final response = await _dio.post('$value/shipment/details',
+            data: {"access_token": accessToken, "shipment_id": shipmentId});
+
+        debugPrint("Response Data: ${response.data.toString()}");
+
+        debugPrint("Res:${response.statusCode}");
+
+        if (response.statusCode == 200 &&
+            !response.data.toString().contains("TOKEN WRONG")) {
+          final readList = ReadList.fromJson(response.data);
+
+          return readList.data!;
+        } else {
+          if (response.data.toString().contains("TOKEN WRONG")) {
+            _tokenExpiredLogout();
+            return [];
+          }
+        }
+        return [];
+      });
+    } catch (e) {
+      debugPrint("readEpcList error: $e");
+      return [];
+    }
   }
 }

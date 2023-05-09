@@ -152,7 +152,7 @@ class ViewModel extends StateNotifier<void> {
       List<dynamic> tagList = [];
 
       var readList =
-          ref.watch(currentInventoryProvider)!.readEpcList!;
+          ref.watch(currentInventoryProvider)!.readEpcMap.values;
 
       for (var readEpc in readList) {
         tagList.add(readEpc

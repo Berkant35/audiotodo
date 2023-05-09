@@ -62,4 +62,7 @@ abstract class NetworkManagerBase {
       String accessToken,
       Inventory inventory,
       List<dynamic> readEpcList,bool saveAndClose,bool isShipment);
+
+  Future<List<ReadEpc>> getReadList({String? accessToken,
+    String? shipmentId});
 }

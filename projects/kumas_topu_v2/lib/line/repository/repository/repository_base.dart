@@ -4,6 +4,7 @@ import 'package:kumas_topu/line/global_providers.dart';
 import 'package:kumas_topu/models/barcode_info.dart';
 import 'package:kumas_topu/models/create_result_epc.dart';
 import 'package:kumas_topu/models/epc_detail.dart';
+import 'package:kumas_topu/models/read_epc.dart';
 import 'package:kumas_topu/models/serial_number.dart';
 
 import '../../../models/encode_standarts.dart';
@@ -153,6 +154,23 @@ class Repository extends LocaleBase {
     } catch (e) {
       debugPrint('Error: $e');
       return null;
+    }
+  }
+
+  Future<List<ReadEpc>?> getReadList(String? shipmentId) async {
+    try {
+      return localService.getToken().then((token) async {
+        if (token != null) {
+          return await networkManager!
+              .getReadList(accessToken: token,shipmentId: shipmentId)
+              .then((value) {
+                return value;
+          });
+        }
+      });
+    } catch (e) {
+      debugPrint('Error: $e');
+      return [];
     }
   }
 

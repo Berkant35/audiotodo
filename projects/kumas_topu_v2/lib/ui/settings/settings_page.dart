@@ -30,18 +30,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   @override
   void initState() {
-
+    super.initState();
     ref
         .read(currentInventoryProvider.notifier)
         .nativeManager!
         .getPower()
         .then((value) {
-          ref.read(currentPowerValueProvider.notifier).changeState(value);
+      ref.read(currentPowerValueProvider.notifier).changeState(value);
       setState(() {
         isLoading = false;
       });
     });
-    super.initState();
   }
 
   @override
@@ -94,17 +93,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             activeColor: CustomColors.secondaryColor,
             inactiveColor: CustomColors.customGreyColor,
             onChanged: (double changedValue) {
+              ref.read(currentPowerValueProvider.notifier).changeState(
+                  changedValue.toInt());
 
+            },
+            onChangeEnd: (value) {
               ref
                   .read(currentInventoryProvider.notifier)
                   .nativeManager!
-                  .setPower(changedValue.toInt().toString()).then((value){
-                ref.read(currentPowerValueProvider.notifier).changeState(
-                    changedValue.toInt());
-              });
-            },
-            onChangeEnd: (value) {
-
+                  .setPower(value.toInt().toString());
             },
           )
         ],

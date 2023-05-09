@@ -104,12 +104,14 @@ class NativeManager extends NativeInterface {
                 .changeState(ScanModes.scan);
           }
         } else {
+
+
           if (ref
               .read(currentInventoryProvider)!
               .inventory!
               .prefix!
               .split(",")
-              .contains(event.toString().substring(0, 4))) {
+              .contains(event.toString().substring(0, 4)) ) {
             var addedTimeFormatUTC = DateFormat("yyyy-MM-dd HH:mm:ss")
                 .format(DateTime.now().toUtc());
             ref
@@ -151,6 +153,7 @@ class NativeManager extends NativeInterface {
   @override
   Future<int> getPower() async {
     var result = await _methodChannel.invokeMethod(InvokeMethods.getPower.name);
+    debugPrint(result.toString());
     result ??= 5;
     return int.parse(result);
   }

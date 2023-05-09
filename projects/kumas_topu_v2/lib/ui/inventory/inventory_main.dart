@@ -52,6 +52,7 @@ class _InventoryMainState extends ConsumerState<InventoryMain> {
                           Inventory perInventory = inventoryList.data![index];
                           return PerRowInventoryInfo(
                             perInventory: perInventory,
+                            isShipment: ref.read(currentIsShipmentProvider),
                           );
                         }),
                   )
