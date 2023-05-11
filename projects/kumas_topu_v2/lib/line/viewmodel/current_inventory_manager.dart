@@ -19,8 +19,8 @@ class CurrentInventoryState extends StateNotifier<CurrentInventory?> {
     state = value;
   }
 
-  Future<void> getReadListAndSet(String? shipmentId) async {
-    final currentList = await repository!.getReadList(shipmentId);
+  Future<void> getReadListAndSet(String? shipmentId,bool isShipment) async {
+    final currentList = await repository!.getReadList(shipmentId,isShipment);
 
     for (var perReadEpc in currentList!) {
       addTag(perReadEpc.epc!, perReadEpc.readDate!);

@@ -17,6 +17,7 @@ import '../../models/login_success.dart';
 import '../../models/encode_standarts.dart';
 import '../../models/read_list.dart';
 import '../../models/serial_number.dart';
+import '../../models/version.dart';
 import '../../utilities/components/dialogs.dart';
 import '../../utilities/constants/app/url_constants.dart';
 import '../../utilities/init/navigation/navigation_constants.dart';
@@ -482,7 +483,7 @@ class NetworkManager extends NetworkManagerBase {
 
   @override
   Future<List<ReadEpc>> getReadList(
-      {String? accessToken, String? shipmentId}) async {
+      {String? accessToken, String? shipmentId, required bool isShipment}) async {
     try {
       return await urlConstans.getUrl().then((value) async {
         (_dio.httpClientAdapter as DefaultHttpClientAdapter)
@@ -492,8 +493,8 @@ class NetworkManager extends NetworkManagerBase {
           return dioClient;
         };
 
-        final response = await _dio.post('$value/shipment/details',
-            data: {"access_token": accessToken, "shipment_id": shipmentId});
+        final response = await _dio.post('$value/${isShipment ? 'shipment':'inventories'}/details',
+            data: {"access_token": accessToken, isShipment ? 'shipment_id':'inventories_id': shipmentId});
 
         debugPrint("Response Data: ${response.data.toString()}");
 
@@ -515,6 +516,42 @@ class NetworkManager extends NetworkManagerBase {
     } catch (e) {
       debugPrint("readEpcList error: $e");
       return [];
+    }
+  }
+
+  @override
+  Future<Version?> getVersion() async {
+    try {
+      return await urlConstans.getUrl().then((value) async {
+        (_dio.httpClientAdapter as DefaultHttpClientAdapter)
+            .onHttpClientCreate = (HttpClient dioClient) {
+          dioClient.badCertificateCallback =
+          ((X509Certificate cert, String host, int port) => true);
+          return dioClient;
+        };
+
+        final response = await _dio.get('$value/server/version');
+
+        debugPrint("Response Data: ${response.data.toString()}");
+
+        debugPrint("Res:${response.statusCode}");
+
+        if (response.statusCode == 200 &&
+            !response.data.toString().contains("TOKEN WRONG")) {
+          final version = Version.fromJson(response.data);
+
+          return version;
+        } else {
+          if (response.data.toString().contains("TOKEN WRONG")) {
+            _tokenExpiredLogout();
+            return null;
+          }
+        }
+        return null;
+      });
+    } catch (e) {
+      debugPrint("readEpcList error: $e");
+      return null;
     }
   }
 }

@@ -13,6 +13,7 @@ import 'package:kumas_topu/line/viewmodel/scan_stop_manager.dart';
 import 'package:kumas_topu/line/viewmodel/state_manager.dart';
 import 'package:kumas_topu/line/viewmodel/tags_manager.dart';
 import 'package:kumas_topu/line/viewmodel/trigger_mode.dart';
+import 'package:kumas_topu/line/viewmodel/version_manager.dart';
 import 'package:kumas_topu/line/viewmodel/view_model.dart';
 import 'package:kumas_topu/line/viewmodel/write_mode_manager.dart';
 import 'package:kumas_topu/models/current_epc_detail.dart';
@@ -23,6 +24,7 @@ import 'package:kumas_topu/models/epc_detail.dart';
 import '../models/barcode_info.dart';
 import '../models/rfid_device.dart';
 import '../models/uhf_tag_info.dart';
+import '../models/version.dart';
 import '../utilities/constants/app/enums.dart';
 
 final rfidStateProvider =
@@ -99,4 +101,8 @@ final currentIsShipmentProvider =
 final currentPowerValueProvider =
     StateNotifierProvider<CurrentPowerValueManager, int>((ref) {
   return CurrentPowerValueManager(15);
+});
+final currentVersionProvider =
+StateNotifierProvider<VersionManagerNotifier, Version?>((ref) {
+  return VersionManagerNotifier(null);
 });

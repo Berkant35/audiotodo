@@ -38,6 +38,7 @@ class Data {
   String? deviceIp;
   String? recordDate;
   String? recordUser;
+  String? barcode;
 
   Data(
       {this.epc,
@@ -48,6 +49,7 @@ class Data {
         this.deviceName,
         this.deviceIp,
         this.recordDate,
+        this.barcode,
         this.recordUser});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -57,6 +59,7 @@ class Data {
     tid = json['tid'];
     supplierId = json['supplier_id'];
     deviceName = json['device name'];
+    barcode = json['barcode'];
     deviceIp = json['device_ip'];
     recordDate = json['record_date'];
     recordUser = json['record_user'];
@@ -71,6 +74,7 @@ class Data {
     data['supplier_id'] = supplierId;
     data['device name'] = deviceName;
     data['device_ip'] = deviceIp;
+    data['barcode'] = barcode;
     data['record_date'] = recordDate;
     data['record_user'] = recordUser;
     return data;

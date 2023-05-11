@@ -14,7 +14,9 @@ import '../../utilities/init/theme/custom_colors.dart';
 class PerRowInventoryInfo extends ConsumerWidget {
   final Inventory perInventory;
   final bool isShipment;
-  const PerRowInventoryInfo({Key? key, required this.perInventory,required this.isShipment})
+
+  const PerRowInventoryInfo(
+      {Key? key, required this.perInventory, required this.isShipment})
       : super(key: key);
 
   @override
@@ -23,14 +25,12 @@ class PerRowInventoryInfo extends ConsumerWidget {
       onTap: () {
         //Mevcut Saıyımı Ayarla
         ref.read(currentInventoryProvider.notifier).changeState(
-            CurrentInventory(inventory: perInventory, readEpcList: [],readEpcMap: {}));
+            CurrentInventory(
+                inventory: perInventory, readEpcList: [], readEpcMap: {}));
 
-
-        if(isShipment){
-          ref
-              .read(currentInventoryProvider.notifier)
-              .getReadListAndSet(perInventory.iD);
-        }
+        ref
+            .read(currentInventoryProvider.notifier)
+            .getReadListAndSet(perInventory.iD, isShipment);
 
         ref.read(inventoryTagsProvider.notifier).listen(ref);
 
@@ -50,7 +50,7 @@ class PerRowInventoryInfo extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Row(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(
@@ -59,6 +59,16 @@ class PerRowInventoryInfo extends ConsumerWidget {
                             perInventory.inventoryName!,
                             style: ThemeValueExtension.subtitle
                                 .copyWith(fontWeight: FontWeight.w700),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 68.w,
+                          child: Text(
+                            perInventory.recordDate!,
+                            style: ThemeValueExtension.subtitle2.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: CustomColors.customGreyColor),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),

@@ -37,6 +37,7 @@ class Inventory {
   String? inventoryName;
   String? inventoryUniqueName;
   String? prefix;
+  String? recordDate;
 
   Inventory({this.iD, this.inventoryName, this.inventoryUniqueName});
 
@@ -45,14 +46,18 @@ class Inventory {
     inventoryName = json[isShipment ? "shipment_name" : 'inventory_name'];
     inventoryUniqueName = json[isShipment ? "shipment_unique_name" : 'inventory_unique_name'];
     prefix = json['prefix'];
+    recordDate = json['record_date'] ?? "unknown";
   }
 
-  Map<String, dynamic> toJson(bool isShipment) {
+  Map<String, dynamic> toJson(bool isShipment)
+  {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['ID'] = iD;
     data[isShipment ? "shipment_name" : 'inventory_name'] = inventoryName;
     data[isShipment ? "shipment_unique_name" : 'inventory_unique_name'] = inventoryUniqueName;
     data['prefix'] = prefix;
+    data['record_date'] = recordDate;
+
     return data;
   }
 }

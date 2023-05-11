@@ -48,6 +48,7 @@ class _InventoryMainState extends ConsumerState<InventoryMain> {
                     child: ListView.builder(
                         itemCount: inventoryList.data!.length,
                         shrinkWrap: true,
+                        reverse: true,
                         itemBuilder: (context, index) {
                           Inventory perInventory = inventoryList.data![index];
                           return PerRowInventoryInfo(

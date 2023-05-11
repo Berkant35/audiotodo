@@ -141,7 +141,9 @@ class ViewModel extends StateNotifier<void> {
 
   Future<InventoryList?> getInventoryList(bool isShipment) async {
     try {
-      return await repository!.getInventoryList(isShipment);
+      final list = await repository!.getInventoryList(isShipment);
+      list!.data!.sort((a, b) => a.recordDate!.compareTo(b.recordDate!));
+      return list;
     } catch (e) {
       return null;
     }

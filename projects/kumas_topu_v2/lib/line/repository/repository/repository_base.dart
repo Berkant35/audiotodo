@@ -6,6 +6,7 @@ import 'package:kumas_topu/models/create_result_epc.dart';
 import 'package:kumas_topu/models/epc_detail.dart';
 import 'package:kumas_topu/models/read_epc.dart';
 import 'package:kumas_topu/models/serial_number.dart';
+import 'package:kumas_topu/models/version.dart';
 
 import '../../../models/encode_standarts.dart';
 import '../../../models/inventory_list.dart';
@@ -157,12 +158,12 @@ class Repository extends LocaleBase {
     }
   }
 
-  Future<List<ReadEpc>?> getReadList(String? shipmentId) async {
+  Future<List<ReadEpc>?> getReadList(String? shipmentId,bool isShipment) async {
     try {
       return localService.getToken().then((token) async {
         if (token != null) {
           return await networkManager!
-              .getReadList(accessToken: token,shipmentId: shipmentId)
+              .getReadList(accessToken: token,shipmentId: shipmentId,isShipment: isShipment)
               .then((value) {
                 return value;
           });
@@ -202,6 +203,15 @@ class Repository extends LocaleBase {
           return null;
         }
       });
+    } catch (e) {
+      debugPrint('Error: $e');
+      return null;
+    }
+  }
+
+  Future<Version?> getVersion() async {
+    try {
+      return await networkManager!.getVersion();
     } catch (e) {
       debugPrint('Error: $e');
       return null;

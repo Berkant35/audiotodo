@@ -178,8 +178,8 @@ class MainPage extends ConsumerWidget {
                               SystemSoundType.click.toString(),
                             );
 
-                            NativeManager.instance!.listenAndSingleInventory(ref);
-
+                            NativeManager.instance!
+                                .listenAndSingleInventory(ref);
 
                             NavigationService.instance.navigateToPage(
                                 path: NavigationConstants.detailOfProductPage);
@@ -188,6 +188,7 @@ class MainPage extends ConsumerWidget {
                   ),
                 ),
               ),
+
             ],
           ),
           Align(
@@ -196,10 +197,19 @@ class MainPage extends ConsumerWidget {
               onTap: _launchUrl,
               child: Padding(
                 padding: EdgeInsets.only(bottom: 1.h),
-                child: Text(
-                  ApplicationConstants.uniqueidURL,
-                  style: ThemeValueExtension.subtitle2
-                      .copyWith(color: CustomColors.pinkColor),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      ApplicationConstants.uniqueidURL,
+                      style: ThemeValueExtension.subtitle2
+                          .copyWith(color: CustomColors.pinkColor),
+                    ),
+                    Text(
+                      "V: 1.0.2",
+                      style: ThemeValueExtension.subtitle4,
+                    )
+                  ],
                 ),
               ),
             ),

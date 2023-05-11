@@ -32,134 +32,150 @@ class DetailOfProduct extends ConsumerWidget {
       ),
       body: Padding(
         padding: seperatePadding(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: 2.h,
-            ),
-            Text("Epc",
-                style: ThemeValueExtension.subtitle
-                    .copyWith( fontWeight: FontWeight.bold)),
-            SizedBox(
-              height: 2.h,
-            ),
-            Container(
-              width: 100.w,
-              height: 8.h,
-              decoration: BoxDecoration(
-                  color: CustomColors.darkPurpleColor,
-                  borderRadius: BorderRadius.all(
-                      Radius.circular(EdgeExtension.lowEdge.edgeValue))),
-              child: Center(
-                child: Text(
-                    ref.watch(currentEpcDetailInfoProvider)?.currentEpc ?? "-",
-                    style: ThemeValueExtension.subtitle2.copyWith(
-                        color: Colors.white, fontWeight: FontWeight.w500)),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 2.h,
               ),
-            ),
-            SizedBox(
-              height: 2.h,
-            ),
-            ref.watch(scanStopStateProvider) != ScanModes.scan
-                ? Center(
-                    child: CustomElevatedButton(
-                      onPressed: () => ref
-                          .read(currentEpcDetailInfoProvider.notifier)
-                          .getCurrentDetailThenSet(ref, false),
-                      inButtonText: "Tara",
-                      primaryColor: CustomColors.primaryColorM,
+              Text("Epc",
+                  style: ThemeValueExtension.subtitle
+                      .copyWith( fontWeight: FontWeight.bold)),
+              SizedBox(
+                height: 2.h,
+              ),
+              Container(
+                width: 100.w,
+                height: 8.h,
+                decoration: BoxDecoration(
+                    color: CustomColors.darkPurpleColor,
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(EdgeExtension.lowEdge.edgeValue))),
+                child: Center(
+                  child: Text(
+                      ref.watch(currentEpcDetailInfoProvider)?.currentEpc ?? "-",
+                      style: ThemeValueExtension.subtitle2.copyWith(
+                          color: Colors.white, fontWeight: FontWeight.w500)),
+                ),
+              ),
+              SizedBox(
+                height: 2.h,
+              ),
+              ref.watch(scanStopStateProvider) != ScanModes.scan
+                  ? Center(
+                      child: CustomElevatedButton(
+                        onPressed: () => ref
+                            .read(currentEpcDetailInfoProvider.notifier)
+                            .getCurrentDetailThenSet(ref, false),
+                        inButtonText: "Tara",
+                        primaryColor: CustomColors.primaryColorM,
+                      ),
+                    )
+                  : const Center(
+                      child: CircularProgressIndicator.adaptive(),
                     ),
-                  )
-                : const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  ),
-            SizedBox(height: 2.h),
-            Text("Epc Detay",
-                style: ThemeValueExtension.subtitle
-                    .copyWith(
-                        fontWeight: FontWeight.bold
-                )),
-            SizedBox(height: 2.h,),
-            ref.watch(currentEpcDetailInfoProvider)?.epcDetail != null
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      buildRow(
-                          "Şirket Adı:",
-                          ref
-                                  .watch(currentEpcDetailInfoProvider)
-                                  ?.epcDetail!
-                                  .data!
-                                  .companyName ??
-                              "-"),
-                      buildRow(
-                          "Cihaz Adı:",
-                          ref
-                                  .watch(currentEpcDetailInfoProvider)
-                                  ?.epcDetail!
-                                  .data!
-                                  .deviceName ??
-                              "-"),
-                      buildRow(
-                          "Cihaz IP:",
-                          ref
-                                  .watch(currentEpcDetailInfoProvider)
-                                  ?.epcDetail!
-                                  .data!
-                                  .deviceIp ??
-                              "-"),
-                      buildRow(
-                          "Kayıt tarihi:",
-                          ref
-                                  .watch(currentEpcDetailInfoProvider)
-                                  ?.epcDetail!
-                                  .data!
-                                  .recordDate ??
-                              "-"),
-                      buildRow(
-                          "Kayıt eden kullanıcı:",
-                          ref
-                                  .watch(currentEpcDetailInfoProvider)
-                                  ?.epcDetail!
-                                  .data!
-                                  .recordUser ??
-                              "-"),
-                    ],
-                  )
-                : Center(
-                    child: Text(
-                      "Bu epc ile ilgili tanımlanan bir bilgi bulunmamaktadır.",
-                      style: ThemeValueExtension.subtitle,
-                      textAlign: TextAlign.center,
+              SizedBox(height: 2.h),
+              Text("Epc Detay",
+                  style: ThemeValueExtension.subtitle
+                      .copyWith(
+                          fontWeight: FontWeight.bold
+                  )),
+              SizedBox(height: 2.h),
+              ref.watch(currentEpcDetailInfoProvider)?.epcDetail != null
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        buildRow(
+                            "Barcode:",
+                            ref
+                                .watch(currentEpcDetailInfoProvider)
+                                ?.epcDetail!
+                                .data!
+                                .barcode ??
+                                "-"),
+                        buildRow(
+                            "Şirket Adı:",
+                            ref
+                                    .watch(currentEpcDetailInfoProvider)
+                                    ?.epcDetail!
+                                    .data!
+                                    .companyName ??
+                                "-"),
+                        buildRow(
+                            "Cihaz Adı:",
+                            ref
+                                    .watch(currentEpcDetailInfoProvider)
+                                    ?.epcDetail!
+                                    .data!
+                                    .deviceName ??
+                                "-"),
+                        buildRow(
+                            "Cihaz IP:",
+                            ref
+                                    .watch(currentEpcDetailInfoProvider)
+                                    ?.epcDetail!
+                                    .data!
+                                    .deviceIp ??
+                                "-"),
+                        buildRow(
+                            "Kayıt tarihi:",
+                            ref
+                                    .watch(currentEpcDetailInfoProvider)
+                                    ?.epcDetail!
+                                    .data!
+                                    .recordDate ??
+                                "-"),
+                        buildRow(
+                            "Kayıt eden kullanıcı:",
+                            ref
+                                    .watch(currentEpcDetailInfoProvider)
+                                    ?.epcDetail!
+                                    .data!
+                                    .recordUser ??
+                                "-"),
+                        SizedBox(height: 10.h,)
+                      ],
+                    )
+                  : Center(
+                      child: Text(
+                        "Bu epc ile ilgili tanımlanan bir bilgi bulunmamaktadır.",
+                        style: ThemeValueExtension.subtitle,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Row buildRow(String header, String content) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Column buildRow(String header, String content) {
+    return Column(
       children: [
-        Expanded(
-          flex: 4,
-          child: Text(
-            header,
-            style: ThemeValueExtension.subtitle
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Text(
+                header,
+                style: ThemeValueExtension.subtitle
+                    .copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            Expanded(
+              flex: 6,
+              child: Text(
+                content,
+                style: ThemeValueExtension.subtitle,
+              ),
+            ),
+          ],
         ),
-        Expanded(
-          flex: 6,
-          child: Text(
-            content,
-            style: ThemeValueExtension.subtitle,
-          ),
-        ),
+        const Divider()
       ],
     );
   }
