@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:xrandom/xrandom.dart';
 
+import '../../catchpad_flutter_lib.dart';
 import '../enums/sensors/config/sensor_type.dart';
 
 /// this class is just here for general purposed
@@ -21,7 +22,10 @@ abstract class BigGuy {
     if (actionTime == -1 || commandTime == -1) {
       return null;
     }
+    logger.i("Action Time:"+actionTime.toString());
+    logger.i("Command Time:"+commandTime.toString());
     final ms = actionTime - commandTime;
+    logger.i("ms:"+ms.toString());
     return Duration(milliseconds: ms);
   }
 
