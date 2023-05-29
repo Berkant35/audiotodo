@@ -46,9 +46,19 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Passwords not same"),
         "please_enter_a_strong_password": MessageLookupByLibrary.simpleMessage(
             "Please enter a strong password"),
+        "please_give_feed_back": MessageLookupByLibrary.simpleMessage(
+            "Please contact us for feedback"),
+        "press_for_meet":
+            MessageLookupByLibrary.simpleMessage("Press For Meeting..."),
+        "profil": MessageLookupByLibrary.simpleMessage("Profil"),
+        "record": MessageLookupByLibrary.simpleMessage("Record"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
+        "sign_out": MessageLookupByLibrary.simpleMessage("Sign Out"),
         "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),
+        "something_went_wrong":
+            MessageLookupByLibrary.simpleMessage("Something went wrong"),
         "surname": MessageLookupByLibrary.simpleMessage("Surname"),
+        "todo": MessageLookupByLibrary.simpleMessage("Todo"),
         "user_creation_failed":
             MessageLookupByLibrary.simpleMessage("User Creation Failed!"),
         "username": MessageLookupByLibrary.simpleMessage("Username"),

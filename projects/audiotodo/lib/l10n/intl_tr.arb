@@ -4,6 +4,7 @@
   "or": "veya",
   "sign_up": "Kayıt Ol",
   "sign_in": "Giriş Yap",
+  "sign_out" : "Çıkış Yap",
   "welcome_to_audiotodo": "AudioToDo'ya Hoşgeldiniz",
   "username": "Ad",
   "surname": "Soyad",
@@ -22,6 +23,11 @@
   "please_enter_a_strong_password": "Lütfen güçlü bir şifre girin",
   "an_error_occurred" : "Bir Hata meydana geldi",
   "wrong_password" : "Yanlış Şifre",
-  "login_failed" : "Giriş Başarısız!"
-
+  "login_failed" : "Giriş Başarısız!",
+  "profil": "Profil",
+  "todo" : "Yapılacaklar",
+  "record": "Kayıt",
+  "something_went_wrong" : "Bir şeyler ters gitti",
+  "please_give_feed_back" : "Lütfen bize geri bildirim için iletişime geçin",
+  "press_for_meet" : "Başlamak için butona bas..."
 }

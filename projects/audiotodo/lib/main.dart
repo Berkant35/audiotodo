@@ -52,7 +52,6 @@ class AudioToDo extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
         ],
         theme: CustomTheme.themeData,
-
         onGenerateRoute: NavigationRoute.instance.generateRoute,
         navigatorKey: NavigationService.instance.navigatorKey,
         debugShowCheckedModeBanner: false,

@@ -57,9 +57,13 @@ class AuthService extends AuthManager {
   }
 
   @override
-  Future<bool> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  Future<bool> signOut() async {
+    try {
+      await firebaseAuth.signOut();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   @override

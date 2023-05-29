@@ -4,6 +4,7 @@
   "or" : "or",
   "sign_up" : "Sign Up",
   "sign_in" : "Sign In",
+  "sign_out" : "Sign Out",
   "welcome_to_audiotodo": "Welcome To AudioToDo",
   "username" : "Username",
   "surname": "Surname",
@@ -22,5 +23,12 @@
   "please_enter_a_strong_password": "Please enter a strong password",
   "an_error_occurred" : "An error occurred!",
   "wrong_password" : "Wrong Password!",
-  "login_failed" : "Login Failed!"
+  "login_failed" : "Login Failed!",
+  "profil": "Profil",
+  "todo": "Todo",
+  "record": "Record",
+  "something_went_wrong" : "Something went wrong",
+  "please_give_feed_back" : "Please contact us for feedback",
+  "press_for_meet" : "Press For Meeting..."
+
 }

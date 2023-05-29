@@ -6,6 +6,7 @@ import 'package:audiotodo/utilities/components/buttons/mini_button.dart';
 import 'package:audiotodo/utilities/constants/enums/loading_states.dart';
 import 'package:audiotodo/utilities/constants/extensions/context_extension.dart';
 import 'package:audiotodo/utilities/constants/extensions/edge_extension.dart';
+import 'package:audiotodo/utilities/constants/extensions/widget_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -58,6 +59,7 @@ class _AuthLoginState extends ConsumerState<AuthLogin>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBarExtension.noneAppBar,
       backgroundColor: Theme.of(context).primaryColor,
       body: SizedBox(
         width: 100.w,
@@ -121,6 +123,7 @@ class _AuthLoginState extends ConsumerState<AuthLogin>
           style: ThemeValueExtension.primary
               .copyWith(color: CustomColors.fillWhiteColor),
         ),
+
         const Expanded(flex: 3, child: LoginDivider()),
         const Spacer(
           flex: 4,
@@ -155,6 +158,7 @@ class _AuthLoginState extends ConsumerState<AuthLogin>
   }
 
   Column loginButtons() {
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [buttonsSign(), buildRow(), socialLoginRow()],

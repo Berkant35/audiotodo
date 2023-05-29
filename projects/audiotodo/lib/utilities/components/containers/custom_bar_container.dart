@@ -25,7 +25,7 @@ class CustomBarContainer extends ConsumerWidget {
               bottomLeft: Radius.circular(40),
               bottomRight: Radius.circular(40)))),
       child: Container(
-        height: 10.h,
+        height: 8.h,
         width: 65.w,
         decoration: BoxDecoration(
             color: isPrimaryContainer
@@ -36,7 +36,7 @@ class CustomBarContainer extends ConsumerWidget {
               bottomRight: Radius.circular(EdgeExtension.hugeEdge.edgeValue),
             )),
         child: Align(
-            alignment: Alignment.bottomCenter,
+            alignment: Alignment.center,
             child: Text(text,
                 style: ThemeValueExtension.headline1.copyWith(
                   color: isPrimaryContainer

@@ -58,6 +58,10 @@ extension PaddingExtension on BuildContext {
   EdgeInsets get paddingHigh => EdgeInsets.all(highValue);
 }
 
+
+
+
+
 //sağa sola yatımra işlemlerindeki dalga dümenler oluyor bu
 extension PaddingExtensionSymetric on BuildContext {
   EdgeInsets get paddingLowVertical => EdgeInsets.symmetric(vertical: lowValue);
@@ -104,6 +108,7 @@ extension GapSizedBox on Widget{
 }
 
 extension ThemeValueExtension on BuildContext {
+
   static TextStyle get headline1 => TextStyle(
       fontSize: 23.sp,
       fontWeight: FontWeight.w600,
@@ -187,6 +192,14 @@ extension ThemeValueExtension on BuildContext {
       letterSpacing: 0.5.sp,
       fontFamily: ApplicationConstants.customFontFamily,
       overflow: TextOverflow.ellipsis);
+
+  static TextStyle get highBody => TextStyle(
+      fontSize: 18.sp,
+      fontWeight: FontWeight.w400,
+      letterSpacing: 0.5.sp,
+      fontFamily: ApplicationConstants.customFontFamily,
+      overflow: TextOverflow.ellipsis);
+
 
   static TextStyle get body2 => TextStyle(
       fontSize: 13.sp,

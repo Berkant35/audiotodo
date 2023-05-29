@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/custom_colors.dart';
 
-
 enum EdgeExtension {
+  customTiny1,
   tinyEdge,
   lowEdge,
   lowToNormalEdge,
   normalEdge,
+  customNormal1,
   mediumEdge,
   highEdge,
   hugeEdge,
@@ -31,6 +32,8 @@ enum BoxDecorationExtensions { cardBoxDecoration, imageBoxDecoration }
 extension EdgeValueExtension on EdgeExtension {
   double get edgeValue {
     switch (this) {
+      case EdgeExtension.customTiny1:
+        return 4;
       case EdgeExtension.tinyEdge:
         return 6;
       case EdgeExtension.lowEdge:
@@ -39,6 +42,8 @@ extension EdgeValueExtension on EdgeExtension {
         return 12;
       case EdgeExtension.normalEdge:
         return 15;
+      case EdgeExtension.customNormal1:
+        return 20;
       case EdgeExtension.mediumEdge:
         return 22;
       case EdgeExtension.mediumtoHighEdge:
@@ -52,8 +57,6 @@ extension EdgeValueExtension on EdgeExtension {
     }
   }
 }
-
-
 
 extension BorderRadiusExtension on BorderGeometryExtension {
   BorderRadiusGeometry get borderRadiusGeometryValue {

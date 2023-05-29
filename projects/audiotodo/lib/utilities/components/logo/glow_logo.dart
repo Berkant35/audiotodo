@@ -7,35 +7,49 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import '../../../core/theme/custom_colors.dart';
 
 class GlowLogo extends ConsumerWidget {
+  final Color? customGlowColor;
+  final Color? backColor;
+  final double? size;
+  final double? radius;
+  final bool showMicIcon;
+  final bool animationTrigger;
+
   const GlowLogo({
     Key? key,
+    this.customGlowColor,
+    this.backColor,
+    this.size,
+    this.radius,
+    this.showMicIcon = true,
+    this.animationTrigger = true,
+
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AvatarGlow(
       startDelay: const Duration(milliseconds: 2000),
-      glowColor: CustomColors.fillWhiteColor,
-      endRadius: 20.h,
+      glowColor: customGlowColor ?? CustomColors.fillWhiteColor,
+      endRadius: radius ?? 20.h,
       duration: const Duration(milliseconds: 6000),
       repeat: true,
       showTwoGlows: true,
       repeatPauseDuration: const Duration(seconds: 1),
       shape: BoxShape.circle,
-      animate: true,
+      animate: animationTrigger,
       curve: Curves.fastOutSlowIn,
       child: Container(
-        width: 30.h,
-        height: 30.h,
+        width: size ?? 30.h,
+        height: size ?? 30.h,
         decoration: BoxDecoration(
-            color: CustomColors.secondaryColor.withOpacity(0.75),
+            color: backColor ?? CustomColors.secondaryColor.withOpacity(0.75),
             borderRadius: BorderRadius.all(Radius.circular(60.h))),
         child: Center(
-          child: Icon(
+          child: showMicIcon ? Icon(
             Icons.mic,
             size: IconSizeExtension.huge.sizeValue,
             color: CustomColors.fillWhiteColor,
-          ),
+          ) : null,
         ),
       ),
     );

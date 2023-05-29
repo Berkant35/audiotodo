@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'custom_colors.dart';
 
@@ -10,8 +11,11 @@ class CustomTheme {
 
     cardColor: CustomColors.fillWhiteColor,
     errorColor: CustomColors.errorColor,
+
     appBarTheme: const AppBarTheme(
       color: CustomColors.primaryColor,
+
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
       elevation: 0,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(

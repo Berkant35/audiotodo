@@ -13,7 +13,7 @@ class AuthManagerProvider extends StateNotifier<UserModel?> with AuthManager {
   AuthManagerProvider(UserModel? userModel) : super(null);
   final _authService = AuthService();
 
-  changeUser(UserModel userModel) => state = userModel;
+  changeUser(UserModel? userModel) => state = userModel;
 
   @override
   Future<bool> createCustomUserWithEmailAndPassword(
@@ -55,8 +55,8 @@ class AuthManagerProvider extends StateNotifier<UserModel?> with AuthManager {
       state = currentUser;
 
       if (state != null) {
-        // await NavigationService.instance
-        //     .navigateToPageClear(path: NavigationConstants.mainBase);
+        await NavigationService.instance
+            .navigateToPageClear(path: NavigationConstants.mainBase);
       }
 
       return state;
@@ -67,9 +67,16 @@ class AuthManagerProvider extends StateNotifier<UserModel?> with AuthManager {
   }
 
   @override
-  Future<bool> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  Future<bool> signOut() async {
+    final isSignOuted = await _authService.signOut();
+
+    if (isSignOuted) {
+      changeUser(null);
+      await NavigationService.instance
+          .navigateToPageClear(path: NavigationConstants.authLoginPage);
+    }
+
+    return isSignOuted;
   }
 
   @override

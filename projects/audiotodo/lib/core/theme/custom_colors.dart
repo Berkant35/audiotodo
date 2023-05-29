@@ -13,10 +13,22 @@ class CustomColors {
   static final MaterialStateProperty<Color> fillWhiteColorM =
   MaterialStateProperty.all<Color>(fillWhiteColor);
 
+  static const Color accentColor = Color(0xFFFFA200);
+  static final MaterialStateProperty<Color> accentColorM =
+  MaterialStateProperty.all<Color>(accentColor);
+
   //BCBCBC
   static const Color greyColor = Color(0xFFBCBCBC);
   static final MaterialStateProperty<Color> greyColorM =
   MaterialStateProperty.all<Color>(greyColor);
+
+  static const Color textGreyColor = Color(0xFF5E5E5E);
+  static final MaterialStateProperty<Color> textGreyColorM =
+  MaterialStateProperty.all<Color>(textGreyColor);
+
+  static const Color backGreyColor = Color(0xFFD9D9D9);
+  static final MaterialStateProperty<Color> backGreyColorM =
+  MaterialStateProperty.all<Color>(backGreyColor);
 
   static const Color grey2Color = Color(0xFFD2D2D2);
   static final MaterialStateProperty<Color> grey2ColorM =

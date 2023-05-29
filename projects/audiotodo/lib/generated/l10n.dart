@@ -90,6 +90,16 @@ class S {
     );
   }
 
+  /// `Sign Out`
+  String get sign_out {
+    return Intl.message(
+      'Sign Out',
+      name: 'sign_out',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Welcome To AudioToDo`
   String get welcome_to_audiotodo {
     return Intl.message(
@@ -275,6 +285,66 @@ class S {
     return Intl.message(
       'Login Failed!',
       name: 'login_failed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profil`
+  String get profil {
+    return Intl.message(
+      'Profil',
+      name: 'profil',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Todo`
+  String get todo {
+    return Intl.message(
+      'Todo',
+      name: 'todo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Record`
+  String get record {
+    return Intl.message(
+      'Record',
+      name: 'record',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Something went wrong`
+  String get something_went_wrong {
+    return Intl.message(
+      'Something went wrong',
+      name: 'something_went_wrong',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please contact us for feedback`
+  String get please_give_feed_back {
+    return Intl.message(
+      'Please contact us for feedback',
+      name: 'please_give_feed_back',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Press For Meeting...`
+  String get press_for_meet {
+    return Intl.message(
+      'Press For Meeting...',
+      name: 'press_for_meet',
       desc: '',
       args: [],
     );

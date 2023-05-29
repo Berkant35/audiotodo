@@ -46,9 +46,19 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Şifreleriniz uyuşmuyor"),
         "please_enter_a_strong_password": MessageLookupByLibrary.simpleMessage(
             "Lütfen güçlü bir şifre girin"),
+        "please_give_feed_back": MessageLookupByLibrary.simpleMessage(
+            "Lütfen bize geri bildirim için iletişime geçin"),
+        "press_for_meet":
+            MessageLookupByLibrary.simpleMessage("Başlamak için butona bas..."),
+        "profil": MessageLookupByLibrary.simpleMessage("Profil"),
+        "record": MessageLookupByLibrary.simpleMessage("Kayıt"),
         "sign_in": MessageLookupByLibrary.simpleMessage("Giriş Yap"),
+        "sign_out": MessageLookupByLibrary.simpleMessage("Çıkış Yap"),
         "sign_up": MessageLookupByLibrary.simpleMessage("Kayıt Ol"),
+        "something_went_wrong":
+            MessageLookupByLibrary.simpleMessage("Bir şeyler ters gitti"),
         "surname": MessageLookupByLibrary.simpleMessage("Soyad"),
+        "todo": MessageLookupByLibrary.simpleMessage("Yapılacaklar"),
         "user_creation_failed":
             MessageLookupByLibrary.simpleMessage("Kullanıcı Oluşturma Hatası!"),
         "username": MessageLookupByLibrary.simpleMessage("Ad"),
