@@ -599,6 +599,15 @@ abstract class PadManager {
   }
 
 
+  static Stream<String> listenToResponseForUploadMusicFile(String deviceId, {
+    required WidgetRef ref,
+  }) async* {
+    yield* BleManager.subscribeToCharacteristic(
+      audioCharacteristic.qualCharacteristic(deviceId),
+      ref: ref,
+    ).map((event) => String.fromCharCodes(event));
+  }
+
 
   // #endregion
 

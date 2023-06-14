@@ -33,10 +33,11 @@ class DevInfoModel {
     final st = String.fromCharCodes(bytes);
     final sp = st.split('/');
 
+    const defaultValue = "9999999";
 
     debugPrint("Sp:${sp.toList()}");
 
-    return DevInfoModel(
+    return sp.toList() != ['?'] ? DevInfoModel(
       cpId: sp[4],
       macId: sp[1],
       bleName: sp[6],
@@ -45,6 +46,16 @@ class DevInfoModel {
       swVersion: sp[1],
       noTm: sp[2],
       variantId: sp[3],
+
+    ) : DevInfoModel(
+      cpId: defaultValue,
+      macId: defaultValue,
+      bleName: defaultValue,
+      stickerType: defaultValue,
+      hwVersion: defaultValue,
+      swVersion: defaultValue,
+      noTm: defaultValue,
+      variantId: defaultValue,
 
     );
   }
